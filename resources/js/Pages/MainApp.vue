@@ -31,12 +31,15 @@
                             <template v-slot:prepend="{ item }">
                                 <v-icon>{{ item.icon }}</v-icon>
                             </template>
+                            <template v-slot:title="{ item }">
+                                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                            </template>
                             <template v-slot:item="{ item }">
-                                <Link :href="item.route">
+                                <Link :href="item.url">
                                     <v-list-item color="warning" rounded>
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
-                                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
                                         </template>
                                     </v-list-item>
                                 </Link>
@@ -45,7 +48,7 @@
 
                         <!-- --------------mini------------------->
                         <v-list v-show="miniDrawer" dense class="list-mini">
-                            <v-list-item v-for="item in items" :key="item.id" link :href="item.route">
+                            <v-list-item v-for="item in items" :key="item.id" link :href="item.url">
                                 <v-icon>{{ item.icon }}</v-icon>
                             </v-list-item>
                         </v-list>
@@ -53,12 +56,15 @@
                             <template v-slot:prepend="{ item }">
                                 <v-icon>{{ item.icon }}</v-icon>
                             </template>
+                            <template v-slot:title="{ item }">
+                                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                            </template>
                             <template v-slot:item="{ item }">
-                                <Link :href="item.route">
+                                <Link :href="item.url">
                                     <v-list-item color="warning" rounded>
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
-                                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
                                         </template>
                                     </v-list-item>
                                 </Link>
@@ -71,7 +77,7 @@
                                 <v-btn block :color="colorStore.color" v-if="!miniDrawer" @click="logout">
                                     <v-icon>mdi-logout</v-icon>Logout
                                 </v-btn>
-                                <v-btn v-else style="min-width: 100%; max-width: 100%;" :color="colorStore.color">
+                                <v-btn v-else style="min-width: 100%; max-width: 100%;" :color="colorStore.color" @click="logout">
                                     <div class="d-flex align-center">
                                         <v-icon>mdi-logout</v-icon>
                                         <v-list-item-title :class="['text-uppercase', 'custom-font', { 'hidden-text': drawerWidth <= 50 }]">Logout</v-list-item-title>
@@ -455,17 +461,6 @@ import $ from 'jquery';
 import { Store } from '@/store/index';
 import axios from 'axios';
 
-const dashboardData = ref(null);
-
-const fetchDashboardData = async () => {
-    try {
-        const response = await axios.get('getDashboard');
-        dashboardData.value = response.data;
-    } catch (error) {
-        console.error('Error fetching data', error);
-    }
-};
-
 const props = defineProps({
     title: String,
 });
@@ -487,24 +482,7 @@ const colorPicker = ref(colorStore.color);
 const selectedColor = ref(localStorage.getItem('selectedColor') || 'grey-darken-3');
 const WindowSize = ref(false);
 const footerHeight = ref(null);
-const items = [
-    {
-        id: 1,
-        title: 'Applications :',
-        icon: 'mdi-monitor-dashboard',
-        route: '/dashboard',
-    },
-    {
-        id: 2,
-        title: 'Applications :',
-        icon: 'mdi-pen',
-        children: [
-            { id: 3,icon: 'mdi-pen', route:  '/sale',title: 'Calendar : app' },
-            { id: 4, icon: 'mdi-pen',route:  '/sale',title: 'Chrome : app' },
-            { id: 5, icon: 'mdi-pen',route:  '/sale',title: 'Webstorm : app' },
-        ],
-    },
-];
+const items = ref([]);
 const icons = [
     'mdi-facebook',
     'mdi-twitter',
@@ -583,7 +561,7 @@ const checkWindowSize = () => {
 };
 
 onMounted(() => {
-    // fetchDashboardData();
+    fetchDashboardData();
     setTimeout(function(){
         $(".v-navigation-drawer").find(".treeview-mini").css({"display": "none"});
     }, 100);
@@ -715,6 +693,16 @@ function selectDirection(direction) {
     console.log(direction)
     colorStore.setSelectedDirection(direction);
 }
+const fetchDashboardData = async () => {
+    try {
+        const response = await axios.get('getMenu');
+        items.value = response.data;
+        console.log(items.value);
+    } catch (error) {
+        console.error('Error fetching data', error);
+    }
+};
+
 </script>
 <style scoped>
 .hidden-text {

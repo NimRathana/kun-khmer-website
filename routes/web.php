@@ -3,14 +3,14 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Api\demoController;
+use App\Http\Controllers\Api\MenuController;
 
 
 Route::prefix('/')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Default/DefaultScreen');
     });
-    Route::get('/getDashboard', [demoController::class, 'getGrid']);
+    Route::get('/getDashboard', [MenuController::class, 'getGrid']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -18,12 +18,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/', function () {
             return Inertia::render('Dashboard');
         });
-        Route::get('/getGrid', [demoController::class, 'getGrid']);
     });
 
-    Route::prefix('sale')->group(function () {
+    Route::prefix('menu-system')->group(function () {
         Route::get('/', function () {
-            return Inertia::render('Components/index');
+            return Inertia::render('Components/MenuSystem');
         });
     });
+
+    Route::get('/getMenu', [MenuController::class, 'getMenu']);
 });
