@@ -3,30 +3,37 @@
         <v-row>
             <!-- First column (Text Field and Select) -->
             <v-col cols="12" md="6">
-            <v-text-field label="demo"></v-text-field>
+            <v-text-field variant="outlined" label="demo"></v-text-field>
             <v-autocomplete
                 label="Select"
+                variant="outlined"
                 :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
             ></v-autocomplete>
             </v-col>
 
             <!-- Second column (Text Field) -->
             <v-col cols="12" md="6">
-            <v-text-field label="demo"></v-text-field>
+                <v-text-field variant="outlined" label="demo"></v-text-field>
+                <v-select
+                label="Select"
+                variant="outlined"
+                :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                ></v-select>
             </v-col>
         </v-row>
-        <!-- <v-data-table
+        <v-data-table
             :headers="headers"
             :items="desserts"
             :items-per-page="itemsPerPage"
             :loading="loading"
             :total-items="totalItems"
+            @dblclick:row="editItem"
             :server-items-length="totalItems"
         >
             <template #item.name="{ item }">
             <span>{{ item.name }}</span>
             </template>
-      </v-data-table> -->
+      </v-data-table>
     </MainApp>
 </template>
 
@@ -58,4 +65,11 @@ const headers = ref([
 ]);
 const loading = ref(true);
 const totalItems = ref(0);
+
+function editItem (event, {item}) {
+    debugger
+};
 </script>
+<style>
+
+</style>
