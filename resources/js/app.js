@@ -11,17 +11,23 @@ import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import { helper } from './helper';
+import axios from 'axios'
 
 const vuetify = createVuetify({
     components,
     directives,
 });
 
+// axios.defaults.baseURL = 'http://localhost:8000/';
 createInertiaApp({
     title: (title) => `${title}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) });
+        // Register the helper globally
+        app.config.globalProperties.$helper = helper;
+        return app
             .use(plugin)
             .use(ZiggyVue)
             .use(vuetify)

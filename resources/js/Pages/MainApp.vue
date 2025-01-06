@@ -35,7 +35,7 @@
                                 <v-list-item-title>{{ item.name }}</v-list-item-title>
                             </template>
                             <template v-slot:item="{ item }">
-                                <Link :href="item.url">
+                                <Link :href="item.url" :active="route().current(item.url)">
                                     <v-list-item color="warning" rounded>
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
@@ -416,14 +416,14 @@
                             </v-container>
                         </template>
                     </v-app-bar>
-                    <v-main class="main" style="display: flex; flex-direction: column; min-height: 100vh;">
+                    <v-main class="main" style="display: flex; flex-direction: column;">
                         <v-row class="pt-0 mt-0">
-                            <v-col cols="12" class="pb-0 content">
-                                <v-container :fluid="colorStore.selectedContent !== 'Compact'">
+                            <v-col cols="12" class="content">
+                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="container_body" style="height: 100%;">
                                     <slot />
                                 </v-container>
                             </v-col>
-                            <v-col cols="12" class="mt-0">
+                            <!-- <v-col cols="12" class="mt-0">
                                 <v-footer class="d-flex flex-column pa-0 ma-0 footer">
                                     <div class="bg-teal d-flex w-100 align-center px-4">
                                     <strong>This is Footer!</strong>
@@ -441,14 +441,14 @@
                                         <strong>© 2024 Develop By Nim Rathana</strong>
                                     </div>
                                 </v-footer>
-                            </v-col>
+                            </v-col> -->
                         </v-row>
                     </v-main>
                 </v-app>
             </v-responsive>
         </v-layout>
-        <v-btn v-if="showButton" style="position: fixed;bottom:20px;right:20px;z-index: 999;" icon="mdi-cog-outline" size="large"
-            :color="colorStore.color" @click.stop="toggleRightDrawer = !toggleRightDrawer" class="rotate-animation"></v-btn>
+        <v-btn v-if="showButton" style="position: fixed;bottom:70px;right:20px;z-index: 999;" icon="mdi-cog-outline" size="large"
+            :color="colorStore.color" @click.stop="toggleRightDrawer = !toggleRightDrawer" class="rotate-animation setting_btn"></v-btn>
     </div>
 </template>
 
@@ -695,9 +695,8 @@ function selectDirection(direction) {
 }
 const fetchDashboardData = async () => {
     try {
-        const response = await axios.get('getMenu');
+        const response = await axios.get('api/getMenu');
         items.value = response.data;
-        console.log(items.value);
     } catch (error) {
         console.error('Error fetching data', error);
     }
@@ -714,7 +713,8 @@ const fetchDashboardData = async () => {
   font-weight: 300;
 }
 .rotate-animation {
-  animation: rotation 2s infinite linear;
+    cursor: move;
+    animation: rotation 2s infinite linear;
 }
 .v-theme--dark {
     --v-theme-background: 38, 50, 56;

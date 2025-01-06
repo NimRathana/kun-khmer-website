@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Api\MenuController;
@@ -25,6 +24,4 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             return Inertia::render('Components/MenuSystem');
         });
     });
-
-    Route::get('/getMenu', [MenuController::class, 'getMenu']);
 });

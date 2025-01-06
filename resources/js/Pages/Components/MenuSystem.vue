@@ -1,75 +1,154 @@
 <template>
     <MainApp>
-        <v-row>
-            <!-- First column (Text Field and Select) -->
+        <v-row class="head">
             <v-col cols="12" md="6">
-            <v-text-field variant="outlined" label="demo"></v-text-field>
-            <v-autocomplete
-                label="Select"
-                variant="outlined"
-                :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-            ></v-autocomplete>
+                <v-text-field variant="outlined" density="compact" label="search" v-model="search"></v-text-field>
             </v-col>
-
-            <!-- Second column (Text Field) -->
             <v-col cols="12" md="6">
-                <v-text-field variant="outlined" label="demo"></v-text-field>
-                <v-select
-                label="Select"
-                variant="outlined"
-                :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-                ></v-select>
+                <v-btn color="primary" style="float: right;" @click="dialog = true">
+                    <v-icon>mdi-plus</v-icon>Add
+                </v-btn>
             </v-col>
         </v-row>
         <v-data-table
             :headers="headers"
-            :items="desserts"
+            :items="MenuItem"
+            :search="search"
             :items-per-page="itemsPerPage"
             :loading="loading"
             :total-items="totalItems"
             @dblclick:row="editItem"
             :server-items-length="totalItems"
+            :sticky="true"
         >
-            <template #item.name="{ item }">
-            <span>{{ item.name }}</span>
+            <template v-slot:loading>
+                <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
             </template>
-      </v-data-table>
+            <template #item.name="{ item }">
+                <span>{{ item.name }}</span>
+            </template>
+            <template #item.icon="{ item }">
+                <v-icon>{{ item.icon }}</v-icon>
+            </template>
+            <template v-slot:item.action="{ item }">
+                <v-icon @click="editItem($event, item)" color="primary">mdi-pencil</v-icon>
+                <v-icon class="ml-2" color="red">mdi-delete</v-icon>
+            </template>
+        </v-data-table>
+
+        <v-dialog v-model="dialog" max-width="600">
+            <v-card
+                prepend-icon="mdi-account"
+                title="User Profile"
+            >
+                <v-divider></v-divider>
+                <form @submit.prevent="editMode ? updateMenu() : createMenu()" enctype="multipart/form-data">
+                    <v-card-text>
+                        <v-row dense>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" density="compact" label="Name" v-model="form.name" :error-messages="errorMessage.name"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" density="compact" label="Url" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" density="compact" label="Order" v-model="form.order" type="number" :error-messages="errorMessage.order"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" density="compact" label="Icon" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            text="Close"
+                            color="red"
+                            @click="dialog = false, errorMessage = '', form.reset()"
+                        ></v-btn>
+
+                        <v-btn
+                            color="primary"
+                            text="Save"
+                            type="submit"
+                            @click="createMenu()"
+                        ></v-btn>
+                    </v-card-actions>
+                </form>
+            </v-card>
+        </v-dialog>
     </MainApp>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, getCurrentInstance } from 'vue';
+import $ from 'jquery';
 import MainApp from '../MainApp.vue';
+import axios from 'axios';
+import { useForm } from '@inertiajs/vue3';
 
-const desserts = ref([
-  { name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, iron: '1' },
-  { name: 'Jelly bean', calories: 375, fat: 0.0, carbs: 94, protein: 0.0, iron: '0' },
-  { name: 'KitKat', calories: 518, fat: 26.0, carbs: 65, protein: 7, iron: '6' },
-  { name: 'Eclair', calories: 262, fat: 16.0, carbs: 23, protein: 6.0, iron: '7' },
-  { name: 'Gingerbread', calories: 356, fat: 16.0, carbs: 49, protein: 3.9, iron: '16' },
-  { name: 'Ice cream sandwich', calories: 237, fat: 9.0, carbs: 37, protein: 4.3, iron: '1' },
-  { name: 'Lollipop', calories: 392, fat: 0.2, carbs: 98, protein: 0, iron: '2' },
-  { name: 'Cupcake', calories: 305, fat: 3.7, carbs: 67, protein: 4.3, iron: '8' },
-  { name: 'Honeycomb', calories: 408, fat: 3.2, carbs: 87, protein: 6.5, iron: '45' },
-  { name: 'Donut', calories: 452, fat: 25.0, carbs: 51, protein: 4.9, iron: '22' },
-]);
-
+const MenuItem = ref([]);
+const editMode = ref(false);
+const errorMessage = ref('');
+const search = ref(null);
+const dialog = ref(false);
 const itemsPerPage = ref(5);
 const headers = ref([
-  { title: 'Dessert (100g serving)', align: 'start', sortable: false, key: 'name' },
-  { title: 'Calories', key: 'calories', align: 'end' },
-  { title: 'Fat (g)', key: 'fat', align: 'end' },
-  { title: 'Carbs (g)', key: 'carbs', align: 'end' },
-  { title: 'Protein (g)', key: 'protein', align: 'end' },
-  { title: 'Iron (%)', key: 'iron', align: 'end' },
+  { title: 'Name', align: 'start', key: 'name' },
+  { title: 'Url', key: 'url', align: 'start' },
+  { title: 'Order', key: 'order', align: 'start' },
+  { title: 'Icon', key: 'icon', align: 'start' },
+  { title: 'Actions', key: 'action', align: 'center' },
 ]);
 const loading = ref(true);
 const totalItems = ref(0);
+const form = useForm({
+    name: '',
+    url: '',
+    order: '',
+    icon: ''
+});
 
-function editItem (event, {item}) {
+onMounted(()=>{
     debugger
+    const token = localStorage.getItem('token');
+    getMenuGrid();
+    const instance = getCurrentInstance();
+    const helper = instance?.proxy.$helper;
+    helper.GetGridHeight();
+});
+window.onresize = function() {
+};
+const getMenuGrid = async () => {
+    try {
+        const response = await axios.get('api/getMenuGrid');
+        MenuItem.value = response.data;
+        loading.value = false;
+    } catch (error) {
+        console.error('Error fetching data', error);
+    }
+};
+const createMenu = async () => {
+    axios.post('/api/createMenu', form);
+    // form.post('/api/createMenu', {
+    //     onFinish: () => {
+    //     },
+    //     onError: (errors) => {
+    //         errorMessage.value = errors;
+    //     }
+    // });
+};
+
+const updateMenu = () => {
+    debugger
+}
+function editItem (event, item) {
+    var data = null;
+    if(event.type == "dblclick"){
+        data = item.item;
+    }else{
+        data = item;
+    }
 };
 </script>
-<style>
-
-</style>

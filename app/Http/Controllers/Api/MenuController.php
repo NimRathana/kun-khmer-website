@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class MenuController extends Controller
@@ -60,4 +62,45 @@ class MenuController extends Controller
         return response()->json($menuTree);
     }
 
+    public function getMenuGrid(){
+        $menus = DB::table('tb_menus')->select('id','name','url','parent_id','order','icon')->get();
+        return response()->json($menus);
+    }
+
+    public function createMenu(Request $request){
+        dd($request);
+        try{
+            $validated = $request->validate([
+                'name' => 'required',
+                'url' => 'required',
+                'parent_id' => 'nullable|integer',
+                'order' => 'required',
+                'icon' => 'required',
+            ],[
+                'name.required' => 'Name is required',
+                'url.required' => 'Url is required',
+                'order.required' => 'Order is required',
+                'icon.required' => 'Icon is required',
+            ]);
+
+            $menu = DB::table('tb_menus')->insert([
+                'name' => $validated['name'],
+                'url' => $validated['url'],
+                'parent_id' => $validated['parent_id'] ?? null,
+                'order' => $validated['order'],
+                'icon' => $validated['icon'],
+            ]);
+
+            if ($menu) {
+                return response()->json(['message' => 'Menu created successfully'], 201);
+            }
+
+            return response()->json(['message' => 'Menu creation failed'], 400);
+
+        }catch(Exception $e){
+            return Inertia::render('Components/MenuSystem', [
+                'errors' => $e->errors(),
+            ]);
+        }
+    }
 }
