@@ -17,7 +17,7 @@
             <v-col cols="12" class="body" style="height: 100%;">
                 <v-data-table
                     :headers="headers"
-                    :items="MenuItem"
+                    :items="item"
                     :search="search"
                     :items-per-page="itemsPerPage"
                     :loading="loading"
@@ -28,12 +28,6 @@
                 >
                     <template v-slot:loading>
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
-                    </template>
-                    <template #item.name="{ item }">
-                        <span>{{ item.name }}</span>
-                    </template>
-                    <template #item.icon="{ item }">
-                        <v-icon>{{ item.icon }}</v-icon>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon @click="editItem($event, item)" color="primary">mdi-pencil</v-icon>
@@ -49,24 +43,27 @@
                 :title="editMode?'Update':'Create'"
             >
                 <v-divider></v-divider>
-                <form @submit.prevent="editMode ? updateMenu() : createMenu()" enctype="multipart/form-data">
+
+                <form @submit.prevent="editMode ? update() : create()" enctype="multipart/form-data">
                     <v-card-text>
                         <v-row dense>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Name" v-model="form.name" :error-messages="errorMessage.name"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="parameter_code" v-model="form.parameter_code" :error-messages="errorMessage.parameter_code"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Url" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="value" v-model="form.value" :error-messages="errorMessage.value"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Order" v-model="form.order" type="number" :error-messages="errorMessage.order"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="text_en" v-model="form.text_en" :error-messages="errorMessage.text_en"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Icon" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="text_km" v-model="form.text_km" :error-messages="errorMessage.text_km"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
+
                     <v-divider></v-divider>
+
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
@@ -117,14 +114,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import MainApp from '../MainApp.vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
-import { Store } from '@/store/index';
 
-const colorStore = Store();
-const MenuItem = ref([]);
+const item = ref([]);
 const deleteDialog = ref(false);
 const editMode = ref(false);
 const errorMessage = ref('');
@@ -132,73 +127,58 @@ const search = ref(null);
 const dialog = ref(false);
 const itemsPerPage = ref(5);
 const headers = ref([
-  { title: 'Name', align: 'start', key: 'name' },
-  { title: 'Url', key: 'url', align: 'start' },
-  { title: 'Order', key: 'order', align: 'start' },
-  { title: 'Icon', key: 'icon', align: 'start' },
+  { title: 'Parameter', align: 'start', key: 'parameter_code' },
+  { title: 'Value', key: 'value', align: 'start' },
+  { title: 'Text KM', key: 'text_km', align: 'start' },
+  { title: 'Text EN', key: 'text_en', align: 'start' },
   { title: 'Actions', key: 'action', align: 'center' },
 ]);
 const loading = ref(true);
 const totalItems = ref(0);
 const form = useForm({
     id: '',
-    name: '',
-    url: '',
-    order: '',
-    icon: ''
+    parameter_code: '',
+    value: '',
+    text_km: '',
+    text_en: ''
 });
 
 onMounted(()=>{
-    getMenuGrid();
+    getParameterGrid();
 });
 
-watch(
-  () => colorStore.menuItem,
-  (newItem) => {
-    MenuItem.value = newItem;
-  }
-);
-
-window.onresize = function() {
-};
-
-const getMenuGrid = async () => {
+const getParameterGrid = async () => {
     try {
-        const response = await axios.get('getMenuGrid');
-        MenuItem.value = response.data;
-        colorStore.menuItem = response.data;
+        const response = await axios.get('parameter/getParameter');
+        item.value = response.data;
         loading.value = false;
     } catch (error) {
         console.error('Error fetching data', error);
     }
 };
 
-const createMenu = () => {
+const create = () => {
     errorMessage.value = {};
-    if (form.name === "") {
-        errorMessage.value.name = "Name is required";
+    if (form.parameter_code === "") {
+        errorMessage.value.parameter_code = "Parameter Code is required";
     }
-    if (form.url === "") {
-        errorMessage.value.url = "URL is required";
+    if (form.value === "") {
+        errorMessage.value.value = "Value is required";
     }
-    if (form.order === "") {
-        errorMessage.value.order = "Order is required";
+    if (form.text_en === "") {
+        errorMessage.value.text_en = "Text EN is required";
     }
-    if (form.icon === "") {
-        errorMessage.value.icon = "Icon is required";
+    if (form.text_km === "") {
+        errorMessage.value.text_km = "Text KM is required";
     }
 
-    const isDuplicate = MenuItem.value.some(item => {
-        if(item.name.toLowerCase() === form.name.toLowerCase()){
-            errorMessage.value.name = "Name is duplicate";
+    const isDuplicate = item.value.some(item => {
+        if(item.parameter_code.toLowerCase() === form.parameter_code.toLowerCase()){
+            errorMessage.value.parameter_code = "Parameter Code is duplicate";
             return true;
         }
-        if(item.url.toLowerCase() === form.url.toLowerCase()){
-            errorMessage.value.url = "URL is duplicate";
-            return true;
-        }
-        if(item.order.toString() === form.order){
-            errorMessage.value.order = "Order is duplicate";
+        if(item.value.toLowerCase() === form.value.toLowerCase()){
+            errorMessage.value.value = "Value is duplicate";
             return true;
         }
         return false;
@@ -208,13 +188,12 @@ const createMenu = () => {
         return;
     }
 
-    form.post('createMenu', {
+    form.post('parameter/create', {
         onSuccess: () => {
-            getMenuGrid();
+            getParameterGrid();
             form.reset();
             dialog.value = false;
             errorMessage.value = "";
-
         },
         onError: (errors) => {
             // errorMessage.value = errors;
@@ -222,34 +201,29 @@ const createMenu = () => {
     });
 };
 
-const updateMenu = () => {
+const update = () => {
     errorMessage.value = {};
+    if (form.parameter_code === "") {
+        errorMessage.value.parameter_code = "Parameter Code is required";
+    }
+    if (form.value === "") {
+        errorMessage.value.value = "Value is required";
+    }
+    if (form.text_en === "") {
+        errorMessage.value.text_en = "Text EN is required";
+    }
+    if (form.text_km === "") {
+        errorMessage.value.text_km = "Text KM is required";
+    }
 
-    if (form.name === "") {
-        errorMessage.value.name = "Name is required";
-    }
-    if (form.url === "") {
-        errorMessage.value.url = "URL is required";
-    }
-    if (form.order === "") {
-        errorMessage.value.order = "Order is required";
-    }
-    if (form.icon === "") {
-        errorMessage.value.icon = "Icon is required";
-    }
-
-    const isDuplicate = MenuItem.value.some(item => {
+    const isDuplicate = item.value.some(item => {
         if(item.id != form.id){
-            if(item.name.toLowerCase() === form.name.toLowerCase()){
-                errorMessage.value.name = "Name is duplicate";
+            if(item.parameter_code.toLowerCase() === form.parameter_code.toLowerCase()){
+                errorMessage.value.parameter_code = "Parameter Code is duplicate";
                 return true;
             }
-            if(item.url.toLowerCase() === form.url.toLowerCase()){
-                errorMessage.value.url = "URL is duplicate";
-                return true;
-            }
-            if(item.order.toString() === form.order){
-                errorMessage.value.order = "Order is duplicate";
+            if(item.value.toLowerCase() === form.value.toLowerCase()){
+                errorMessage.value.value = "Value is duplicate";
                 return true;
             }
             return false;
@@ -260,9 +234,9 @@ const updateMenu = () => {
         return;
     }
 
-    form.post('updateMenu', {
+    form.post('parameter/update', {
         onSuccess: () => {
-            getMenuGrid();
+            getParameterGrid();
             form.reset();
             dialog.value = false;
             errorMessage.value = "";
@@ -271,22 +245,22 @@ const updateMenu = () => {
             // errorMessage.value = errors;
         },
     });
-};
+}
 
 function deleteMenu (item) {
     deleteDialog.value = true;
     form.id = item.id;
-    form.name = item.name;
-    form.url = item.url;
-    form.order = item.order;
-    form.icon = item.icon;
-};
+    form.parameter_code = item.parameter_code;
+    form.value = item.value;
+    form.text_en = item.text_en;
+    form.text_km = item.text_km;
+}
 
 function confirmDelete (del){
     if(del == true){
-        form.post('deleteMenu', {
+        form.post('parameter/delete', {
             onSuccess: () => {
-                getMenuGrid();
+                getParameterGrid();
                 form.reset();
                 deleteDialog.value = false;
             },
@@ -295,7 +269,7 @@ function confirmDelete (del){
             },
         });
     }
-};
+}
 
 function editItem (event, item) {
     var data = null;
@@ -307,9 +281,9 @@ function editItem (event, item) {
         data = item;
     }
     form.id = data.id;
-    form.name = data.name;
-    form.url = data.url;
-    form.order = data.order;
-    form.icon = data.icon;
+    form.parameter_code = data.parameter_code;
+    form.value = data.value;
+    form.text_en = data.text_en;
+    form.text_km = data.text_km;
 };
 </script>

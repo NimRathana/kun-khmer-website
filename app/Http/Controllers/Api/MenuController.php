@@ -6,7 +6,6 @@ use Exception;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class MenuController extends Controller
@@ -14,6 +13,7 @@ class MenuController extends Controller
     public function index(){
         return Inertia::render('Dashboard');
     }
+
     public function getGrid(){
         $data = [
             'status' => 'success',

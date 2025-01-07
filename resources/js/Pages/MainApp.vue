@@ -419,7 +419,7 @@
                     <v-main class="main" style="display: flex; flex-direction: column;">
                         <v-row class="pt-0 mt-0">
                             <v-col cols="12" class="content">
-                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="container_body" style="height: 100%;">
+                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="container_body" style="height: 100%;padding-bottom: 5px;">
                                     <slot />
                                 </v-container>
                             </v-col>
@@ -453,7 +453,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUpdated } from 'vue';
+import { ref, watch, onMounted, onUpdated, getCurrentInstance, nextTick } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { VTreeview } from 'vuetify/labs/VTreeview';
 import { Inertia } from '@inertiajs/inertia';
@@ -546,6 +546,12 @@ watch(
 
 onUpdated(() => {});
 const checkWindowSize = () => {
+    const headElement = document.getElementsByClassName("head")[0];
+    if (headElement) {
+        const height = headElement.offsetHeight;
+        const bodyHeight = document.getElementsByClassName("body")[0];
+        bodyHeight.style.height = "calc(100% - " + height + "px)";
+    }
     if(window.innerWidth > window.outerWidth * 0.5 && colorStore.selectedLayout == 'Collapsed'){
         miniDrawer.value = true;
     }
@@ -562,6 +568,15 @@ const checkWindowSize = () => {
 };
 
 onMounted(() => {
+    const instance = getCurrentInstance();
+    const helper = instance?.proxy.$helper;
+    helper.GetGridHeight();
+    const txtsearch = document.getElementsByClassName("search")[0];
+    const detailsElement = txtsearch.querySelector(".v-input__details");
+
+    if (detailsElement) {
+        detailsElement.classList.remove("v-input__details");
+    }
     fetchDashboardData();
     setTimeout(function(){
         $(".v-navigation-drawer").find(".treeview-mini").css({"display": "none"});

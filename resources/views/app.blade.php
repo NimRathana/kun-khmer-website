@@ -60,10 +60,18 @@
             //grid height
             const headElement = document.getElementsByClassName("head")[0];
             if (headElement) {
-                const height = headElement.offsetHeight - 20;
-                const gridHeight = document.getElementsByClassName("v-table")[0];
-                gridHeight.style.height = "calc(100% - " + height + "px)";
+                const height = headElement.offsetHeight;
+                const bodyHeight = document.getElementsByClassName("body")[0];
+                bodyHeight.style.height = "calc(100% - " + height + "px)";
             }
+
+            const txtsearch = document.getElementsByClassName("search")[0];
+            const detailsElement = txtsearch.querySelector(".v-input__details");
+
+            if (detailsElement) {
+                detailsElement.classList.remove("v-input__details");
+            }
+
         }, 200);
     });
 </script>
