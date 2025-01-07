@@ -45,6 +45,7 @@ class MenuController extends Controller
                     'id' => $menu->id,
                     'name' => $menu->name,
                     'url' => $menu->url,
+                    'order' => $menu->order,
                     'icon' => $menu->icon,
                 ];
 
@@ -68,9 +69,8 @@ class MenuController extends Controller
     }
 
     public function createMenu(Request $request){
-        dd($request);
         try{
-            $validated = $request->validate([
+            $request->validate([
                 'name' => 'required',
                 'url' => 'required',
                 'parent_id' => 'nullable|integer',
@@ -83,24 +83,64 @@ class MenuController extends Controller
                 'icon.required' => 'Icon is required',
             ]);
 
-            $menu = DB::table('tb_menus')->insert([
-                'name' => $validated['name'],
-                'url' => $validated['url'],
-                'parent_id' => $validated['parent_id'] ?? null,
-                'order' => $validated['order'],
-                'icon' => $validated['icon'],
+            DB::table('tb_menus')->insert([
+                'name' => $request->name,
+                'url' => $request->url,
+                'parent_id' => $request->parent_id,
+                'order' => $request->order,
+                'icon' => $request->icon,
             ]);
 
-            if ($menu) {
-                return response()->json(['message' => 'Menu created successfully'], 201);
-            }
-
-            return response()->json(['message' => 'Menu creation failed'], 400);
+            // if ($menu) {
+            //     return Inertia::render('Components/MenuSystem', [
+            //         'message' => 'Menu created successfully',
+            //         'status' => 'success',
+            //     ]);
+            // }
 
         }catch(Exception $e){
-            return Inertia::render('Components/MenuSystem', [
-                'errors' => $e->errors(),
+            throw $e;
+        }
+    }
+
+    public function updateMenu(Request $request){
+        try{
+            $request->validate([
+                'name' => 'required',
+                'url' => 'required',
+                'parent_id' => 'nullable|integer',
+                'order' => 'required',
+                'icon' => 'required',
+            ],[
+                'name.required' => 'Name is required',
+                'url.required' => 'Url is required',
+                'order.required' => 'Order is required',
+                'icon.required' => 'Icon is required',
             ]);
+
+            DB::table('tb_menus')
+            ->where('id', $request->id)
+            ->update([
+                'name' => $request->name,
+                'url' => $request->url,
+                'parent_id' => $request->parent_id,
+                'order' => $request->order,
+                'icon' => $request->icon,
+            ]);
+
+        }catch(Exception $e){
+            throw $e;
+        }
+    }
+
+    public function deleteMenu(Request $request){
+        try {
+            DB::table('tb_menus')
+                ->where('id', $request->id)
+                ->delete();
+
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 }

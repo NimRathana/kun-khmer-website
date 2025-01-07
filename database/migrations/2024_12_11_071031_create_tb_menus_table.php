@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('parent_id')->nullable();
             $table->integer('order');
             $table->text('icon');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

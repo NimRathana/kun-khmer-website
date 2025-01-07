@@ -8,6 +8,7 @@ export const Store = defineStore('theme', () => {
     const selectedLayout = ref(localStorage.getItem('selectedLayout') || 'Vertical');
     const selectedContent = ref(localStorage.getItem('selectedContent') || 'Compact');
     const selectedDirection = ref(localStorage.getItem('selectedDirection') || 'Left');
+    const menuItem = ref(localStorage.getItem('menuItem') || []);
 
     const setColor = (newColor) => {
       color.value = newColor;
@@ -39,6 +40,11 @@ export const Store = defineStore('theme', () => {
         localStorage.setItem('selectedDirection', direction);
     };
 
-    return { color, setColor, theme, setTheme, selectedSkin, setSelectedSkin, selectedLayout, setSelectedLayout, selectedContent, setSelectedContent, selectedDirection, setSelectedDirection };
+    const setMenuItem = (item) => {
+        menuItem.value = item;
+        localStorage.setItem('menuItem', item);
+    }
+
+    return { color, setColor, theme, setTheme, selectedSkin, setSelectedSkin, selectedLayout, setSelectedLayout, selectedContent, setSelectedContent, selectedDirection, setSelectedDirection, menuItem, setMenuItem };
 });
 

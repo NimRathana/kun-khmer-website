@@ -36,7 +36,7 @@
                             </template>
                             <template v-slot:item="{ item }">
                                 <Link :href="item.url" :active="route().current(item.url)">
-                                    <v-list-item color="warning" rounded>
+                                    <v-list-item :color="'warning'" rounded :value="item.url" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
                                             <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -48,8 +48,8 @@
 
                         <!-- --------------mini------------------->
                         <v-list v-show="miniDrawer" dense class="list-mini">
-                            <v-list-item v-for="item in items" :key="item.id" link :href="item.url">
-                                <v-icon>{{ item.icon }}</v-icon>
+                            <v-list-item v-for="item in items" :key="item.id" link :href="item.url" :value="item.url" :class="{ 'bg-active': $page.url === '/'+item.url }" rounded>
+                                <v-icon size="small">{{ item.icon }}</v-icon>
                             </v-list-item>
                         </v-list>
                         <v-treeview v-show="miniDrawer" floating :items="items" class="mx-2 treeview-mini" activatable open-on-click :opened="initiallyOpen" transition>
@@ -61,7 +61,7 @@
                             </template>
                             <template v-slot:item="{ item }">
                                 <Link :href="item.url">
-                                    <v-list-item color="warning" rounded>
+                                    <v-list-item color="warning" rounded :value="item.url" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
                                             <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -483,12 +483,6 @@ const selectedColor = ref(localStorage.getItem('selectedColor') || 'grey-darken-
 const WindowSize = ref(false);
 const footerHeight = ref(null);
 const items = ref([]);
-const icons = [
-    'mdi-facebook',
-    'mdi-twitter',
-    'mdi-linkedin',
-    'mdi-instagram',
-];
 const colors = ref(['#0D47A1', '#B71C1C', '#1B5E20', '#4A148C']);
 
 watch(
@@ -540,6 +534,13 @@ watch(
   () => miniDrawer,
   (newMiniDrawer) => {
     drawerWidth.value = newMiniDrawer ? 50 : 100;
+  }
+);
+
+watch(
+  () => colorStore.menuItem,
+  (newItem) => {
+    items.value = newItem.sort((a, b) => a.order - b.order);;
   }
 );
 
@@ -695,8 +696,8 @@ function selectDirection(direction) {
 }
 const fetchDashboardData = async () => {
     try {
-        const response = await axios.get('api/getMenu');
-        items.value = response.data;
+        const response = await axios.get('getMenu');
+        items.value = response.data.sort((a, b) => a.order - b.order);
     } catch (error) {
         console.error('Error fetching data', error);
     }
@@ -704,6 +705,10 @@ const fetchDashboardData = async () => {
 
 </script>
 <style scoped>
+.bg-active {
+  background-color: rgb(var(--v-theme-warning)) !important;
+  color : white !important;
+}
 .hidden-text {
   display: none;
 }

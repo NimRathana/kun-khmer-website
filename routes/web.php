@@ -24,4 +24,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             return Inertia::render('Components/MenuSystem');
         });
     });
+
+    Route::get('/getMenu', [MenuController::class, 'getMenu']);
+    Route::get('/getMenuGrid', [MenuController::class, 'getMenuGrid']);
+    Route::post('/createMenu', [MenuController::class, 'createMenu']);
+    Route::post('/updateMenu', [MenuController::class, 'updateMenu']);
+    Route::post('/deleteMenu', [MenuController::class, 'deleteMenu']);
 });
