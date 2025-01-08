@@ -18,10 +18,10 @@
                                         </v-avatar>
                                     </v-list-item-title>
                                     <v-list-item-subtitle class="my-3">
-                                        nim.rathana11@gmail.com
+                                        {{ $page.props.auth.user.email }}
                                     </v-list-item-subtitle>
                                     <v-list-item-title>
-                                        Nim Rathana
+                                        {{ $page.props.auth.user.name }}
                                     </v-list-item-title>
                                 </v-list-item>
                             </v-list>
@@ -36,7 +36,7 @@
                             </template>
                             <template v-slot:item="{ item }">
                                 <Link :href="item.url" :active="route().current(item.url)">
-                                    <v-list-item :color="'warning'" rounded :value="item.url" :class="{ 'bg-active': $page.url === '/'+item.url }">
+                                    <v-list-item :color="'warning'" rounded :value="item.url" class="mt-3" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
                                             <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -48,7 +48,7 @@
 
                         <!-- --------------mini------------------->
                         <v-list v-show="miniDrawer" dense class="list-mini">
-                            <v-list-item v-for="item in items" :key="item.id" link :href="item.url" :value="item.url" :class="{ 'bg-active': $page.url === '/'+item.url }" rounded>
+                            <v-list-item v-for="item in items" :key="item.id" link :href="item.url" :value="item.url" class="mt-3" :class="{ 'bg-active': $page.url === '/'+item.url }" rounded>
                                 <v-icon size="small">{{ item.icon }}</v-icon>
                             </v-list-item>
                         </v-list>
@@ -61,7 +61,7 @@
                             </template>
                             <template v-slot:item="{ item }">
                                 <Link :href="item.url">
-                                    <v-list-item color="warning" rounded :value="item.url" :class="{ 'bg-active': $page.url === '/'+item.url }">
+                                    <v-list-item color="warning" rounded :value="item.url" class="mt-3" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
                                             <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -327,7 +327,7 @@
                     </v-navigation-drawer>
                     <v-app-bar style="position: fixed;top:0;z-index: 98;">
                         <v-app-bar-nav-icon v-if="colorStore.selectedLayout !== 'Horizontal'" @click="toggleDrawerLeft"></v-app-bar-nav-icon>
-                        <v-app-bar-title>My files</v-app-bar-title>
+                        <v-app-bar-title>{{ $page.component.split('/').pop() }}</v-app-bar-title>
                         <template v-slot:append>
                             <div class="d-flex justify-end">
                                 <v-menu offset-y>
@@ -368,9 +368,9 @@
                                                     </VListItemAction>
                                                 </template>
                                                 <VListItemTitle class="font-weight-semibold">
-                                                    John Doe
+                                                    {{ $page.props.auth.user.name }}
                                                 </VListItemTitle>
-                                                <VListItemSubtitle>Admin</VListItemSubtitle>
+                                                <VListItemSubtitle>{{ $page.props.auth.user.email }}</VListItemSubtitle>
                                             </VListItem>
                                             <VDivider class="my-2" />
                                             <VListItem link :href="route('profile.show')">
@@ -379,11 +379,11 @@
                                                 </template>
                                                 <VListItemTitle>Profile</VListItemTitle>
                                             </VListItem>
-                                            <VListItem link>
+                                            <VListItem link @click="goHomePage">
                                                 <template #prepend>
-                                                    <VIcon class="me-2" icon="mdi-cog" size="22" />
+                                                    <VIcon class="me-2" icon="mdi-home-account" size="22" />
                                                 </template>
-                                                <VListItemTitle>Settings</VListItemTitle>
+                                                <VListItemTitle>Home</VListItemTitle>
                                             </VListItem>
                                             <VDivider class="my-2" />
                                             <VListItem @click="logout">
@@ -453,8 +453,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUpdated, getCurrentInstance, nextTick } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { ref, watch, onMounted, onUpdated, getCurrentInstance } from 'vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { VTreeview } from 'vuetify/labs/VTreeview';
 import { Inertia } from '@inertiajs/inertia';
 import $ from 'jquery';
@@ -463,7 +463,9 @@ import axios from 'axios';
 
 const props = defineProps({
     title: String,
+    sessions: Array,
 });
+const page = usePage();
 const colorStore = Store();
 const theme = ref(colorStore.theme);
 const selectedSkin = ref(colorStore.selectedSkin);
@@ -484,6 +486,7 @@ const WindowSize = ref(false);
 const footerHeight = ref(null);
 const items = ref([]);
 const colors = ref(['#0D47A1', '#B71C1C', '#1B5E20', '#4A148C']);
+const hideDrawer = ref(page.url);
 
 watch(
   () => colorStore.theme,
@@ -540,12 +543,26 @@ watch(
 watch(
   () => colorStore.menuItem,
   (newItem) => {
-    items.value = newItem.sort((a, b) => a.order - b.order);;
+    items.value = newItem.sort((a, b) => a.order - b.order);
   }
 );
 
-onUpdated(() => {});
+watch(hideDrawer, async () => {
+    if(hideDrawer.value == "/user/profile"){
+        setTimeout(() => {
+            toggleLeftDrawer.value = false;
+            miniDrawer.value = false;
+        }, 200);
+    }
+  },
+  { immediate: true }
+);
+
 const checkWindowSize = () => {
+    if(hideDrawer.value == "/user/profile"){
+        toggleLeftDrawer.value = false;
+        miniDrawer.value = false;
+    }
     const headElement = document.getElementsByClassName("head")[0];
     if (headElement) {
         const height = headElement.offsetHeight;
@@ -572,12 +589,17 @@ onMounted(() => {
     const helper = instance?.proxy.$helper;
     helper.GetGridHeight();
     const txtsearch = document.getElementsByClassName("search")[0];
-    const detailsElement = txtsearch.querySelector(".v-input__details");
+    let detailsElement = '';
+    if(txtsearch != undefined){
+        detailsElement = txtsearch.querySelector(".v-input__details");
+    }
 
     if (detailsElement) {
         detailsElement.classList.remove("v-input__details");
     }
-    fetchDashboardData();
+    if(page.url !== "/user/profile") {
+        fetchDashboardData();
+    }
     setTimeout(function(){
         $(".v-navigation-drawer").find(".treeview-mini").css({"display": "none"});
     }, 100);
@@ -616,9 +638,11 @@ onMounted(() => {
 const logout = () => {
     Inertia.post(route('logout'));
 };
+
 function ChangeTheme(newTheme) {
     colorStore.setTheme(newTheme);
 };
+
 function toggleDrawerLeft(){
     if(WindowSize.value){
         toggleLeftDrawer.value = true;
@@ -644,7 +668,8 @@ function toggleDrawerLeft(){
             colorStore.setSelectedLayout('Vertical');
         }
     }
-}
+};
+
 function mouseenter() {
     drawerWidth.value = 100;
     $(".custom-scroll").find(".v-navigation-drawer__content").css({"overflow": "auto"});
@@ -652,7 +677,8 @@ function mouseenter() {
         $(".list-mini").css({"display": "none"});
         $(".treeview-mini").css({"display": ""});
     }
-}
+};
+
 function mouseleave() {
     drawerWidth.value = 50;
     $(".custom-scroll").find(".v-navigation-drawer__content").css({"overflow": "hidden"});
@@ -660,16 +686,19 @@ function mouseleave() {
         $(".treeview-mini").css({"display": "none"});
         $(".list-mini").css({"display": ""});
     }
-}
+};
+
 function toggleColorPicker() {
   showColorPicker.value = !showColorPicker.value;
-}
+};
+
 function UpdateColor() {
     colorStore.setColor(colorPicker.value);
     localStorage.setItem('selectedColor', "grey-darken-3");
     localStorage.setItem('checkSelectedColor', false);
     selectedColor.value = "grey-darken-3";
-}
+};
+
 function clickColor(newColor) {
     if (selectedColor.value === newColor) {
         selectedColor.value = 'grey-darken-3';
@@ -681,10 +710,12 @@ function clickColor(newColor) {
     colorPicker.value = '#424242';
     localStorage.setItem('selectedColor', selectedColor.value);
     localStorage.setItem('checkSelectedColor', true);
-}
+};
+
 function selectSkin(skin) {
     colorStore.setSelectedSkin(skin);
-}
+};
+
 function selectLayout(layout) {
     if(layout == 'Collapsed') {
         setTimeout(function(){
@@ -701,23 +732,28 @@ function selectLayout(layout) {
         miniDrawer.value = false;
     }
     colorStore.setSelectedLayout(layout);
-}
+};
+
 function selectContent(content) {
     colorStore.setSelectedContent(content);
-}
+};
+
 function selectDirection(direction) {
-    console.log(direction)
     colorStore.setSelectedDirection(direction);
-}
+};
+
 const fetchDashboardData = async () => {
     try {
-        const response = await axios.get('getMenu');
+        const response = await axios.get('menu-system/getMenu');
         items.value = response.data.sort((a, b) => a.order - b.order);
     } catch (error) {
         console.error('Error fetching data', error);
     }
 };
 
+function goHomePage(){
+    Inertia.get(route('dashboard'));
+};
 </script>
 <style scoped>
 .bg-active {

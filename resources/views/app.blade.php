@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="image/png" href="build/assets/icons/account-box-multiple.svg" />
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Rathana') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -66,7 +66,10 @@
             }
 
             const txtsearch = document.getElementsByClassName("search")[0];
-            const detailsElement = txtsearch.querySelector(".v-input__details");
+            let detailsElement = '';
+            if(txtsearch != undefined){
+                detailsElement = txtsearch.querySelector(".v-input__details");
+            }
 
             if (detailsElement) {
                 detailsElement.classList.remove("v-input__details");
@@ -76,16 +79,16 @@
     });
 </script>
 <style>
-input {
-    background-color: transparent !important;
-}
-[type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus{
-    --tw-ring-shadow: none !important;
-}
-.v-table{
-    height: 100%;
-}
-.v-table__wrapper{
-    height: 1px;
-}
+    input {
+        background-color: transparent !important;
+    }
+    [type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus{
+        --tw-ring-shadow: none !important;
+    }
+    .v-table{
+        height: 100%;
+    }
+    .v-table__wrapper{
+        height: 1px;
+    }
 </style>

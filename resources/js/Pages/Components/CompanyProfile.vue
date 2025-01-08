@@ -30,11 +30,14 @@
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                     </template>
                     <template v-slot:item.logo="{ item }">
-                        <img
-                            :src="getImageUrl(item.logo)"
-                            alt="Logo"
-                            style="border-radius: 5px;"
-                        >
+                        <v-card class="my-2" elevation="2" rounded>
+                            <v-img
+                                :src="getImageUrl(item.logo)"
+                                height="200"
+                                width="200"
+                                cover
+                            ></v-img>
+                        </v-card>
                     </template>
                     <template v-slot:item.isUsed="{ item }">
                         <v-chip

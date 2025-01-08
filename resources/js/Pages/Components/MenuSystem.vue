@@ -164,7 +164,7 @@ window.onresize = function() {
 
 const getMenuGrid = async () => {
     try {
-        const response = await axios.get('getMenuGrid');
+        const response = await axios.get('menu-system/getMenuGrid');
         MenuItem.value = response.data;
         colorStore.menuItem = response.data;
         loading.value = false;
@@ -208,7 +208,7 @@ const createMenu = () => {
         return;
     }
 
-    form.post('createMenu', {
+    form.post('menu-system/createMenu', {
         onSuccess: () => {
             getMenuGrid();
             form.reset();
@@ -260,7 +260,7 @@ const updateMenu = () => {
         return;
     }
 
-    form.post('updateMenu', {
+    form.post('menu-system/updateMenu', {
         onSuccess: () => {
             getMenuGrid();
             form.reset();
@@ -284,7 +284,7 @@ function deleteMenu (item) {
 
 function confirmDelete (del){
     if(del == true){
-        form.post('deleteMenu', {
+        form.post('menu-system/deleteMenu', {
             onSuccess: () => {
                 getMenuGrid();
                 form.reset();

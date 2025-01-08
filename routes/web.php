@@ -10,20 +10,24 @@ Route::prefix('/')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Default/DefaultScreen');
     });
-    Route::get('/getDashboard', [MenuController::class, 'getGrid']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Dashboard');
-        });
+        })->name('dashboard');;
     });
 
     Route::prefix('menu-system')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Components/MenuSystem');
         });
+        Route::get('/getMenu', [MenuController::class, 'getMenu']);
+        Route::get('/getMenuGrid', [MenuController::class, 'getMenuGrid']);
+        Route::post('/createMenu', [MenuController::class, 'createMenu']);
+        Route::post('/updateMenu', [MenuController::class, 'updateMenu']);
+        Route::post('/deleteMenu', [MenuController::class, 'deleteMenu']);
     });
 
     Route::prefix('parameter')->group(function () {
@@ -45,11 +49,4 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/update', [CompanyProfileController::class, 'update']);
         Route::post('/delete', [CompanyProfileController::class, 'delete']);
     });
-
-    //Menu
-    Route::get('/getMenu', [MenuController::class, 'getMenu']);
-    Route::get('/getMenuGrid', [MenuController::class, 'getMenuGrid']);
-    Route::post('/createMenu', [MenuController::class, 'createMenu']);
-    Route::post('/updateMenu', [MenuController::class, 'updateMenu']);
-    Route::post('/deleteMenu', [MenuController::class, 'deleteMenu']);
 });

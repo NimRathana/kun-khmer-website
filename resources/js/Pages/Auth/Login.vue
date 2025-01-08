@@ -51,6 +51,40 @@ const submit = () => {
         remember: form.remember ? 'on' : '',
     })).post(route('login'), {
         onFinish: () => form.reset('password'),
+        onSuccess: () => {
+            //move button setting
+            const button = document.querySelector('.setting_btn');
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            if(button != undefined){
+                button.addEventListener('mousedown', (event) => {
+                    isDragging = true;
+                    // Calculate the initial offset of the mouse cursor from the button's position
+                    offsetX = event.clientX - button.getBoundingClientRect().left;
+                    offsetY = event.clientY - button.getBoundingClientRect().top;
+
+                    // Add a style to prevent the text selection during dragging
+                    document.body.style.userSelect = 'none';
+                });
+
+                document.addEventListener('mousemove', (event) => {
+                    if (isDragging) {
+                        const x = event.clientX - offsetX;
+                        const y = event.clientY - offsetY;
+
+                        // Update the button's position based on the mouse movement
+                        button.style.left = `${x}px`;
+                        button.style.top = `${y}px`;
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    document.body.style.userSelect = ''; // Restore the text selection behavior
+                });
+            }
+        }
     });
 };
 </script>

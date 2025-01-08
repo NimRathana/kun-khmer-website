@@ -93,6 +93,7 @@ const clearPhotoFileInput = () => {
             <div class="col-span-6 sm:col-span-4">
                 <!-- Profile Photo File Input -->
                 <input
+                    accept="image/*"
                     id="photo"
                     ref="photoInput"
                     type="file"
