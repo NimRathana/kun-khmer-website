@@ -11,10 +11,10 @@
                                 <v-list-item link class="text-center pa-0">
                                     <v-list-item-title>
                                         <v-avatar color="grey lighten-5" size="50" v-show="!miniDrawer">
-                                            <v-img src="https://randomuser.me/api/portraits/women/85.jpg" />
+                                            <v-img :src="getImageUrl($page.props.auth.user.profile_photo_path)" />
                                         </v-avatar>
                                         <v-avatar color="grey lighten-5" size="40" v-show="miniDrawer">
-                                            <v-img src="https://randomuser.me/api/portraits/women/85.jpg" />
+                                            <v-img :src="getImageUrl($page.props.auth.user.profile_photo_path)" />
                                         </v-avatar>
                                     </v-list-item-title>
                                     <v-list-item-subtitle class="my-3">
@@ -353,7 +353,7 @@
                             </div>
                             <VBadge dot location="bottom right" offset-x="3" offset-y="3" class="mx-3" color="success" bordered>
                                 <VAvatar class="cursor-pointer" color="primary" variant="tonal">
-                                    <VImg src="https://randomuser.me/api/portraits/women/85.jpg" />
+                                    <VImg :src="getImageUrl($page.props.auth.user.profile_photo_path)" />
                                     <VMenu activator="parent" width="230" location="bottom end" offset="14px">
                                         <VList>
                                             <VListItem>
@@ -362,7 +362,7 @@
                                                         <VBadge dot location="bottom right" offset-x="3" offset-y="3"
                                                             color="success">
                                                             <VAvatar color="primary" variant="tonal">
-                                                                <VImg src="https://randomuser.me/api/portraits/women/85.jpg" />
+                                                                <VImg :src="getImageUrl($page.props.auth.user.profile_photo_path)" />
                                                             </VAvatar>
                                                         </VBadge>
                                                     </VListItemAction>
@@ -753,6 +753,10 @@ const fetchDashboardData = async () => {
 
 function goHomePage(){
     Inertia.get(route('dashboard'));
+};
+
+function getImageUrl(name) {
+    return new URL(`/storage/app/public/${name}`, import.meta.url).href
 };
 </script>
 <style scoped>
