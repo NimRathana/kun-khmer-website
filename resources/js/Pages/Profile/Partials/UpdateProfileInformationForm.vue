@@ -76,6 +76,10 @@ const clearPhotoFileInput = () => {
         photoInput.value.value = null;
     }
 };
+
+function getImageUrl(name) {
+    return new URL(`/storage/app/public/${name}`, import.meta.url).href
+}
 </script>
 
 <template>
@@ -105,7 +109,7 @@ const clearPhotoFileInput = () => {
 
                 <!-- Current Profile Photo -->
                 <div v-show="! photoPreview" class="mt-2">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                    <img :src="getImageUrl(user.profile_photo_path)" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->
