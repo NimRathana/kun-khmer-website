@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\ParameterController;
 
 Route::prefix('/')->group(function () {
     Route::get('/', function () {
-        return Inertia::render('Default/DefaultScreen');
+        return Inertia::render('Front/DefaultScreen');
     });
 });
 

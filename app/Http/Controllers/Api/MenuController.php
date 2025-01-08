@@ -14,21 +14,6 @@ class MenuController extends Controller
         return Inertia::render('Dashboard');
     }
 
-    public function getGrid(){
-        $data = [
-            'status' => 'success',
-            'message' => 'Dashboard data retrieved successfully',
-            'data' => [
-                'grid' => [
-                    ['id' => 1, 'name' => 'Item 1'],
-                    ['id' => 2, 'name' => 'Item 2'],
-                    ['id' => 3, 'name' => 'Item 3'],
-                ],
-            ],
-        ];
-        return response()->json($data);
-    }
-
     public function getMenu() {
         // Fetch all menus from the database
         $menus = DB::table('tb_menus')->get();

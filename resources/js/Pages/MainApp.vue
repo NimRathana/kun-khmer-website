@@ -224,7 +224,7 @@
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
-                                        <v-btn :color="selectedLayout === 'Vertical' ? colorStore.color : 'transparent'" height="70" class="pa-0" variant="outlined" @click="selectLayout('Vertical')">
+                                        <v-btn :color="selectedLayout === 'Vertical' ? colorStore.color : 'transparent'" height="70" class="pa-0" variant="outlined" @click="selectLayout('Vertical')" :disabled="hideDrawer == '/user/profile' ? true : false">
                                             <v-card color="transparent" style="box-shadow: none;" class="d-flex align-center justify-center">
                                                 <img
                                                     src="../images/misc/skin-default.png"
@@ -237,7 +237,7 @@
                                     </v-col>
 
                                     <v-col cols="4">
-                                        <v-btn :color="selectedLayout === 'Collapsed' ? colorStore.color : 'transparent'" height="70" class="pa-0" variant="outlined" @click="selectLayout('Collapsed')">
+                                        <v-btn :color="selectedLayout === 'Collapsed' ? colorStore.color : 'transparent'" height="70" class="pa-0" variant="outlined" @click="selectLayout('Collapsed')" :disabled="hideDrawer == '/user/profile' ? true : false">
                                             <v-card color="transparent" style="box-shadow: none;" class="d-flex align-center justify-center">
                                                 <img
                                                     src="../images/misc/Collapsed.png"
@@ -250,7 +250,7 @@
                                     </v-col>
 
                                     <v-col cols="4">
-                                        <v-btn :color="selectedLayout === 'Horizontal' ? colorStore.color : 'transparent'" height="70" class="pa-0" variant="outlined" @click="selectLayout('Horizontal')">
+                                        <v-btn :color="selectedLayout === 'Horizontal' ? colorStore.color : 'transparent'" height="70" class="pa-0" variant="outlined" @click="selectLayout('Horizontal')" :disabled="hideDrawer == '/user/profile' ? true : false">
                                             <v-card color="transparent" style="box-shadow: none;" class="d-flex align-center justify-center">
                                                 <img
                                                     src="../images/misc/Horizontal.png"
@@ -326,8 +326,8 @@
                         </v-container>
                     </v-navigation-drawer>
                     <v-app-bar style="position: fixed;top:0;z-index: 98;">
-                        <v-app-bar-nav-icon v-if="colorStore.selectedLayout !== 'Horizontal'" @click="toggleDrawerLeft"></v-app-bar-nav-icon>
-                        <v-app-bar-title>{{ $page.component.split('/').pop() }}</v-app-bar-title>
+                        <v-app-bar-nav-icon v-show="hideDrawer !== '/user/profile' ? true : false" v-if="colorStore.selectedLayout !== 'Horizontal' || selectedLayout !== 'Horizontal'" @click="toggleDrawerLeft"></v-app-bar-nav-icon>
+                        <v-app-bar-title>{{ $page.url.split('/').pop().toLocaleUpperCase() }}</v-app-bar-title>
                         <template v-slot:append>
                             <div class="d-flex justify-end">
                                 <v-menu offset-y>
@@ -552,6 +552,7 @@ watch(hideDrawer, async () => {
         setTimeout(() => {
             toggleLeftDrawer.value = false;
             miniDrawer.value = false;
+            selectedLayout.value = 'Horizontal';
         }, 200);
     }
   },
