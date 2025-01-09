@@ -42,7 +42,7 @@
                             </v-card-item>
                         </v-card>
 
-                        <v-row class="mx-auto mt-1" justify="start" align="center" dense>
+                        <v-row class="mx-auto mt-2" justify="start" align="center" dense>
                             <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
                                 <v-card class="mx-auto mt-1" max-width="400" height="300" variant="text">
                                     <v-img
