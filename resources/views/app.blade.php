@@ -12,12 +12,16 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased" style="background-color: gray">
+    <body class="font-sans antialiased" style="background-color: gray;font;font-family: 'Battambang';">
         @inertia
     </body>
 </html>
@@ -79,6 +83,14 @@
     });
 </script>
 <style>
+    body{
+        transition: .25s;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+        line-height: 1.5;
+    }
     input {
         background-color: transparent !important;
     }
@@ -90,5 +102,23 @@
     }
     .v-table__wrapper{
         height: 1px;
+    }
+    .rotate-animation {
+    cursor: move;
+    animation: rotation 2s infinite linear;
+    }
+    .v-theme--dark {
+        --v-theme-background: 38, 50, 56;
+    }
+    .v-theme--light {
+        --v-theme-background: 240, 245, 249;
+    }
+    @keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
     }
 </style>

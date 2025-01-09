@@ -10,6 +10,7 @@ Route::prefix('/')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Front/DefaultScreen');
     });
+    Route::get('/getCompanyProfile', [CompanyProfileController::class, 'getCompanyProfile']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {

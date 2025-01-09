@@ -3,7 +3,7 @@
         <Head :title="title" />
         <v-layout class="rounded rounded-md">
             <v-responsive class="border rounded" max-height="100%">
-                <v-app :theme="theme">
+                <v-app :theme="theme" style="overflow-y: hidden;overflow-x: auto;">
                     <v-navigation-drawer bordered v-model="toggleLeftDrawer" :rail="miniDrawer" :permanent="WindowSize ?? false" :temporary="WindowSize ?? true" expand-on-hover @mouseenter="mouseenter" @mouseleave="mouseleave" :class="['custom-scroll']"
                         :style="{'z-index': 99, height: '100vh', position: 'fixed', bottom: 0, 'background-color': switchColor ? '#64607F' : '', color: switchColor ? 'white' : ''}">
                         <v-card :color="colorStore.color" elevation="5" style="position: sticky;top:0;z-index: 100;">
@@ -416,7 +416,7 @@
                             </v-container>
                         </template>
                     </v-app-bar>
-                    <v-main class="main" style="display: flex; flex-direction: column;">
+                    <v-main class="main" style="display: flex; flex-direction: column;min-width: 900px;min-height: 500px;">
                         <v-row class="pt-0 mt-0">
                             <v-col cols="12" class="content">
                                 <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="container_body" style="height: 100%;padding-bottom: 5px;">
@@ -453,7 +453,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUpdated, getCurrentInstance } from 'vue';
+import { ref, watch, onMounted, getCurrentInstance } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { VTreeview } from 'vuetify/labs/VTreeview';
 import { Inertia } from '@inertiajs/inertia';
@@ -772,23 +772,5 @@ function getImageUrl(name) {
   font-size: 14px;
   letter-spacing: 1px;
   font-weight: 300;
-}
-.rotate-animation {
-    cursor: move;
-    animation: rotation 2s infinite linear;
-}
-.v-theme--dark {
-    --v-theme-background: 38, 50, 56;
-}
-.v-theme--light {
-    --v-theme-background: 240, 245, 249;
-}
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 </style>
