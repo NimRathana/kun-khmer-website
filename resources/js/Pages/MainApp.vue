@@ -3,7 +3,7 @@
         <Head :title="title" />
         <v-layout class="rounded rounded-md">
             <v-responsive class="border rounded" max-height="100%">
-                <v-app :theme="theme" style="overflow-y: hidden;overflow-x: auto;">
+                <v-app :theme="theme" class="app_scroll">
                     <v-navigation-drawer bordered v-model="toggleLeftDrawer" :rail="miniDrawer" :permanent="WindowSize ?? false" :temporary="WindowSize ?? true" expand-on-hover @mouseenter="mouseenter" @mouseleave="mouseleave" :class="['custom-scroll']"
                         :style="{'z-index': 99, height: '100vh', position: 'fixed', bottom: 0, 'background-color': switchColor ? '#64607F' : '', color: switchColor ? 'white' : ''}">
                         <v-card :color="colorStore.color" elevation="5" style="position: sticky;top:0;z-index: 100;">
@@ -423,25 +423,6 @@
                                     <slot />
                                 </v-container>
                             </v-col>
-                            <!-- <v-col cols="12" class="mt-0">
-                                <v-footer class="d-flex flex-column pa-0 ma-0 footer">
-                                    <div class="bg-teal d-flex w-100 align-center px-4">
-                                    <strong>This is Footer!</strong>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        v-for="icon in icons"
-                                        :key="icon"
-                                        :icon="icon"
-                                        class="mx-4"
-                                        size="small"
-                                        variant="plain"
-                                    ></v-btn>
-                                    </div>
-                                    <div class="px-4 py-2 bg-black text-center w-100">
-                                        <strong>© 2024 Develop By Nim Rathana</strong>
-                                    </div>
-                                </v-footer>
-                            </v-col> -->
                         </v-row>
                     </v-main>
                 </v-app>
@@ -580,6 +561,16 @@ const checkWindowSize = () => {
         miniDrawer.value = false;
         WindowSize.value = false;
     }
+
+    let left = $(".v-navigation-drawer--left").position().left;
+    if (left < -0) {
+        $(".app_scroll").attr("style", "overflow-x: scroll;");
+        $(".app_scroll").attr("style", "overflow-y: hidden;");
+    } else {
+        setTimeout(() => {
+            $(".app_scroll").removeAttr("style");
+        }, 200);
+    }
     footerHeight.value = $(".footer").height() + 20;
     $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
     showButton.value = window.innerWidth > window.outerWidth * 0.5 && window.outerWidth > 700;
@@ -589,6 +580,15 @@ onMounted(() => {
     const instance = getCurrentInstance();
     const helper = instance?.proxy.$helper;
     helper.GetGridHeight();
+    let left = $(".v-navigation-drawer--left").position().left;
+    if (left < 0) {
+        $(".app_scroll").attr("style", "overflow-x: scroll;");
+        $(".app_scroll").attr("style", "overflow-y: hidden;");
+    } else {
+        setTimeout(() => {
+            $(".app_scroll").removeAttr("style");
+        }, 200);
+    }
     const txtsearch = document.getElementsByClassName("search")[0];
     let detailsElement = '';
     if(txtsearch != undefined){
@@ -745,7 +745,7 @@ function selectDirection(direction) {
 
 const fetchDashboardData = async () => {
     try {
-        const response = await axios.get('menu-system/getMenu');
+        const response = await axios.get('menu_system/getMenu');
         items.value = response.data.sort((a, b) => a.order - b.order);
     } catch (error) {
         console.error('Error fetching data', error);

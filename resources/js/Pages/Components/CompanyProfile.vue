@@ -67,10 +67,10 @@
                             <v-col cols="12" md="8">
                                 <v-row>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" density="compact" label="Name English" v-model="form.name_en" :error-messages="errorMessage.name_en"></v-text-field>
+                                        <v-text-field variant="outlined" density="compact" label="Name English*" v-model="form.name_en" :error-messages="errorMessage.name_en"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" density="compact" label="Name Khmer" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
+                                        <v-text-field variant="outlined" density="compact" label="Name Khmer*" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field variant="outlined" type="date" density="compact" label="Create Date" v-model="form.created_date"></v-text-field>

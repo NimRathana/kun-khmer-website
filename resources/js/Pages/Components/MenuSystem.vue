@@ -53,16 +53,16 @@
                     <v-card-text>
                         <v-row dense>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Name" v-model="form.name" :error-messages="errorMessage.name"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="Name*" v-model="form.name" :error-messages="errorMessage.name"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Url" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="Url*" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Order" v-model="form.order" type="number" :error-messages="errorMessage.order"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="Order*" v-model="form.order" type="number" :error-messages="errorMessage.order"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Icon" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="Icon*" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -164,7 +164,7 @@ window.onresize = function() {
 
 const getMenuGrid = async () => {
     try {
-        const response = await axios.get('menu-system/getMenuGrid');
+        const response = await axios.get('menu_system/getMenuGrid');
         MenuItem.value = response.data;
         colorStore.menuItem = response.data;
         loading.value = false;
@@ -208,7 +208,7 @@ const createMenu = () => {
         return;
     }
 
-    form.post('menu-system/createMenu', {
+    form.post('menu_system/createMenu', {
         onSuccess: () => {
             getMenuGrid();
             form.reset();
@@ -260,7 +260,7 @@ const updateMenu = () => {
         return;
     }
 
-    form.post('menu-system/updateMenu', {
+    form.post('menu_system/updateMenu', {
         onSuccess: () => {
             getMenuGrid();
             form.reset();
@@ -284,7 +284,7 @@ function deleteMenu (item) {
 
 function confirmDelete (del){
     if(del == true){
-        form.post('menu-system/deleteMenu', {
+        form.post('menu_system/deleteMenu', {
             onSuccess: () => {
                 getMenuGrid();
                 form.reset();

@@ -20,7 +20,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         })->name('dashboard');;
     });
 
-    Route::prefix('menu-system')->group(function () {
+    Route::prefix('menu_system')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Components/MenuSystem');
         });

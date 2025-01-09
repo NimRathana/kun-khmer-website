@@ -48,16 +48,16 @@
                     <v-card-text>
                         <v-row dense>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="parameter_code" v-model="form.parameter_code" :error-messages="errorMessage.parameter_code"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="parameter_code*" v-model="form.parameter_code" :error-messages="errorMessage.parameter_code"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="value" v-model="form.value" :error-messages="errorMessage.value"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="value*" v-model="form.value" :error-messages="errorMessage.value"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="text_en" v-model="form.text_en" :error-messages="errorMessage.text_en"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="text_en*" v-model="form.text_en" :error-messages="errorMessage.text_en"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="text_km" v-model="form.text_km" :error-messages="errorMessage.text_km"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="text_km*" v-model="form.text_km" :error-messages="errorMessage.text_km"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
