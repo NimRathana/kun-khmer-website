@@ -3,23 +3,60 @@
         <v-layout class="rounded rounded-md">
             <v-responsive class="border rounded">
                 <v-app :theme="theme" style="display: flex;align-items: center;justify-content: center;overflow-y: hidden;overflow-x: auto;">
-                    <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="pa-0 shadow mb-5 position-relative" style="border: 1px solid pink;min-width: 1000px;">
-                        <v-system-bar window style="position: sticky;top: 0;">
-                            <Link :href="route('register')" class="text-sm text-blue-600 hover:text-blue-400 border-hidden">
-                                <span class="ms-2 text-sm">register</span>
-                            </Link>
-                            <Link :href="route('login')" class="text-sm text-blue-600 hover:text-blue-400 border-hidden">
-                                <span class="ms-2 text-sm">login</span>
-                            </Link>
+                    <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="pa-0 shadow mb-5 position-relative" style="border: 1px solid pink;min-width: 1320px;">
+                        <v-row class="mb-2" style="height: 100px;display: flex;align-items: center;">
+                            <v-col cols="2" class="" style="height: 100%;">
+                                <v-card
+                                    class="mx-auto pa-1"
+                                    href="https://github.com/vuetifyjs/vuetify/"
+                                    target="_blank"
+                                    style="height: 100%;"
+                                    variant="text"
+                                >
+                                    <v-img  v-if="company_profile && company_profile.logo" :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" style="height: 100%;border-radius: 5px;display: block;" alt="Company Logo"></v-img>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="8">
+                                <v-tabs
+                                    next-icon="mdi-arrow-right-bold-box-outline"
+                                    prev-icon="mdi-arrow-left-bold-box-outline"
+                                    show-arrows
+                                    center-active
+                                    align-tabs="center"
+                                    hide-slider
+                                    :items="news_type_data"
+                                    :style="{ '--selected-tab-color': colorStore.color }"
+                                    >
+                                    <template v-slot:tab="{ item }">
+                                        <v-tab href="" class="text-center">
+                                            {{ item.name_en }}
+                                        </v-tab>
+                                    </template>
+                                </v-tabs>
+                            </v-col>
+                            <v-col cols="2" class="d-flex justify-center align-center">
+                                <v-btn variant="text" icon="mdi-cog-outline" size="x-large">
+                                    <v-icon>mdi-cog-outline</v-icon>
+                                    <VMenu activator="parent" width="230" location="bottom end" offset="14px">
+                                        <VList>
+                                            <VListItem link :href="route('register')">
+                                                <template #prepend>
+                                                    <VIcon class="me-2" icon="mdi-account-plus-outline" size="22" />
+                                                </template>
+                                                <VListItemTitle>Register</VListItemTitle>
+                                            </VListItem>
+                                            <VListItem link :href="route('login')">
+                                                <template #prepend>
+                                                    <VIcon class="me-2" icon="mdi-login" size="22" />
+                                                </template>
+                                                <VListItemTitle>Login</VListItemTitle>
+                                            </VListItem>
+                                        </VList>
+                                    </VMenu>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
 
-                            <v-spacer></v-spacer>
-
-                            <v-icon icon="mdi-wifi-strength-4"></v-icon>
-                            <v-icon icon="mdi-signal" class="ms-2"></v-icon>
-                            <v-icon icon="mdi-battery" class="ms-2"></v-icon>
-
-                            <span class="ms-2">3:13PM</span>
-                        </v-system-bar>
                         <v-card
                             class="mx-auto d-flex justify-center"
                             href="https://github.com/vuetifyjs/vuetify/"
@@ -42,7 +79,7 @@
                             </v-card-item>
                         </v-card>
 
-                        <v-row class="mx-auto mt-2" justify="start" align="center" dense>
+                        <v-row class="mx-auto mt-2" justify="start" align="center">
                             <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
                                 <v-card class="mx-auto mt-1" max-width="400" height="300" variant="text">
                                     <v-img
@@ -288,7 +325,7 @@
     <v-btn style="position: fixed;bottom:70px;right:20px;z-index: 999;" icon="mdi-cog-outline" size="large" class="rotate-animation setting_btn" :color="colorStore.color" @click.stop="toggleRightDrawer = !toggleRightDrawer"></v-btn>
 </template>
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { ref, watch, onMounted } from 'vue';
 import axios from 'axios';
 import { Store } from '@/store/index';
@@ -318,6 +355,7 @@ const items = ref([
         { label: "Yesterday", image: "CompanyProfile/google.png" },
       ]);
 const company_profile = ref([]);
+const news_type_data = ref([]);
 
 watch(
   () => colorStore.theme,
@@ -373,6 +411,7 @@ watch(
 
 onMounted(()=>{
     getCompanyProfile();
+    getNewsTypeGrid();
 });
 
 async function getCompanyProfile() {
@@ -397,7 +436,15 @@ async function getCompanyProfile() {
     } catch (error) {
         console.error('Error fetching data', error);
     }
-    console.log(company_profile.value)
+};
+
+async function getNewsTypeGrid() {
+    try {
+        const response = await axios.get('getNewsTypeGrid');
+        news_type_data.value = response.data;
+    } catch (error) {
+        console.error('Error fetching data', error);
+    }
 };
 
 function UpdateColor() {
@@ -478,6 +525,11 @@ function getStorageImageUrl(name) {
   text-overflow: ellipsis; /* Add "..." for overflow */
   max-height: calc(1.5em * 3); /* Adjust based on your line height */
   font-size: 1.25rem;
+}
+
+.v-tab-item--selected {
+    background-color: var(--selected-tab-color);
+    border-radius: 5px !important;
 }
 
 </style>

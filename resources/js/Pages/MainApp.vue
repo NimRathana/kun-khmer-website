@@ -581,14 +581,15 @@ onMounted(() => {
     const helper = instance?.proxy.$helper;
     helper.GetGridHeight();
     let left = $(".v-navigation-drawer--left").position().left;
-    if (left < 0) {
-        $(".app_scroll").attr("style", "overflow-x: scroll;");
-        $(".app_scroll").attr("style", "overflow-y: hidden;");
-    } else {
-        setTimeout(() => {
+    setTimeout(() => {
+        if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
+            debugger
+            $(".app_scroll").attr("style", "overflow-x: scroll;");
+            $(".app_scroll").attr("style", "overflow-y: hidden;");
+        } else {
             $(".app_scroll").removeAttr("style");
-        }, 200);
-    }
+        }
+    }, 100);
     const txtsearch = document.getElementsByClassName("search")[0];
     let detailsElement = '';
     if(txtsearch != undefined){
