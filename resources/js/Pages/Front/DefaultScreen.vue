@@ -441,7 +441,15 @@ async function getCompanyProfile() {
 async function getNewsTypeGrid() {
     try {
         const response = await axios.get('getNewsTypeGrid');
-        news_type_data.value = response.data;
+        if (response.data && Array.isArray(response.data)) {
+            const filteredProfiles = response.data.filter(acitve => acitve.isUsed === 1);
+
+            if (filteredProfiles.length > 0) {
+                news_type_data.value = filteredProfiles;
+            } else {
+                news_type_data.value = null; // No profiles meet the condition
+            }
+        }
     } catch (error) {
         console.error('Error fetching data', error);
     }
