@@ -56,7 +56,8 @@
                         <v-row dense>
                             <v-col cols="12">
                                 <v-text-field variant="outlined" density="compact" label="Name EN*" v-model="form.name_en" :error-messages="errorMessage.name_en"></v-text-field>
-                                <v-text-field class="mt-2" variant="outlined" density="compact" label="Name KM*" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
+                                <v-text-field class="mt-2 mb-2" variant="outlined" density="compact" label="Name KM*" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
+                                <v-text-field variant="outlined" type="number" density="compact" label="Order" v-model="form.order" :disabled="editMode == true ? false : true" :error-messages="errorMessage.order"></v-text-field>
                                 <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
                             </v-col>
                         </v-row>
@@ -132,6 +133,7 @@ export default {
             headers: [
                 { title: 'Name EN', align: 'start', key: 'name_en' },
                 { title: 'Name KM', key: 'name_km', align: 'start' },
+                { title: 'Order', key: 'order', align: 'start' },
                 { title: 'Used', key: 'isUsed', align: 'start' },
                 { title: 'Actions', key: 'action', align: 'center' },
             ],
@@ -141,8 +143,24 @@ export default {
                 id: '',
                 name_en: '',
                 name_km: '',
+                order: '',
                 isUsed: false,
             })
+        }
+    },
+
+    watch: {
+        dialog(newVal) {
+            if(newVal == true) {
+                if(this.editMode == false){
+                    const maxOrder = this.item.reduce((max, currentItem) => {
+                        return currentItem.order > max ? currentItem.order : max;
+                    }, 0);
+
+                    // Set the form's order to maxOrder + 1
+                    this.form.order = maxOrder + 1;
+                }
+            }
         }
     },
 
@@ -177,6 +195,10 @@ export default {
                 }
                 if(item.name_km.toLowerCase() === this.form.name_km.toLowerCase()){
                     this.errorMessage.name_km = "Name KM is duplicate";
+                    return true;
+                }
+                if(item.order === this.form.order){
+                    this.errorMessage.order = "Order is duplicate";
                     return true;
                 }
                 return false;
@@ -216,6 +238,10 @@ export default {
                     }
                     if(item.name_km.toLowerCase() === this.form.name_km.toLowerCase()){
                         this.errorMessage.name_km = "Name EN is duplicate";
+                        return true;
+                    }
+                    if(item.order === parseInt(this.form.order)){
+                        this.errorMessage.order = "Order is duplicate";
                         return true;
                     }
                 }
@@ -274,6 +300,7 @@ export default {
             this.form.id = data.id;
             this.form.name_en = data.name_en;
             this.form.name_km = data.name_km;
+            this.form.order = data.order;
             this.form.isUsed = data.isUsed == 1 ? true : false;
         }
     }

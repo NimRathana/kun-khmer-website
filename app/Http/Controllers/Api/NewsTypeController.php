@@ -19,6 +19,7 @@ class NewsTypeController extends Controller
             DB::table('tb_news_type')->insert([
                 'name_en' => $request->name_en,
                 'name_km' => $request->name_km,
+                'order' => $request->order,
                 'isUsed' => $request->isUsed,
             ]);
 
@@ -35,6 +36,7 @@ class NewsTypeController extends Controller
             ->update([
                 'name_en' => $request->name_en,
                 'name_km' => $request->name_km,
+                'order' => $request->order,
                 'isUsed' => $request->isUsed,
             ]);
 

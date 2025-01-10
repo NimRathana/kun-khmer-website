@@ -536,7 +536,7 @@ async function getNewsType() {
             const filteredProfiles = response.data.filter(acitve => acitve.isUsed === 1);
 
             if (filteredProfiles.length > 0) {
-                news_type_data.value = filteredProfiles;
+                news_type_data.value = filteredProfiles.sort((a, b) => a.order - b.order);
                 tab.value = news_type_data.value[0].id;
                 tabChange(news_type_data.value[0].id);
             } else {
@@ -572,7 +572,7 @@ async function getAboutNewsType() {
             const filteredNews = response.data.filter(acitve => acitve.isUsed === 1);
 
             if (filteredNews.length > 0) {
-                about_news_type_data.value = filteredNews;
+                about_news_type_data.value = filteredNews.sort((a, b) => a.order - b.order);
             } else {
                 about_news_type_data.value = null;
             }
