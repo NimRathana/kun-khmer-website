@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 
 class CompanyProfileController extends Controller
@@ -76,6 +77,14 @@ class CompanyProfileController extends Controller
                 'remark' => $request->remark,
             ]);
 
+            if($request->logo_delete != null) {
+                $imagePath = storage_path('images/CompanyProfile/' . $request->logo_delete);
+
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
+
         }catch(Exception $e){
             throw $e;
         }
@@ -83,9 +92,18 @@ class CompanyProfileController extends Controller
 
     public function delete(Request $request){
         try {
+
             DB::table('tb_company_profile')
                 ->where('id', $request->id)
                 ->delete();
+
+            if($request->logo != null) {
+                $imagePath = storage_path('images/CompanyProfile/' . $request->logo);
+
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
 
         } catch (Exception $e) {
             throw $e;

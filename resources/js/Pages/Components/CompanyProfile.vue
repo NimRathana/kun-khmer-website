@@ -30,14 +30,13 @@
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                     </template>
                     <template v-slot:item.logo="{ item }">
-                        <v-card class="my-2" elevation="2" rounded>
-                            <v-img
-                                :src="getImageUrl(item.logo)"
-                                height="200"
-                                width="200"
-                                cover
-                            ></v-img>
-                        </v-card>
+                        <v-img
+                            :src="getImageUrl(item.logo)"
+                            height="200"
+                            width="200"
+                            cover
+                            style="margin: 10px;border-radius: 5px;"
+                        ></v-img>
                     </template>
                     <template v-slot:item.isUsed="{ item }">
                         <v-chip
@@ -207,6 +206,7 @@ const form = useForm({
     email: '',
     isUsed: false,
     remark: '',
+    logo_delete: '',
 });
 
 onMounted(()=>{
@@ -304,6 +304,7 @@ const update = () => {
 function deleteMenu (item) {
     deleteDialog.value = true;
     form.id = item.id;
+    form.logo = item.logo;
 }
 
 function confirmDelete (del){
@@ -342,6 +343,7 @@ function editItem (event, item) {
     form.isUsed = data.isUsed == 1 ? true : false;
     form.remark = data.remark;
     imageUrl.value = getImageUrl(data.logo);
+    form.logo_delete = data.logo;
 };
 
 function triggerFileInput() {

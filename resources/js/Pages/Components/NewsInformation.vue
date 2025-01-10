@@ -38,6 +38,9 @@
                             style="margin: 10px;border-radius: 5px;"
                         ></v-img>
                     </template>
+                    <template v-slot:item.news_type_id="{ item }">
+                        {{ item.name_en }}
+                    </template>
                     <template v-slot:item.isUsed="{ item }">
                         <v-chip
                             :color="item.isUsed ? 'green' : 'red'"
@@ -72,12 +75,7 @@
                                         <v-text-field variant="outlined" density="compact" label="Title Khmer*" v-model="form.title_km" :error-messages="errorMessage.title_km"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-select
-                                        variant="outlined"
-                                        density="compact"
-                                        label="Select"
-                                        :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-                                        ></v-select>
+                                        <v-select v-model="form.news_type_id" variant="outlined" density="compact" label="Select" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field variant="outlined" density="compact" label="Url Video" v-model="form.url_video"></v-text-field>
@@ -197,7 +195,7 @@ export default {
             totalItems: 0,
             form: useForm({
                 id: '',
-                news_type_id: '',
+                news_type_id: null,
                 title_en: '',
                 title_km: '',
                 image: '',
@@ -205,20 +203,47 @@ export default {
                 location: '',
                 description: '',
                 isUsed: false,
+                image_delete: '',
             }),
-            imageUrl: false
+            imageUrl: false,
+            news_type_data: []
         }
     },
 
     mounted() {
         this.getNewsInformationGrid();
+        this.getNewsType();
     },
 
     methods: {
-        async getNewsInformationGrid() {
+        getNewsInformationGrid() {
             try {
-                const response = await axios.get('news_information/getNewsInformationGrid');
-                this.item = response.data;
+
+                axios.get('news_information/getNewsInformationGrid')
+                .then((response)=>{
+                    this.item = response.data;
+                    this.loading = false;
+                }).catch((e)=>{
+                    console.error(e);
+                });
+
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        },
+
+        async getNewsType() {
+            try {
+                const response = await axios.get('news_type/getNewsTypeGrid');
+                if (response.data && Array.isArray(response.data)) {
+                    const filtered = response.data.filter(acitve => acitve.isUsed === 1);
+
+                    if (filtered.length > 0) {
+                        this.news_type_data = filtered;
+                    } else {
+                        this.news_type_data = null;
+                    }
+                }
                 this.loading = false;
             } catch (error) {
                 console.error('Error fetching data', error);
@@ -233,7 +258,7 @@ export default {
             if (this.form.title_km === "") {
                 this.errorMessage.title_km = "Title KM is required";
             }
-            if (this.form.news_type_id === "") {
+            if (this.form.news_type_id === "" || this.form.news_type_id === null) {
                 this.errorMessage.news_type_id = "News Type is required";
             }
 
@@ -255,7 +280,6 @@ export default {
 
             this.form.post('news_information/create', {
                 onSuccess: () => {
-                    debugger
                     this.getNewsInformationGrid();
                     this.form.reset();
                     this.dialog = false;
@@ -275,9 +299,9 @@ export default {
             if (this.form.title_km === "") {
                 this.errorMessage.title_km = "Title KM is required";
             }
-            // if (this.form.news_type_id === "") {
-            //     this.errorMessage.news_type_id = "News Type is required";
-            // }
+            if (this.form.news_type_id === "" || this.form.news_type_id === null) {
+                this.errorMessage.news_type_id = "News Type is required";
+            }
 
             this.item.some(item => {
                 if(item.id != this.form.id) {
@@ -340,11 +364,13 @@ export default {
             this.form.id = data.id;
             this.form.title_en = data.title_en;
             this.form.title_km = data.title_km;
+            this.form.news_type_id = data.news_type_id;
             this.form.url_video = data.url_video;
             this.form.location = data.location;
             this.form.description = data.description;
             this.form.isUsed = data.isUsed == 1 ? true : false;
             this.imageUrl = this.getImageUrl(data.image);
+            this.form.image_delete = data.image;
         },
 
         triggerFileInput() {

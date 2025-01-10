@@ -583,7 +583,6 @@ onMounted(() => {
     let left = $(".v-navigation-drawer--left").position().left;
     setTimeout(() => {
         if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
-            debugger
             $(".app_scroll").attr("style", "overflow-x: scroll;");
             $(".app_scroll").attr("style", "overflow-y: hidden;");
         } else {

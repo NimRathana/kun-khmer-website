@@ -7,12 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class NewsInformationController extends Controller
 {
     public function getNewsInformationGrid(){
-        $data = DB::table('tb_news_information')->get();
+        $data = DB::table('tb_news_information')
+        ->leftJoin('tb_news_type', 'tb_news_type.id', '=', 'tb_news_information.news_type_id')
+        ->get();
         return response()->json($data);
     }
 
@@ -20,7 +21,7 @@ class NewsInformationController extends Controller
         try{
 
             $dataID = DB::table('tb_news_information')->insertGetId([
-                'news_type_id' => $request->news_type_id??2,
+                'news_type_id' => $request->news_type_id,
                 'title_en' => $request->title_en,
                 'title_km' => $request->title_km,
                 'url_video' => $request->url_video,
@@ -53,7 +54,7 @@ class NewsInformationController extends Controller
             DB::table('tb_news_information')
             ->where('id', $request->id)
             ->update([
-                'news_type_id' => $request->news_type_id??2,
+                'news_type_id' => $request->news_type_id,
                 'title_en' => $request->title_en,
                 'title_km' => $request->title_km,
                 'url_video' => $request->url_video,
@@ -75,6 +76,14 @@ class NewsInformationController extends Controller
                 ]);
             }
 
+            if($request->image_delete != null) {
+                $imagePath = storage_path('images/NewsImages/' . $request->image_delete);
+
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
+
         }catch(Exception $e){
             throw $e;
         }
@@ -83,18 +92,16 @@ class NewsInformationController extends Controller
     public function delete(Request $request){
         try {
 
-            // DB::table('tb_news_information')
-            //     ->where('id', $request->id)
-            //     ->delete();
+            DB::table('tb_news_information')
+                ->where('id', $request->id)
+                ->delete();
 
             if($request->image != null) {
-                $imagePath = '/storage/images/NewsImages/' . $request->image;
+                $imagePath = storage_path('images/NewsImages/' . $request->image);
 
-                // if (file_exists($imagePath)) {
-                //     unlink($imagePath);
-                // }
-                File::exists($imagePath);
-                // File::delete($imagePath);
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
             }
 
         } catch (Exception $e) {

@@ -13,7 +13,7 @@
                                     style="height: 100%;"
                                     variant="text"
                                 >
-                                    <v-img  v-if="company_profile && company_profile.logo" :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" style="height: 100%;border-radius: 5px;display: block;" alt="Company Logo"></v-img>
+                                    <v-img  v-if="company_profile !== null" :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" style="height: 100%;border-radius: 5px;display: block;" alt="Company Logo"></v-img>
                                 </v-card>
                             </v-col>
                             <v-col cols="8">
@@ -43,14 +43,14 @@
                                                 <template #prepend>
                                                     <VListItemAction start>
                                                         <VAvatar color="primary" variant="tonal" size="60">
-                                                            <VImg :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" />
+                                                            <VImg v-if="company_profile !== null" :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" />
                                                         </VAvatar>
                                                     </VListItemAction>
                                                 </template>
                                                 <VListItemTitle class="font-weight-semibold">
-                                                    {{ company_profile.name_km }}
+                                                    {{ company_profile !== null ? company_profile.name_km : '' }}
                                                 </VListItemTitle>
-                                                <VListItemSubtitle>{{ company_profile.name_en }}</VListItemSubtitle>
+                                                <VListItemSubtitle>{{ company_profile !== null ? company_profile.name_en : '' }}</VListItemSubtitle>
                                             </VListItem>
                                             <VDivider class="my-2" />
                                             <VListItem link :href="route('register')">
@@ -79,31 +79,31 @@
                             target="_blank"
                             color="light-blue-darken-4"
                         >
-                            <v-card-item>
-                                <v-img  v-if="company_profile && company_profile.logo" :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" style="width: 140px;height: 140px;border-radius: 5px;" cover alt="Company Logo"></v-img>
+                            <v-card-item v-if="company_profile !== null">
+                                <v-img :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" style="width: 140px;height: 140px;border-radius: 5px;" cover alt="Company Logo"></v-img>
                             </v-card-item>
                             <v-card-item class="text-center">
                                 <v-card-title style="font-size: 3rem;">
-                                    {{ company_profile.name_km }}
+                                    {{ company_profile !== null ? company_profile.name_km : '' }}
                                 </v-card-title>
 
                                 <v-card-title style="font-size: 2rem;">
-                                    {{ company_profile.name_en }}
+                                    {{ company_profile !== null ? company_profile.name_en : '' }}
                                 </v-card-title>
                             </v-card-item>
                         </v-card>
 
                         <v-row class="mx-auto mt-2" justify="start" align="center">
-                            <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in items" :key="index">
+                            <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in news_information_data" :key="index">
                                 <v-card class="mx-auto mt-1" max-width="400" height="300" variant="text">
                                     <v-img
-                                        :src="getImageUrl(item.image)"
+                                        :src="getStorageImageUrl('NewsImages/'+item.image)"
                                         width="400"
                                         height="200"
                                         style="border-radius: 5px;"
                                     ></v-img>
                                     <v-card-text class="text-center pa-2">
-                                        <div class="font-weight-bold text-clamp">{{ item.label }}</div>
+                                        <div class="font-weight-bold text-clamp">{{ item.title_en }}</div>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
@@ -370,6 +370,7 @@ const items = ref([
       ]);
 const company_profile = ref([]);
 const news_type_data = ref([]);
+const news_information_data = ref([]);
 
 watch(
   () => colorStore.theme,
@@ -426,6 +427,7 @@ watch(
 onMounted(()=>{
     getCompanyProfile();
     getNewsTypeGrid();
+    getNewsInformation();
 });
 
 async function getCompanyProfile() {
@@ -462,6 +464,23 @@ async function getNewsTypeGrid() {
                 news_type_data.value = filteredProfiles;
             } else {
                 news_type_data.value = null; // No profiles meet the condition
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching data', error);
+    }
+};
+
+async function getNewsInformation() {
+    try {
+        const response = await axios.get('getNewsInformation');
+        if (response.data && Array.isArray(response.data)) {
+            const filteredNews = response.data.filter(acitve => acitve.isUsed === 1);
+
+            if (filteredNews.length > 0) {
+                news_information_data.value = filteredNews;
+            } else {
+                news_information_data.value = null;
             }
         }
     } catch (error) {
