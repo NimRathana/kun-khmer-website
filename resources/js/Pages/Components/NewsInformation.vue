@@ -75,7 +75,7 @@
                                         <v-text-field variant="outlined" density="compact" label="Title Khmer*" v-model="form.title_km" :error-messages="errorMessage.title_km"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-select v-model="form.news_type_id" variant="outlined" density="compact" label="Select" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
+                                        <v-select v-model="form.news_type_id" variant="outlined" density="compact" label="Select*" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field variant="outlined" density="compact" label="Url Video" v-model="form.url_video"></v-text-field>
@@ -218,7 +218,6 @@ export default {
     methods: {
         getNewsInformationGrid() {
             try {
-
                 axios.get('news_information/getNewsInformationGrid')
                 .then((response)=>{
                     this.item = response.data;

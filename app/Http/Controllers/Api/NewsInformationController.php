@@ -13,6 +13,7 @@ class NewsInformationController extends Controller
     public function getNewsInformationGrid(){
         $data = DB::table('tb_news_information')
         ->leftJoin('tb_news_type', 'tb_news_type.id', '=', 'tb_news_information.news_type_id')
+        ->select('tb_news_information.id','tb_news_information.news_type_id','tb_news_information.title_en','tb_news_information.title_km','tb_news_information.image','tb_news_information.url_video','tb_news_information.location','tb_news_information.description','tb_news_information.isUsed','tb_news_type.name_en','tb_news_type.name_km')
         ->get();
         return response()->json($data);
     }
@@ -51,9 +52,7 @@ class NewsInformationController extends Controller
     public function update(Request $request){
         try{
 
-            DB::table('tb_news_information')
-            ->where('id', $request->id)
-            ->update([
+            $updateData = [
                 'news_type_id' => $request->news_type_id,
                 'title_en' => $request->title_en,
                 'title_km' => $request->title_km,
@@ -61,28 +60,30 @@ class NewsInformationController extends Controller
                 'location' => $request->location,
                 'description' => $request->description,
                 'isUsed' => $request->isUsed,
-            ]);
+            ];
 
+            // Handle new image upload if provided
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $extension = $file->getClientOriginalExtension();
                 $filename = time() . '.' . $extension;
                 $file->move(storage_path('images/NewsImages'), $filename);
 
-                DB::table('tb_news_information')
-                ->where('id', $request->id)
-                ->update([
-                    'image' => $filename,
-                ]);
-            }
+                $updateData['image'] = $filename;
 
-            if($request->image_delete != null) {
-                $imagePath = storage_path('images/NewsImages/' . $request->image_delete);
-
-                if (File::exists($imagePath)) {
-                    File::delete($imagePath);
+                // Delete old image if requested
+                if ($request->image_delete) {
+                    $oldImagePath = storage_path('images/NewsImages/' . $request->image_delete);
+                    if (File::exists($oldImagePath)) {
+                        File::delete($oldImagePath);
+                    }
                 }
             }
+
+            // Update the database
+            DB::table('tb_news_information')
+                ->where('id', $request->id)
+                ->update($updateData);
 
         }catch(Exception $e){
             throw $e;
@@ -91,7 +92,7 @@ class NewsInformationController extends Controller
 
     public function delete(Request $request){
         try {
-
+            dd($request);
             DB::table('tb_news_information')
                 ->where('id', $request->id)
                 ->delete();

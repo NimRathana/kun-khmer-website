@@ -93,21 +93,25 @@
                             </v-card-item>
                         </v-card>
 
-                        <v-row class="mx-auto mt-2" justify="start" align="center">
-                            <v-col cols="12" sm="6" md="4" lg="3" v-for="(item, index) in news_information_data" :key="index">
-                                <v-card class="mx-auto mt-1" max-width="400" height="300" variant="text">
-                                    <v-img
-                                        :src="getStorageImageUrl('NewsImages/'+item.image)"
-                                        width="400"
-                                        height="200"
-                                        style="border-radius: 5px;"
-                                    ></v-img>
-                                    <v-card-text class="text-center pa-2">
-                                        <div class="font-weight-bold text-clamp">{{ item.title_en }}</div>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                        </v-row>
+                        <v-carousel v-model="carousel" cycle class="carousel" height="400" show-arrows="hover" hide-delimiter-background :color="colorStore.color">
+                                <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
+                                    <v-row align="center">
+                                        <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
+                                            <v-card max-width="400" height="300" variant="text" href="#">
+                                                <v-img
+                                                :src="getStorageImageUrl('NewsImages/' + item.image)"
+                                                width="400"
+                                                height="200"
+                                                style="border-radius: 5px;"
+                                                ></v-img>
+                                                <v-card-text class="text-center pa-2">
+                                                    <div class="font-weight-bold text-clamp">{{ item.title_en }}</div>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-col>
+                                    </v-row>
+                                </v-carousel-item>
+                            </v-carousel>
 
                         <v-main class="pa-5">
                             <v-row>
@@ -340,7 +344,7 @@
 </template>
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed  } from 'vue';
 import axios from 'axios';
 import { Store } from '@/store/index';
 import $ from 'jquery';
@@ -371,6 +375,7 @@ const items = ref([
 const company_profile = ref([]);
 const news_type_data = ref([]);
 const news_information_data = ref([]);
+const carousel = ref(0);
 
 watch(
   () => colorStore.theme,
@@ -423,6 +428,16 @@ watch(
     items.value = newItem.sort((a, b) => a.order - b.order);
   }
 );
+
+const chunkedItems = computed(() => {
+    const chunkSize = 4;
+    return news_information_data.value.reduce((acc, item, index) => {
+        const chunkIndex = Math.floor(index / chunkSize);
+        if (!acc[chunkIndex]) acc[chunkIndex] = [];
+        acc[chunkIndex].push(item);
+        return acc;
+    }, []);
+});
 
 onMounted(()=>{
     getCompanyProfile();
@@ -571,6 +586,10 @@ function getStorageImageUrl(name) {
 .v-tab-item--selected {
     background-color: var(--selected-tab-color);
     border-radius: 5px !important;
+}
+
+.carousel .v-responsive__content {
+    display: flex;
 }
 
 </style>
