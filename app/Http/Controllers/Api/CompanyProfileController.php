@@ -17,20 +17,7 @@ class CompanyProfileController extends Controller
     public function create(Request $request){
         try{
 
-            if ($request->hasFile('logo')) {
-                $file = $request->file('logo');
-                $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $file->move(storage_path('images/CompanyProfile'), $filename);
-
-                DB::table('tb_company_profile')
-                ->where('id', $request->id)
-                ->update([
-                    'logo' => $filename,
-                ]);
-            }
-
-            DB::table('tb_company_profile')->insert([
+            $dataID = DB::table('tb_company_profile')->insertGetId([
                 'name_km' => $request->name_km,
                 'name_en' => $request->name_en,
                 'logo' => $request->logo,
@@ -41,6 +28,19 @@ class CompanyProfileController extends Controller
                 'isUsed' => $request->isUsed,
                 'remark' => $request->remark,
             ]);
+
+            if ($request->hasFile('logo')) {
+                $file = $request->file('logo');
+                $extension = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $extension;
+                $file->move(storage_path('images/CompanyProfile'), $filename);
+
+                DB::table('tb_company_profile')
+                ->where('id', $dataID)
+                ->update([
+                    'logo' => $filename,
+                ]);
+            }
 
         }catch(Exception $e){
             throw $e;

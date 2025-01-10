@@ -59,7 +59,7 @@
                                 <v-text-field variant="outlined" density="compact" label="Url*" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Order*" v-model="form.order" type="number" :error-messages="errorMessage.order"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" label="Order*" v-model="form.order" type="number" :disabled="editMode == true ? false : true" :error-messages="errorMessage.order"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <v-text-field variant="outlined" density="compact" label="Icon*" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
@@ -167,6 +167,14 @@ const getMenuGrid = async () => {
         const response = await axios.get('menu_system/getMenuGrid');
         MenuItem.value = response.data;
         colorStore.menuItem = response.data;
+        if(editMode.value == false){
+            const maxOrderNumber = MenuItem.value.reduce((max, item) => {
+                return item.order > max ? item.order : max;
+            }, 0);
+            form.order = maxOrderNumber + 1;
+        }else{
+            form.order = "";
+        }
         loading.value = false;
     } catch (error) {
         console.error('Error fetching data', error);

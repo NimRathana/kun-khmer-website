@@ -37,8 +37,22 @@
                             <v-col cols="2" class="d-flex justify-center align-center">
                                 <v-btn variant="text" icon="mdi-cog-outline" size="x-large">
                                     <v-icon>mdi-cog-outline</v-icon>
-                                    <VMenu activator="parent" width="230" location="bottom end" offset="14px">
+                                    <VMenu activator="parent" width="300" location="bottom end" offset="14px">
                                         <VList>
+                                            <VListItem>
+                                                <template #prepend>
+                                                    <VListItemAction start>
+                                                        <VAvatar color="primary" variant="tonal" size="60">
+                                                            <VImg :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" />
+                                                        </VAvatar>
+                                                    </VListItemAction>
+                                                </template>
+                                                <VListItemTitle class="font-weight-semibold">
+                                                    {{ company_profile.name_km }}
+                                                </VListItemTitle>
+                                                <VListItemSubtitle>{{ company_profile.name_en }}</VListItemSubtitle>
+                                            </VListItem>
+                                            <VDivider class="my-2" />
                                             <VListItem link :href="route('register')">
                                                 <template #prepend>
                                                     <VIcon class="me-2" icon="mdi-account-plus-outline" size="22" />

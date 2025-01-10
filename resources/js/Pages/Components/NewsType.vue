@@ -209,13 +209,15 @@ export default {
             }
 
             const isDuplicate = this.item.some(item => {
-                if(item.name_en.toLowerCase() === this.form.name_en.toLowerCase()){
-                    this.errorMessage.name_en = "Name EN is duplicate";
-                    return true;
-                }
-                if(item.name_km.toLowerCase() === this.form.name_km.toLowerCase()){
-                    this.errorMessage.name_km = "Name EN is duplicate";
-                    return true;
+                if(item.id != this.form.id) {
+                    if(item.name_en.toLowerCase() === this.form.name_en.toLowerCase()){
+                        this.errorMessage.name_en = "Name EN is duplicate";
+                        return true;
+                    }
+                    if(item.name_km.toLowerCase() === this.form.name_km.toLowerCase()){
+                        this.errorMessage.name_km = "Name EN is duplicate";
+                        return true;
+                    }
                 }
                 return false;
             });
