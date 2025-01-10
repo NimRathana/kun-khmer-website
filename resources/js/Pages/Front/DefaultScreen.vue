@@ -18,6 +18,7 @@
                             </v-col>
                             <v-col cols="8">
                                 <v-tabs
+                                    v-model="tab"
                                     next-icon="mdi-arrow-right-bold-box-outline"
                                     prev-icon="mdi-arrow-left-bold-box-outline"
                                     show-arrows
@@ -25,16 +26,39 @@
                                     align-tabs="center"
                                     hide-slider
                                     :items="news_type_data"
+                                    @update:modelValue="tabChange(tab)"
                                     :style="{ '--selected-tab-color': colorStore.color }"
                                     >
                                     <template v-slot:tab="{ item }">
-                                        <v-tab href="" class="text-center">
+                                        <v-tab :value="item.id" href="" class="text-center">
                                             {{ item.name_en }}
                                         </v-tab>
                                     </template>
                                 </v-tabs>
                             </v-col>
                             <v-col cols="2" class="d-flex justify-center align-center">
+                                <div class="d-flex justify-end">
+                                    <v-menu offset-y>
+                                        <template #activator="{ props }">
+                                            <v-btn v-bind="props" icon variant="text">
+                                                <v-icon>
+                                                {{ theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night' }}
+                                                </v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <v-list>
+                                            <v-list-item @click="ChangeTheme('light')">
+                                                <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> Light Theme</v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item @click="ChangeTheme('dark')">
+                                                <v-list-item-title><v-icon>mdi-weather-night</v-icon> Dark Theme</v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item @click="ChangeTheme('system')">
+                                                <v-list-item-title><v-icon>mdi-monitor</v-icon> System Theme</v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </div>
                                 <v-btn variant="text" icon="mdi-cog-outline" size="x-large">
                                     <v-icon>mdi-cog-outline</v-icon>
                                     <VMenu activator="parent" width="300" location="bottom end" offset="14px">
@@ -77,7 +101,7 @@
                             max-width="100%"
                             height="150"
                             target="_blank"
-                            color="light-blue-darken-4"
+                            :color="colorStore.color"
                         >
                             <v-card-item v-if="company_profile !== null">
                                 <v-img :src="getStorageImageUrl('CompanyProfile/'+company_profile.logo)" style="width: 140px;height: 140px;border-radius: 5px;" cover alt="Company Logo"></v-img>
@@ -94,41 +118,76 @@
                         </v-card>
 
                         <v-carousel v-model="carousel" cycle class="carousel" height="400" show-arrows="hover" hide-delimiter-background :color="colorStore.color">
-                                <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
-                                    <v-row align="center">
-                                        <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
-                                            <v-card max-width="400" height="300" variant="text" href="#">
-                                                <v-img
-                                                :src="getStorageImageUrl('NewsImages/' + item.image)"
-                                                width="400"
-                                                height="200"
-                                                style="border-radius: 5px;"
-                                                ></v-img>
-                                                <v-card-text class="text-center pa-2">
-                                                    <div class="font-weight-bold text-clamp">{{ item.title_en }}</div>
-                                                </v-card-text>
-                                            </v-card>
-                                        </v-col>
-                                    </v-row>
-                                </v-carousel-item>
-                            </v-carousel>
+                            <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
+                                <v-row align="center">
+                                    <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
+                                        <v-card max-width="400" height="300" variant="text" href="#">
+                                            <v-img
+                                            :src="getStorageImageUrl('NewsImages/' + item.image)"
+                                            width="400"
+                                            height="200"
+                                            style="border-radius: 5px;"
+                                            ></v-img>
+                                            <v-card-text class="text-center pa-2">
+                                                <div class="font-weight-bold text-clamp">{{ item.title_en }}</div>
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-col>
+                                </v-row>
+                            </v-carousel-item>
+                        </v-carousel>
 
                         <v-main class="pa-5">
                             <v-row>
-                                <v-col style="max-width: 300px;">
-                                1
+                                <v-col class="pa-0" style="max-width: 300px;">
+                                    <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px' }">
+                                        <v-tabs
+                                            v-model="tab_about_news"
+                                            next-icon="mdi-arrow-right-bold-box-outline"
+                                            prev-icon="mdi-arrow-left-bold-box-outline"
+                                            show-arrows
+                                            center-active
+                                            align-tabs="start"
+                                            direction="vertical"
+                                            hide-slider
+                                            :items="about_news_type_select_data"
+                                            :style="{ '--selected-tab-color': colorStore.color }"
+                                            >
+                                            <template v-slot:tab="{ item }">
+                                                <v-tab href="" class="text-center">
+                                                    {{ item.about_news_name_en }}
+                                                </v-tab>
+                                            </template>
+                                        </v-tabs>
+                                    </v-card-text>
                                 </v-col>
-                                <v-col>
-                                <h1>2</h1>
+                                <v-col class="pt-0 pb-0">
+                                    <v-card-text :style="{background:colorStore.color}">
+                                        <v-tabs-window v-model="tab">
+                                            <v-tabs-window-item value="one">
+                                            One
+                                            </v-tabs-window-item>
+
+                                            <v-tabs-window-item value="two">
+                                            Two
+                                            </v-tabs-window-item>
+
+                                            <v-tabs-window-item value="three">
+                                            Three
+                                            </v-tabs-window-item>
+                                        </v-tabs-window>
+                                    </v-card-text>
                                 </v-col>
-                                <v-col style="max-width: 300px;">
-                                3
+                                <v-col class="pa-0" style="max-width: 300px;">
+                                    <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px' }">
+                                        3
+                                    </v-card-text>
                                 </v-col>
                             </v-row>
 
                             <v-row class="my-5">
                                 <v-col cols="12" class="pa-0">
-                                    <h6 class="Muol-Light p-3 bg-success text-white">វីឌីអូសំខាន់ៗ</h6>
+                                    <h6 class="Muol-Light p-3 text-white" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">វីឌីអូសំខាន់ៗ</h6>
                                 </v-col>
                                 <v-col cols="12" class="grid-container m-3">
                                     <a href="https://www.youtube.com/embed/aLkTDdx8aS8?si=02EusmijT5ROthGA" class="grid-item">
@@ -363,19 +422,15 @@ const showColorPicker = ref(false);
 const colorPicker = ref(colorStore.color);
 const selectedColor = ref(localStorage.getItem('selectedColor') || 'grey-darken-3');
 const colors = ref(['#0D47A1', '#B71C1C', '#1B5E20', '#4A148C']);
-const items = ref([
-        { label: "Todayfsaadddddddddddddddddddddddsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddffffffffffffffffffffffffffffffffffffffdddddddddddddd22222rr4rrrrrrrrrrrrrrrrrrr33", image: "CompanyProfile/google.png" },
-        { label: "Tomorrowsdddddddddddddddddddddddddddddsdddddddddddd", image: "CompanyProfile/1736393563.jpg" },
-        { label: "សាលាគុនខេត្តតាកែវ សាលាគុនខេត្តតាកែវ សាលាគុនខេត្តតាកែវ សាលាគុនខេត្តតាកែវ សាលាគុនខេត្តតាកែវ", image: "CompanyProfile/google.png" },
-        { label: "Weekend", image: "CompanyProfile/1736393563.jpg" },
-        { label: "Today", image: "CompanyProfile/google.png" },
-        { label: "Tomorrow", image: "CompanyProfile/1736393563.jpg" },
-        { label: "Yesterday", image: "CompanyProfile/google.png" },
-      ]);
+const items = ref([]);
 const company_profile = ref([]);
 const news_type_data = ref([]);
 const news_information_data = ref([]);
+const about_news_type_data = ref([]);
+const about_news_type_select_data = ref([]);
 const carousel = ref(0);
+const tab = ref(0);
+const tab_about_news = ref(0);
 
 watch(
   () => colorStore.theme,
@@ -429,9 +484,13 @@ watch(
   }
 );
 
+const filteredNews = computed(() => {
+    return news_information_data.value.filter(item => item.news_type_id === tab.value);
+});
+
 const chunkedItems = computed(() => {
     const chunkSize = 4;
-    return news_information_data.value.reduce((acc, item, index) => {
+    return filteredNews.value.reduce((acc, item, index) => {
         const chunkIndex = Math.floor(index / chunkSize);
         if (!acc[chunkIndex]) acc[chunkIndex] = [];
         acc[chunkIndex].push(item);
@@ -440,8 +499,9 @@ const chunkedItems = computed(() => {
 });
 
 onMounted(()=>{
+    getAboutNewsType();
     getCompanyProfile();
-    getNewsTypeGrid();
+    getNewsType();
     getNewsInformation();
 });
 
@@ -469,7 +529,7 @@ async function getCompanyProfile() {
     }
 };
 
-async function getNewsTypeGrid() {
+async function getNewsType() {
     try {
         const response = await axios.get('getNewsTypeGrid');
         if (response.data && Array.isArray(response.data)) {
@@ -477,8 +537,10 @@ async function getNewsTypeGrid() {
 
             if (filteredProfiles.length > 0) {
                 news_type_data.value = filteredProfiles;
+                tab.value = news_type_data.value[0].id;
+                tabChange(news_type_data.value[0].id);
             } else {
-                news_type_data.value = null; // No profiles meet the condition
+                news_type_data.value = null;
             }
         }
     } catch (error) {
@@ -501,6 +563,32 @@ async function getNewsInformation() {
     } catch (error) {
         console.error('Error fetching data', error);
     }
+};
+
+async function getAboutNewsType() {
+    try {
+        const response = await axios.get('getAboutNewsType');
+        if (response.data && Array.isArray(response.data)) {
+            const filteredNews = response.data.filter(acitve => acitve.isUsed === 1);
+
+            if (filteredNews.length > 0) {
+                about_news_type_data.value = filteredNews;
+            } else {
+                about_news_type_data.value = null;
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching data', error);
+    }
+};
+
+function tabChange(tabID) {
+    const selectedNewsType = about_news_type_data.value.filter(
+        (item) => item.news_type_id === tabID
+    );
+
+    // Update the select data with the filtered result
+    about_news_type_select_data.value = selectedNewsType;
 };
 
 function UpdateColor() {

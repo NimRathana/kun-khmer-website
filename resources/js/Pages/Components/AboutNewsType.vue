@@ -54,10 +54,18 @@
                 <form @submit.prevent="editMode ? update() : create()" enctype="multipart/form-data">
                     <v-card-text>
                         <v-row dense>
-                            <v-col cols="12">
-                                <v-text-field variant="outlined" density="compact" label="Name EN*" v-model="form.name_en" :error-messages="errorMessage.name_en"></v-text-field>
-                                <v-text-field class="mt-2" variant="outlined" density="compact" label="Name KM*" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" density="compact" label="Name English*" v-model="form.about_news_name_en" :error-messages="errorMessage.about_news_name_en"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" density="compact" label="Name Khmer*" v-model="form.about_news_name_km" :error-messages="errorMessage.about_news_name_km"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-select v-model="form.news_type_id" @update:modelValue="selectChange(form.news_type_id)" variant="outlined" density="compact" label="Select*" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
                                 <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field variant="outlined" type="number" density="compact" label="Order" v-model="form.order" :disabled="editMode == true ? false : true" :error-messages="errorMessage.order"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -130,8 +138,10 @@ export default {
             dialog: false,
             itemsPerPage: 5,
             headers: [
-                { title: 'Name EN', align: 'start', key: 'name_en' },
-                { title: 'Name KM', key: 'name_km', align: 'start' },
+                { title: 'Name EN', align: 'start', key: 'about_news_name_en' },
+                { title: 'Name KM', key: 'about_news_name_km', align: 'start' },
+                { title: 'News Type', key: 'name_en', align: 'start' },
+                { title: 'Order', key: 'order', align: 'start' },
                 { title: 'Used', key: 'isUsed', align: 'start' },
                 { title: 'Actions', key: 'action', align: 'center' },
             ],
@@ -139,21 +149,25 @@ export default {
             totalItems: 0,
             form: useForm({
                 id: '',
-                name_en: '',
-                name_km: '',
+                about_news_name_en: '',
+                about_news_name_km: '',
+                news_type_id: null,
+                order: '',
                 isUsed: false,
-            })
+            }),
+            news_type_data: [],
         }
     },
 
     mounted() {
-        this.getNewsTypeGrid();
+        this.getAboutNewsTypeGrid();
+        this.getNewsType();
     },
 
     methods: {
-        async getNewsTypeGrid() {
+        async getAboutNewsTypeGrid() {
             try {
-                const response = await axios.get('news_type/getNewsTypeGrid');
+                const response = await axios.get('about_news_type/getAboutNewsType');
                 this.item = response.data;
                 this.loading = false;
             } catch (error) {
@@ -161,23 +175,57 @@ export default {
             }
         },
 
+        async getNewsType() {
+            try {
+                const response = await axios.get('news_type/getNewsTypeGrid');
+                if (response.data && Array.isArray(response.data)) {
+                    const filtered = response.data.filter(acitve => acitve.isUsed === 1);
+
+                    if (filtered.length > 0) {
+                        this.news_type_data = filtered;
+                    } else {
+                        this.news_type_data = null;
+                    }
+                }
+                this.loading = false;
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        },
+
+        selectChange(item){
+            const filteredNews = this.item.filter(news => news.news_type_id === item);
+
+            // Find the maximum 'order' value in the filtered data
+            const maxOrder = filteredNews.length > 0
+                ? Math.max(...filteredNews.map(news => news.order))
+                : 0;
+
+            this.form.order = maxOrder + 1;
+        },
+
         create() {
             this.errorMessage = {};
-            if (this.form.name_en === "") {
-                this.errorMessage.name_en = "Name EN is required";
+            if (this.form.about_news_name_en === "") {
+                this.errorMessage.about_news_name_en = "Name EN is required";
             }
-            if (this.form.name_km === "") {
-                this.errorMessage.name_km = "Name KM is required";
+            if (this.form.about_news_name_km === "") {
+                this.errorMessage.about_news_name_km = "Name KM is required";
+            }
+            if (this.form.news_type_id === "" || this.form.news_type_id === null) {
+                this.errorMessage.news_type_id = "News Type is required";
             }
 
             const isDuplicate = this.item.some(item => {
-                if(item.name_en.toLowerCase() === this.form.name_en.toLowerCase()){
-                    this.errorMessage.name_en = "Name EN is duplicate";
-                    return true;
-                }
-                if(item.name_km.toLowerCase() === this.form.name_km.toLowerCase()){
-                    this.errorMessage.name_km = "Name KM is duplicate";
-                    return true;
+                if(item.news_type_id == this.form.news_type_id){
+                    if(item.about_news_name_en.toLowerCase() === this.form.about_news_name_en.toLowerCase()){
+                        this.errorMessage.about_news_name_en = "Name EN is duplicate";
+                        return true;
+                    }
+                    if(item.about_news_name_km.toLowerCase() === this.form.about_news_name_km.toLowerCase()){
+                        this.errorMessage.about_news_name_km = "Name EN is duplicate";
+                        return true;
+                    }
                 }
                 return false;
             });
@@ -186,9 +234,9 @@ export default {
                 return;
             }
 
-            this.form.post('news_type/create', {
+            this.form.post('about_news_type/create', {
                 onSuccess: () => {
-                    this.getNewsTypeGrid();
+                    this.getAboutNewsTypeGrid();
                     this.form.reset();
                     this.dialog = false;
                     this.errorMessage = "";
@@ -201,22 +249,31 @@ export default {
 
         update() {
             this.errorMessage = {};
-            if (this.form.name_en === "") {
-                this.errorMessage.name_en = "Name EN is required";
+            if (this.form.about_news_name_en === "") {
+                this.errorMessage.about_news_name_en = "Name EN is required";
             }
-            if (this.form.name_km === "") {
-                this.errorMessage.name_km = "Name KM is required";
+            if (this.form.about_news_name_km === "") {
+                this.errorMessage.about_news_name_km = "Name KM is required";
+            }
+            if (this.form.news_type_id === "" || this.form.news_type_id === null) {
+                this.errorMessage.news_type_id = "News Type is required";
             }
 
             const isDuplicate = this.item.some(item => {
                 if(item.id != this.form.id) {
-                    if(item.name_en.toLowerCase() === this.form.name_en.toLowerCase()){
-                        this.errorMessage.name_en = "Name EN is duplicate";
-                        return true;
-                    }
-                    if(item.name_km.toLowerCase() === this.form.name_km.toLowerCase()){
-                        this.errorMessage.name_km = "Name EN is duplicate";
-                        return true;
+                    if(item.news_type_id == this.form.news_type_id){
+                        if(item.about_news_name_en.toLowerCase() === this.form.about_news_name_en.toLowerCase()){
+                            this.errorMessage.about_news_name_en = "Name EN is duplicate";
+                            return true;
+                        }
+                        if(item.about_news_name_km.toLowerCase() === this.form.about_news_name_km.toLowerCase()){
+                            this.errorMessage.about_news_name_km = "Name EN is duplicate";
+                            return true;
+                        }
+                        if(item.order === this.form.order){
+                            this.errorMessage.order = "Order Number is duplicate";
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -226,9 +283,9 @@ export default {
                 return;
             }
 
-            this.form.post('news_type/update', {
+            this.form.post('about_news_type/update', {
                 onSuccess: () => {
-                    this.getNewsTypeGrid();
+                    this.getAboutNewsTypeGrid();
                     this.form.reset();
                     this.dialog = false;
                     this.errorMessage = "";
@@ -242,16 +299,13 @@ export default {
         deleteMenu(item) {
             this.deleteDialog = true;
             this.form.id = item.id;
-            this.form.name_en = item.name_en;
-            this.form.name_km = item.name_km;
-            this.form.isUsed = item.isUsed;
         },
 
         confirmDelete(del) {
             if(del === true){
-                this.form.post('news_type/delete', {
+                this.form.post('about_news_type/delete', {
                     onSuccess: () => {
-                        this.getNewsTypeGrid();
+                        this.getAboutNewsTypeGrid();
                         this.form.reset();
                         this.deleteDialog = false;
                     },
@@ -272,8 +326,10 @@ export default {
                 data = item;
             }
             this.form.id = data.id;
-            this.form.name_en = data.name_en;
-            this.form.name_km = data.name_km;
+            this.form.about_news_name_en = data.about_news_name_en;
+            this.form.about_news_name_km = data.about_news_name_km;
+            this.form.news_type_id = data.news_type_id;
+            this.form.order = data.order;
             this.form.isUsed = data.isUsed == 1 ? true : false;
         }
     }

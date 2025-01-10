@@ -82,7 +82,7 @@
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-textarea variant="outlined" density="compact" label="Description" v-model="form.description"></v-textarea>
-                                        <v-checkbox label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
+                                        <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-textarea variant="outlined" density="compact" label="Location" v-model="form.location"></v-textarea>

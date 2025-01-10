@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tb_news_type', function (Blueprint $table) {
+        Schema::create('tb_about_news_type', function (Blueprint $table) {
             $table->id();
-            $table->text('name_en');
-            $table->text('name_km');
+            $table->string('about_news_name_en');
+            $table->string('about_news_name_km');
+            $table->integer('news_type_id');
             $table->integer('order');
             $table->boolean('isUsed')->default(true);
             $table->timestamp('created_at')->useCurrent();
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_news_type');
+        Schema::dropIfExists('tb_about_news_type');
     }
 };

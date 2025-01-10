@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AboutNewsTypeController;
 use App\Http\Controllers\Api\CompanyProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,6 +16,7 @@ Route::prefix('/')->group(function () {
     Route::get('/getCompanyProfile', [CompanyProfileController::class, 'getCompanyProfile']);
     Route::get('/getNewsTypeGrid', [NewsTypeController::class, 'getNewTypeGrid']);
     Route::get('/getNewsInformation', [NewsInformationController::class, 'getNewsInformationGrid']);
+    Route::get('/getAboutNewsType', [AboutNewsTypeController::class, 'getAboutNewsType']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -73,5 +75,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/create', [NewsInformationController::class, 'create']);
         Route::post('/update', [NewsInformationController::class, 'update']);
         Route::post('/delete', [NewsInformationController::class, 'delete']);
+    });
+
+    Route::prefix('about_news_type')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Components/AboutNewsType');
+        });
+        Route::get('/getAboutNewsType', [AboutNewsTypeController::class, 'getAboutNewsType']);
+        Route::post('/create', [AboutNewsTypeController::class, 'create']);
+        Route::post('/update', [AboutNewsTypeController::class, 'update']);
+        Route::post('/delete', [AboutNewsTypeController::class, 'delete']);
     });
 });

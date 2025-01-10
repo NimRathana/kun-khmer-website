@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('news_type_id');
             $table->string('title_en');
             $table->string('title_km');
-            $table->text('image')->nullable();
+            $table->text('image');
             $table->text('url_video')->nullable();
             $table->text('location')->nullable();
             $table->text('description')->nullable();
