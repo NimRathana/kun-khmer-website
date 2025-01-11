@@ -121,9 +121,9 @@
                             <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
                                 <v-row align="center">
                                     <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
-                                        <v-card max-width="400" height="300" variant="text" href="#">
+                                        <v-card max-width="400" height="300" variant="text" @click="tab_about_news = 2">
                                             <v-img
-                                            :src="getStorageImageUrl('NewsImages/' + item.image)"
+                                            :src="getStorageImageUrl('NewsImages/' + JSON.parse(item.image)[0])"
                                             width="400"
                                             height="200"
                                             style="border-radius: 5px;"
@@ -139,7 +139,7 @@
 
                         <v-main class="pa-5">
                             <v-row>
-                                <v-col class="pa-0" style="max-width: 300px;">
+                                <v-col class="pa-0" style="max-width: 300px;height: 100%;">
                                     <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px' }">
                                         <v-tabs
                                             v-model="tab_about_news"
@@ -162,8 +162,8 @@
                                     </v-card-text>
                                 </v-col>
                                 <v-col class="pt-0 pb-0">
-                                    <v-card-text :style="{background:colorStore.color}">
-                                        <v-tabs-window v-model="tab">
+                                    <v-card-text :style="{background:colorStore.color, height: '100%'}">
+                                        <v-tabs-window v-model="tab_about_news">
                                             <v-tabs-window-item value="one">
                                             One
                                             </v-tabs-window-item>
@@ -179,7 +179,7 @@
                                     </v-card-text>
                                 </v-col>
                                 <v-col class="pa-0" style="max-width: 300px;">
-                                    <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px' }">
+                                    <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px', height: '100%' }">
                                         3
                                     </v-card-text>
                                 </v-col>
@@ -430,7 +430,7 @@ const about_news_type_data = ref([]);
 const about_news_type_select_data = ref([]);
 const carousel = ref(0);
 const tab = ref(0);
-const tab_about_news = ref(0);
+const tab_about_news = ref(1);
 
 watch(
   () => colorStore.theme,

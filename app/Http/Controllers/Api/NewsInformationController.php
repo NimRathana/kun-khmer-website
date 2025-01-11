@@ -32,16 +32,22 @@ class NewsInformationController extends Controller
             ]);
 
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $file->move(storage_path('images/NewsImages'), $filename);
+                $images = $request->file('image');
+                $uploadedImages = [];
 
+                foreach ($images as $image) {
+                    $extension = $image->getClientOriginalExtension();
+                    $filename = uniqid(time() . '_', true) . '.' . $extension;
+                    $image->move(storage_path('images/NewsImages'), $filename);
+                    $uploadedImages[] = $filename;
+                }
+
+                // Optionally, store image names in the database
                 DB::table('tb_news_information')
-                ->where('id', $dataID)
-                ->update([
-                    'image' => $filename,
-                ]);
+                    ->where('id', $dataID)
+                    ->update([
+                        'image' => json_encode($uploadedImages),
+                    ]);
             }
 
         }catch(Exception $e){
@@ -62,20 +68,31 @@ class NewsInformationController extends Controller
                 'isUsed' => $request->isUsed,
             ];
 
-            // Handle new image upload if provided
             if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $file->move(storage_path('images/NewsImages'), $filename);
+                $uploadedImages = [];
 
-                $updateData['image'] = $filename;
+                // Process the new uploaded images
+                foreach ($request->file('image') as $image) {
+                    $extension = $image->getClientOriginalExtension();
+                    $filename = uniqid(time() . '_', true) . '.' . $extension;
+                    $image->move(storage_path('images/NewsImages'), $filename);
+                    $uploadedImages[] = $filename;
+                }
 
-                // Delete old image if requested
-                if ($request->image_delete) {
-                    $oldImagePath = storage_path('images/NewsImages/' . $request->image_delete);
-                    if (File::exists($oldImagePath)) {
-                        File::delete($oldImagePath);
+                if (count($uploadedImages) > 0) {
+                    $updateData['image'] = json_encode($uploadedImages);
+                }
+
+                // Check if images need to be deleted
+                if (is_array($request->image_delete) && count($request->image_delete) > 0) {
+                    foreach ($request->image_delete as $imageToDelete) {
+                        $filePath = storage_path('images/NewsImages/' . $imageToDelete);
+
+                        // Check if the file exists before attempting to delete
+                        if (File::exists($filePath)) {
+                            // Delete the image file
+                            File::delete($filePath);
+                        }
                     }
                 }
             }

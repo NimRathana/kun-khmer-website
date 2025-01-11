@@ -30,13 +30,17 @@
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                     </template>
                     <template v-slot:item.image="{ item }">
-                        <v-img
-                            :src="getImageUrl(item.image)"
-                            height="200"
-                            width="200"
+                        <div class="pa-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <v-img
+                            v-for="(image, index) in parseImages(item.image)"
+                            :key="index"
+                            :src="getImageUrl(image)"
+                            height="100"
+                            width="100"
                             cover
-                            style="margin: 10px;border-radius: 5px;"
-                        ></v-img>
+                            style="border-radius: 5px;object-fit: contain; border: 1px solid #ccc;"
+                            ></v-img>
+                        </div>
                     </template>
                     <template v-slot:item.news_type_id="{ item }">
                         {{ item.name_en }}
@@ -56,7 +60,7 @@
             </v-col>
         </v-row>
 
-        <v-dialog v-model="dialog" max-width="1000">
+        <v-dialog v-model="dialog" max-width="1000" persistent>
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
                 :title="editMode?'Update':'Create'"
@@ -90,21 +94,37 @@
                                 </v-row>
                             </v-col>
                             <v-col cols="12" md="4" style="display: flex;justify-content: center;align-items: center;text-align: center;flex-direction: column;">
-                                <v-row style="display: flex;justify-content: center;align-items: center;">
-                                    <v-col cols="12">
-                                        <v-sheet class="pa-2" :height="200" :width="200" :elevation="5" rounded style="display: flex;justify-content: center;align-items: center;">
-                                            <!-- Display the uploaded image -->
+                                <v-row style="display: flex;justify-content: center;width:100%;">
+                                    <v-col cols="12" style="display: flex;flex-direction: column;align-items: center;">
+                                        <v-sheet
+                                        class="pa-2"
+                                        height="310"
+                                        max-height="310"
+                                        width="90%"
+                                        :elevation="5"
+                                        rounded
+                                        style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; overflow: auto;"
+                                        >
+                                        <template v-if="imageUrl && imageUrl.length > 0">
+                                            <div
+                                            v-for="(preview, index) in imageUrl"
+                                            :key="index"
+                                            style="margin: 5px; display: flex; justify-content: center; align-items: center;"
+                                            >
                                             <img
-                                                v-if="imageUrl"
-                                                :src="imageUrl"
-                                                alt="No Image"
-                                                style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                                :src="preview"
+                                                alt="Uploaded Image"
+                                                style="width: 100px; height: 100px; object-fit: contain; border: 1px solid #ccc; border-radius: 5px;"
                                             />
-                                            <span v-else>No Image</span>
+                                            </div>
+                                        </template>
+
+                                            <!-- Fallback if no images -->
+                                            <span v-else>No Images</span>
                                         </v-sheet>
 
                                         <!-- File input for uploading an image -->
-                                        <v-file-input style="display: none;" ref="fileInput" accept="image/*" @change="FileChange"></v-file-input>
+                                        <v-file-input multiple style="display: none;" ref="fileInput" accept="image/*" @change="FileChange"></v-file-input>
 
                                         <v-btn class="mt-5" @click="triggerFileInput" color="warning">Upload</v-btn>
                                     </v-col>
@@ -203,9 +223,9 @@ export default {
                 location: '',
                 description: '',
                 isUsed: false,
-                image_delete: '',
+                image_delete: [],
             }),
-            imageUrl: false,
+            imageUrl: [],
             news_type_data: []
         }
     },
@@ -368,8 +388,16 @@ export default {
             this.form.location = data.location;
             this.form.description = data.description;
             this.form.isUsed = data.isUsed == 1 ? true : false;
-            this.imageUrl = this.getImageUrl(data.image);
-            this.form.image_delete = data.image;
+            this.imageUrl = [];
+            if (data.image) {
+                try {
+                    const images = this.parseImages(data.image); // Parse the image field
+                    this.imageUrl = images.map((img) => this.getImageUrl(img)); // Generate URLs for each image
+                    this.form.image_delete = images;
+                } catch (error) {
+                    console.error("Error parsing images:", error);
+                }
+            }
         },
 
         triggerFileInput() {
@@ -377,21 +405,30 @@ export default {
         },
 
         FileChange(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                this.form.image = file;
-                const imagePreview = URL.createObjectURL(file);
-                this.imageUrl = imagePreview;
+            const files = event.target.files;
+            if (files.length > 0) {
+                this.form.image = [...files]; // Store all selected files in form data
+                this.imageUrl = Array.from(files).map((file) =>
+                URL.createObjectURL(file)
+                ); // Generate previews for all selected files
             } else {
-                this.imageUrl = null;
-                console.error("No file selected or invalid file.");
+                this.imageUrl = [];
+                console.error("No files selected or invalid files.");
             }
         },
 
         getImageUrl(name) {
             return new URL(`/storage/images/NewsImages/${name}`, import.meta.url).href
-        }
+        },
+
+        parseImages(imageField) {
+            try {
+                return Array.isArray(JSON.parse(imageField)) ? JSON.parse(imageField) : [imageField];
+            } catch (error) {
+                console.error("Error parsing image field:", error);
+                return [];
+            }
+        },
     }
 }
 </script>

@@ -53,7 +53,7 @@
             </v-col>
         </v-row>
 
-        <v-dialog v-model="dialog" max-width="1000">
+        <v-dialog v-model="dialog" max-width="1000" persistent>
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
                 :title="editMode?'Update':'Create'"

@@ -62,6 +62,14 @@ class CompanyProfileController extends Controller
                 ->update([
                     'logo' => $filename,
                 ]);
+
+                if($request->logo_delete) {
+                    $imagePath = storage_path('images/CompanyProfile/' . $request->logo_delete);
+
+                    if (File::exists($imagePath)) {
+                        File::delete($imagePath);
+                    }
+                }
             }
 
             DB::table('tb_company_profile')
@@ -76,14 +84,6 @@ class CompanyProfileController extends Controller
                 'isUsed' => $request->isUsed,
                 'remark' => $request->remark,
             ]);
-
-            if($request->logo_delete != null) {
-                $imagePath = storage_path('images/CompanyProfile/' . $request->logo_delete);
-
-                if (File::exists($imagePath)) {
-                    File::delete($imagePath);
-                }
-            }
 
         }catch(Exception $e){
             throw $e;
