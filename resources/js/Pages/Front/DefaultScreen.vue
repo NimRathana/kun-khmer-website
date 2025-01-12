@@ -121,7 +121,7 @@
                             <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
                                 <v-row align="center">
                                     <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
-                                        <v-card max-width="400" height="300" variant="text" @click="tab_about_news = 2">
+                                        <v-card max-width="400" height="300" variant="text" @click="NewsInformationDetail(item), tab_about_news = 2">
                                             <v-img
                                             :src="getStorageImageUrl('NewsImages/' + JSON.parse(item.image)[0])"
                                             width="400"
@@ -138,8 +138,8 @@
                         </v-carousel>
 
                         <v-main class="pa-5">
-                            <v-row>
-                                <v-col class="pa-0" style="max-width: 300px;height: 100%;">
+                            <v-row style="flex-wrap: nowrap;">
+                                <v-col class="pa-0" style="min-width: 20%;max-width: 20%;height: 100%;">
                                     <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px' }">
                                         <v-tabs
                                             v-model="tab_about_news"
@@ -161,9 +161,9 @@
                                         </v-tabs>
                                     </v-card-text>
                                 </v-col>
-                                <v-col class="pt-0 pb-0">
-                                    <v-card-text :style="{background:colorStore.color, height: '100%'}">
-                                        <v-tabs-window v-model="tab_about_news">
+                                <v-col class="pt-0 pb-0" style="min-width: 60%;max-width: 60%;">
+                                    <v-card class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
+                                        <!-- <v-tabs-window v-model="tab_about_news">
                                             <v-tabs-window-item value="one">
                                             One
                                             </v-tabs-window-item>
@@ -175,10 +175,43 @@
                                             <v-tabs-window-item value="three">
                                             Three
                                             </v-tabs-window-item>
-                                        </v-tabs-window>
-                                    </v-card-text>
+                                        </v-tabs-window> -->
+
+                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ news_detail.title_en }}</v-card-title>
+                                        <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
+
+                                        <v-card-item>
+                                            <v-row class="d-flex justify-center">
+                                                <v-col
+                                                    v-for="(img, index) in (() => {
+                                                        try {
+                                                            return JSON.parse(news_detail.image) || [];
+                                                        } catch (e) {
+                                                            return [];
+                                                        }
+                                                    })()"
+                                                    :key="index"
+                                                    cols="12"
+                                                    sm="6"
+                                                >
+                                                    <v-img
+                                                        :src="getStorageImageUrl('NewsImages/' + img)"
+                                                        width="100%"
+                                                        style="border-radius: 5px;"
+                                                    ></v-img>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card-item>
+
+                                        <v-card-item>
+                                            {{ news_detail.description }}
+                                        </v-card-item>
+
+                                        <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
+                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">ទីតាំង</v-card-title>
+                                    </v-card>
                                 </v-col>
-                                <v-col class="pa-0" style="max-width: 300px;">
+                                <v-col class="pa-0" style="min-width: 20%;max-width: 20%;">
                                     <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px', height: '100%' }">
                                         3
                                     </v-card-text>
@@ -408,6 +441,7 @@ import axios from 'axios';
 import { Store } from '@/store/index';
 import $ from 'jquery';
 import { useGoTo } from 'vuetify';
+import NewsInformation from '../Components/NewsInformation.vue';
 
 const goTo = useGoTo()
 const colorStore = Store();
@@ -431,6 +465,7 @@ const about_news_type_select_data = ref([]);
 const carousel = ref(0);
 const tab = ref(0);
 const tab_about_news = ref(1);
+const news_detail = ref([]);
 
 watch(
   () => colorStore.theme,
@@ -580,6 +615,11 @@ async function getAboutNewsType() {
     } catch (error) {
         console.error('Error fetching data', error);
     }
+};
+
+function NewsInformationDetail(item) {
+    news_detail.value = item;
+    console.log(news_detail.value);
 };
 
 function tabChange(tabID) {

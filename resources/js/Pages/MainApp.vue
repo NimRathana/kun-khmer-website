@@ -562,15 +562,15 @@ const checkWindowSize = () => {
         WindowSize.value = false;
     }
 
-    let left = $(".v-navigation-drawer--left").position().left;
-    if (left < -0) {
-        $(".app_scroll").attr("style", "overflow-x: scroll;");
-        $(".app_scroll").attr("style", "overflow-y: hidden;");
-    } else {
-        setTimeout(() => {
-            $(".app_scroll").removeAttr("style");
-        }, 200);
-    }
+    // let left = $(".v-navigation-drawer--left").position().left;
+    // if (left < -0) {
+    //     $(".app_scroll").attr("style", "overflow-x: scroll;");
+    //     $(".app_scroll").attr("style", "overflow-y: hidden;");
+    // } else {
+    //     setTimeout(() => {
+    //         $(".app_scroll").removeAttr("style");
+    //     }, 200);
+    // }
     footerHeight.value = $(".footer").height() + 20;
     $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
     showButton.value = window.innerWidth > window.outerWidth * 0.5 && window.outerWidth > 700;
@@ -580,15 +580,15 @@ onMounted(() => {
     const instance = getCurrentInstance();
     const helper = instance?.proxy.$helper;
     helper.GetGridHeight();
-    let left = $(".v-navigation-drawer--left").position().left;
-    setTimeout(() => {
-        if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
-            $(".app_scroll").attr("style", "overflow-x: scroll;");
-            $(".app_scroll").attr("style", "overflow-y: hidden;");
-        } else {
-            $(".app_scroll").removeAttr("style");
-        }
-    }, 100);
+    // let left = $(".v-navigation-drawer--left").position().left;
+    // setTimeout(() => {
+    //     if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
+    //         $(".app_scroll").attr("style", "overflow-x: scroll;");
+    //         $(".app_scroll").attr("style", "overflow-y: hidden;");
+    //     } else {
+    //         $(".app_scroll").removeAttr("style");
+    //     }
+    // }, 100);
     const txtsearch = document.getElementsByClassName("search")[0];
     let detailsElement = '';
     if(txtsearch != undefined){
