@@ -208,7 +208,18 @@
                                         </v-card-item>
 
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
-                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">ទីតាំង</v-card-title>
+                                        <v-card-title class="text-center mb-5" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">ទីតាំង</v-card-title>
+
+                                        <GoogleMap :api-key="apiKey" style="width: 100%; height: 500px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15">
+                                            <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
+                                                position: { lat: Number(lat), lng: Number(lng) }, }" />
+                                            <!-- <CustomMarker :options="{ position: { lat: Number(lat), lng: Number(lng) }, }">
+                                                <div style="text-align: center">
+                                                    <v-icon color="red" size="60">mdi-map-marker-account</v-icon>
+                                                    <div :style="{ color: colorStore.color }">{{ news_detail.name_en }}</div>
+                                                </div>
+                                            </CustomMarker> -->
+                                        </GoogleMap>
                                     </v-card>
                                 </v-col>
                                 <v-col class="pa-0" style="min-width: 20%;max-width: 20%;">
@@ -441,7 +452,7 @@ import axios from 'axios';
 import { Store } from '@/store/index';
 import $ from 'jquery';
 import { useGoTo } from 'vuetify';
-import NewsInformation from '../Components/NewsInformation.vue';
+import { GoogleMap, Marker, CustomMarker } from 'vue3-google-map';
 
 const goTo = useGoTo()
 const colorStore = Store();
@@ -466,6 +477,9 @@ const carousel = ref(0);
 const tab = ref(0);
 const tab_about_news = ref(1);
 const news_detail = ref([]);
+const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
+const lat = ref(null);
+const lng = ref(null);
 
 watch(
   () => colorStore.theme,
@@ -533,12 +547,29 @@ const chunkedItems = computed(() => {
     }, []);
 });
 
-onMounted(()=>{
+onMounted(async ()=>{
     getAboutNewsType();
     getCompanyProfile();
     getNewsType();
     getNewsInformation();
+    getLocation()
+        .then((coordinates) => {
+            lat.value = coordinates.lat;
+            lng.value = coordinates.lng;
+        })
+        .catch((error) => {
+            console.error("Error fetching location:", error);
+        });
 });
+
+const getLocation = async () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
+            (error) => reject(error)
+        );
+    });
+};
 
 async function getCompanyProfile() {
     try {

@@ -26,6 +26,8 @@
         "@mdi/font": "^7.4.47",
         "jquery": "^3.7.1",
         "pinia": "^2.2.4",
+        "vue3-geolocation": "^1.0.0",
+        "vue3-google-map": "^0.21.1",
         "vuetify": "^3.7.5"
     }
 }
