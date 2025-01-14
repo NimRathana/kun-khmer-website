@@ -139,8 +139,8 @@
 
                         <v-main class="pa-5">
                             <v-row style="flex-wrap: nowrap;">
-                                <v-col class="pa-0" style="min-width: 20%;max-width: 20%;height: 100%;">
-                                    <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px' }">
+                                <v-col class="pa-0" style="min-width: 20%;max-width: 20%;">
+                                    <v-card class="pa-0 bg-transparent" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px', height: '100%' }">
                                         <v-tabs
                                             v-model="tab_about_news"
                                             next-icon="mdi-arrow-right-bold-box-outline"
@@ -159,7 +159,7 @@
                                                 </v-tab>
                                             </template>
                                         </v-tabs>
-                                    </v-card-text>
+                                    </v-card>
                                 </v-col>
                                 <v-col class="pt-0 pb-0" style="min-width: 60%;max-width: 60%;">
                                     <v-card class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
@@ -213,19 +213,13 @@
                                         <GoogleMap :api-key="apiKey" style="width: 100%; height: 500px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15">
                                             <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
                                                 position: { lat: Number(lat), lng: Number(lng) }, }" />
-                                            <!-- <CustomMarker :options="{ position: { lat: Number(lat), lng: Number(lng) }, }">
-                                                <div style="text-align: center">
-                                                    <v-icon color="red" size="60">mdi-map-marker-account</v-icon>
-                                                    <div :style="{ color: colorStore.color }">{{ news_detail.name_en }}</div>
-                                                </div>
-                                            </CustomMarker> -->
                                         </GoogleMap>
                                     </v-card>
                                 </v-col>
                                 <v-col class="pa-0" style="min-width: 20%;max-width: 20%;">
-                                    <v-card-text class="pa-0" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px', height: '100%' }">
+                                    <v-card class="pa-0 bg-transparent" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px', height: '100%' }">
                                         3
-                                    </v-card-text>
+                                    </v-card>
                                 </v-col>
                             </v-row>
 
@@ -474,12 +468,12 @@ const news_information_data = ref([]);
 const about_news_type_data = ref([]);
 const about_news_type_select_data = ref([]);
 const carousel = ref(0);
-const tab = ref(0);
-const tab_about_news = ref(1);
+const tab = ref(null);
+const tab_about_news = ref(null);
 const news_detail = ref([]);
 const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
-const lat = ref(null);
-const lng = ref(null);
+const lat = ref(10.9134214);
+const lng = ref(104.5888426);
 
 watch(
   () => colorStore.theme,
@@ -552,23 +546,19 @@ onMounted(async ()=>{
     getCompanyProfile();
     getNewsType();
     getNewsInformation();
-    getLocation()
-        .then((coordinates) => {
-            lat.value = coordinates.lat;
-            lng.value = coordinates.lng;
-        })
-        .catch((error) => {
-            console.error("Error fetching location:", error);
-        });
 });
 
-const getLocation = async () => {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
-            (error) => reject(error)
-        );
-    });
+watch(chunkedItems, (newVal) => {
+    if (newVal.length > 0) {
+        autoClickFirstItem();
+    }
+});
+
+const autoClickFirstItem = () => {
+    if (chunkedItems.value.length > 0 && chunkedItems.value[0].length > 0) {
+        const firstItem = chunkedItems.value[0][0]; // Get the first item
+        NewsInformationDetail(firstItem); // Trigger the click logic
+    }
 };
 
 async function getCompanyProfile() {
@@ -625,6 +615,7 @@ async function getNewsInformation() {
             } else {
                 news_information_data.value = null;
             }
+            isDataReady.value = true;
         }
     } catch (error) {
         console.error('Error fetching data', error);
@@ -650,7 +641,13 @@ async function getAboutNewsType() {
 
 function NewsInformationDetail(item) {
     news_detail.value = item;
-    console.log(news_detail.value);
+    if (item.location) {
+        const [latitude, longitude] = item.location.split(',').map(coord => parseFloat(coord.trim()));
+        lat.value = latitude;
+        lng.value = longitude;
+    } else {
+        console.error('Location is missing in the provided item');
+    }
 };
 
 function tabChange(tabID) {

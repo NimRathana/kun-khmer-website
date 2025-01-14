@@ -89,8 +89,17 @@
                                             <v-textarea variant="outlined" density="compact" label="Description" v-model="form.description"></v-textarea>
                                             <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
                                         </v-col>
+
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field variant="outlined" density="compact" label="Latitude" v-model="lat"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field variant="outlined" density="compact" label="Longitude" v-model="lng"></v-text-field>
+                                        </v-col>
+
                                         <v-col cols="12" class="d-flex align-center">
-                                            <v-text-field hide-details variant="outlined" density="compact" label="Location" v-model="form.location"></v-text-field>
+                                            <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field>
+                                            <!-- <input type="text" id="txtlocation" placeholder="Enter a location" /> -->
                                             <v-card-text style="flex: unset;">or</v-card-text>
                                             <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">Use my current location</v-btn>
                                         </v-col>
@@ -134,10 +143,11 @@
                                     </v-row>
                                 </v-col>
                                 <v-col cols="12" class="mt-2">
-                                    <GoogleMap :api-key="apiKey" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15">
+                                    <!-- <GoogleMap :api-key="apiKey" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15" animation="bounce">
                                         <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
                                             position: { lat: Number(lat), lng: Number(lng) }, }" />
-                                    </GoogleMap>
+                                    </GoogleMap> -->
+                                    <div id="map" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;"></div>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -150,7 +160,7 @@
                     <v-btn
                         text="Close"
                         color="red"
-                        @click="dialog = false, errorMessage = '', form.reset(), editMode = false, imageUrl = null"
+                        @click="dialog = false, errorMessage = '', form.reset(), editMode = false, imageUrl = null, lat = 10.9134214, lng = 104.5888426"
                     ></v-btn>
 
                     <v-btn
@@ -220,10 +230,10 @@ import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
 import { GoogleMap, Marker } from 'vue3-google-map';
 import { Store } from '@/store/index';
-import VueGoogleAutocomplete from "vue-google-autocomplete";
+import { Loader } from '@googlemaps/js-api-loader';
 
 export default {
-    components: { MainApp, GoogleMap, Marker, VueGoogleAutocomplete },
+    components: { MainApp, GoogleMap, Marker },
     data() {
         return {
             colorStore: Store(),
@@ -273,19 +283,116 @@ export default {
         this.getNewsInformationGrid();
         this.getNewsType();
         // this.getAddressForm();
+        this.form.location = `${this.lat}, ${this.lng}`;
     },
 
     watch: {
+        dialog(newVal){
+            if(newVal == true){
+                const loader = new Loader({
+                    apiKey: this.apiKey,
+                    libraries: ['places'],
+                });
+                loader.load()
+                .then(() => {
+                    this.initMap();
+                })
+                .catch((error) => {
+                    console.error("Error loading Google Maps API:", error);
+                });
+            }
+        },
+        lat(newVal, oldVal){
+            this.form.location = `${newVal}, ${this.lng}`;
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: Number(newVal), lng: Number(this.lng) },
+                zoom: 15,
+            });
 
+            // Create the marker
+            const marker = new google.maps.Marker({
+                position: { lat: Number(newVal), lng: Number(this.lng) },
+                map: map,
+                animation: google.maps.Animation.BOUNCE,
+                draggable: true,
+                // icon: '@/images/logos/google.png'
+            });
+        },
+        lng(newVal, oldVal){
+            this.form.location = `${this.lat}, ${newVal}`;
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: Number(this.lat), lng: Number(newVal) },
+                zoom: 15,
+            });
+
+            // Create the marker
+            const marker = new google.maps.Marker({
+                position: { lat: Number(this.lat), lng: Number(newVal) },
+                map: map,
+                animation: google.maps.Animation.BOUNCE,
+                draggable: true,
+                // icon: '@/images/logos/google.png'
+            });
+        }
     },
 
     methods: {
+        changeLocation() {
+            const inputElement = document.getElementById('txtlocation');
+            // const map = new google.maps.Map(document.getElementById("map"), {
+            //     center: { lat: this.lat, lng: this.lng },
+            //     zoom: 15,
+            // });
+            // const autocomplete = new google.maps.places.Autocomplete(inputElement);
+            // autocomplete.bindTo('bounds', map);
+            // autocomplete.setFields(['address_components', 'geometry', 'name'])
+            // map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('txtlocation'))
+        },
+
+        initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: this.lat, lng: this.lng },
+                zoom: 15,
+            });
+
+            // Create the marker
+            const marker = new google.maps.Marker({
+                position: { lat: this.lat, lng: this.lng },
+                map: map,
+                animation: google.maps.Animation.BOUNCE,
+                draggable: true,
+                // icon: '@/images/logos/google.png'
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function() {
+                const position = marker.getPosition();
+                const latitude = position.lat();
+                const longitude = position.lng();
+
+                this.lat = latitude;
+                this.lng = longitude;
+                this.form.location = `${latitude}, ${longitude}`;
+            }.bind(this));
+
+
+            // var infowindow = new google.maps.InfoWindow({
+            //     content: `
+            //         <div style="background-color: #fff; color: #333; padding: 10px; border-radius: 5px; width: 200px;">
+            //             <v-card-text>Latitude: ${this.lat}</v-card-text>
+            //             <v-card-text>Longitude: ${this.lng}</v-card-text>
+            //         </div>
+            //     `,
+            // })
+            // infowindow.open(map, marker);
+        },
         async getCurrentPosition() {
             try {
                 this.loading = true;
                 const coordinates = await this.getLocation();
                 this.lat = coordinates.lat;
                 this.lng = coordinates.lng;
+                this.form.location = `${this.lat}, ${this.lng}`;
+                this.initMap();
                 this.loading = false;
             } catch (error) {
                 this.loading = false;
@@ -293,6 +400,7 @@ export default {
                 this.errorMessage = error;
                 this.lat = 40.7128;
                 this.lng = -74.0060;
+                this.form.location = `${this.lat}, ${this.lng}`;
             }
         },
 
@@ -379,6 +487,8 @@ export default {
                 onSuccess: () => {
                     this.getNewsInformationGrid();
                     this.form.reset();
+                    this.lat = 10.9134214;
+                    this.lng = 104.5888426;
                     this.dialog = false;
                     this.errorMessage = "";
                 },
@@ -419,6 +529,8 @@ export default {
                 onSuccess: () => {
                     this.getNewsInformationGrid();
                     this.form.reset();
+                    this.lat = 10.9134214;
+                    this.lng = 104.5888426;
                     this.dialog = false;
                     this.errorMessage = "";
                 },
@@ -440,6 +552,8 @@ export default {
                     onSuccess: () => {
                         this.getNewsInformationGrid();
                         this.form.reset();
+                        this.lat = 10.9134214;
+                        this.lng = 104.5888426;
                         this.deleteDialog = false;
                     },
                     onError: (errors) => {
