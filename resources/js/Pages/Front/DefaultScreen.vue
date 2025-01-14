@@ -202,7 +202,7 @@
                                             </v-row>
                                         </v-card-item>
                                         <v-card-item class="description">
-                                            <QuillEditor ref="descriptionEditor" theme="snow"  />
+                                            <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" />
                                         </v-card-item>
 
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
@@ -443,7 +443,7 @@
 </template>
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, watch, onMounted, computed  } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { Store } from '@/store/index';
 import $ from 'jquery';
