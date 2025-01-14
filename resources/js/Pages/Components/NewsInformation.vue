@@ -81,13 +81,10 @@
                                         </v-col>
                                         <v-col cols="12" sm="6">
                                             <v-select v-model="form.news_type_id" variant="outlined" density="compact" label="Select*" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
+                                            <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary" class="mb-3"></v-checkbox>
                                         </v-col>
                                         <v-col cols="12" sm="6">
                                             <v-text-field variant="outlined" density="compact" label="Url Video" v-model="form.url_video"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" class="d-flex">
-                                            <v-textarea variant="outlined" density="compact" label="Description" v-model="form.description"></v-textarea>
-                                            <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
                                         </v-col>
 
                                         <v-col cols="12" sm="6">
@@ -99,7 +96,6 @@
 
                                         <v-col cols="12" class="d-flex align-center">
                                             <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field>
-                                            <!-- <input type="text" id="txtlocation" placeholder="Enter a location" /> -->
                                             <v-card-text style="flex: unset;">or</v-card-text>
                                             <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">Use my current location</v-btn>
                                         </v-col>
@@ -149,18 +145,23 @@
                                     </GoogleMap> -->
                                     <div id="map" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;"></div>
                                 </v-col>
+
+                                <v-col cols="12" class="mt-2" style="min-height: 400px;">
+                                    <!-- <v-textarea variant="outlined" density="compact" label="Description" v-model="form.description"></v-textarea> -->
+                                    <QuillEditor ref="description" toolbar="full" :options="options" />
+                                </v-col>
                             </v-row>
                         </v-card-text>
                     </form>
                 </v-card-text>
 
-                <v-divider></v-divider>
+                <v-divider class="mt-3"></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
                         text="Close"
                         color="red"
-                        @click="dialog = false, errorMessage = '', form.reset(), editMode = false, imageUrl = null, lat = 10.9134214, lng = 104.5888426"
+                        @click="handleClose"
                     ></v-btn>
 
                     <v-btn
@@ -252,7 +253,7 @@ export default {
                 { title: 'Image', key: 'image', align: 'start' },
                 { title: 'Url Video', key: 'url_video', align: 'start' },
                 { title: 'Location', key: 'location', align: 'start' },
-                { title: 'Description', key: 'description', align: 'start' },
+                // { title: 'Description', key: 'description', align: 'start' },
                 { title: 'Used', key: 'isUsed', align: 'start' },
                 { title: 'Actions', key: 'action', align: 'center' },
             ],
@@ -275,7 +276,10 @@ export default {
             apiKey: 'AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw',
             lat: 10.9134214,
             lng: 104.5888426,
-            autocomplete: null,
+            options: {
+                readOnly: false,
+                theme: 'snow'
+            }
         }
     },
 
@@ -300,6 +304,14 @@ export default {
                 .catch((error) => {
                     console.error("Error loading Google Maps API:", error);
                 });
+                setTimeout(() => {
+                    if(this.editMode == true){
+                        if (this.$refs.description) {
+                            this.$refs.description.pasteHTML(this.form.description);
+                        }
+                    }
+
+                }, 100);
             }
         },
         lat(newVal, oldVal){
@@ -337,6 +349,18 @@ export default {
     },
 
     methods: {
+        handleClose() {
+            this.dialog = false;
+            this.errorMessage = '';
+            this.form.reset();
+            this.editMode = false;
+            this.imageUrl = null;
+            this.lat = 10.9134214;
+            this.lng = 104.5888426;
+            if (this.$refs.description) {
+                this.$refs.description.setText('');
+            }
+        },
         changeLocation() {
             const inputElement = document.getElementById('txtlocation');
             // const map = new google.maps.Map(document.getElementById("map"), {
@@ -385,6 +409,7 @@ export default {
             // })
             // infowindow.open(map, marker);
         },
+
         async getCurrentPosition() {
             try {
                 this.loading = true;
@@ -483,6 +508,7 @@ export default {
                 return;
             }
 
+            this.form.description = this.$refs.description.getHTML()??NULL;
             this.form.post('news_information/create', {
                 onSuccess: () => {
                     this.getNewsInformationGrid();
@@ -525,6 +551,7 @@ export default {
                 return;
             }
 
+            this.form.description = this.$refs.description.getHTML()??NULL;
             this.form.post('news_information/update', {
                 onSuccess: () => {
                     this.getNewsInformationGrid();
@@ -624,3 +651,11 @@ export default {
     }
 }
 </script>
+<style>
+.ql-snow{
+    border-radius: 5px;
+}
+.ql-container {
+    font-family: 'Battambang';
+}
+</style>

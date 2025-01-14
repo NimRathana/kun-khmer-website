@@ -12,6 +12,8 @@ import '@mdi/font/css/materialdesignicons.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import { helper } from './helper';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const vuetify = createVuetify({
     components,
@@ -26,6 +28,7 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) });
         // Register the helper globally
         app.config.globalProperties.$helper = helper;
+        app.component('QuillEditor', QuillEditor);
         return app
             .use(plugin)
             .use(ZiggyVue)

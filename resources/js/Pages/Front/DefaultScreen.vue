@@ -120,7 +120,7 @@
                             <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
                                 <v-row align="center">
                                     <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
-                                        <v-card max-width="400" height="300" variant="text" @click="NewsInformationDetail(item), tab_about_news = 2">
+                                        <v-card max-width="400" height="300" variant="text" @click="NewsInformationDetail(item)">
                                             <v-img
                                             :src="getStorageImageUrl('NewsImages/' + JSON.parse(item.image)[0])"
                                             width="400"
@@ -201,9 +201,8 @@
                                                 </v-col>
                                             </v-row>
                                         </v-card-item>
-
-                                        <v-card-item>
-                                            {{ news_detail.description }}
+                                        <v-card-item class="description">
+                                            <QuillEditor ref="descriptionEditor" theme="snow"  />
                                         </v-card-item>
 
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
@@ -478,6 +477,7 @@ const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
 const lat = ref(10.9134214);
 const lng = ref(104.5888426);
 const sponsor_data = ref([]);
+const descriptionEditor = ref(null);
 
 watch(
   () => colorStore.theme,
@@ -561,8 +561,8 @@ watch(chunkedItems, (newVal) => {
 
 const autoClickFirstItem = () => {
     if (chunkedItems.value.length > 0 && chunkedItems.value[0].length > 0) {
-        const firstItem = chunkedItems.value[0][0]; // Get the first item
-        NewsInformationDetail(firstItem); // Trigger the click logic
+        const firstItem = chunkedItems.value[0][0];
+        NewsInformationDetail(firstItem);
     }
 };
 
@@ -669,6 +669,10 @@ function NewsInformationDetail(item) {
     } else {
         console.error('Location is missing in the provided item');
     }
+
+    if (descriptionEditor.value) {
+        descriptionEditor.value.pasteHTML(item.description);
+    }
 };
 
 function tabChange(tabID) {
@@ -676,8 +680,8 @@ function tabChange(tabID) {
         (item) => item.news_type_id === tabID
     );
 
-    // Update the select data with the filtered result
     about_news_type_select_data.value = selectedNewsType;
+    tab_about_news.value = null;
 };
 
 function UpdateColor() {
@@ -725,6 +729,15 @@ function getStorageImageUrl(name) {
 };
 </script>
 <style>
+.description .ql-toolbar {
+    display: none;
+}
+
+.description .ql-container {
+    border: unset;
+    font-family: 'Battambang';
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
