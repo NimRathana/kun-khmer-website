@@ -3,11 +3,10 @@
         <v-layout class="rounded rounded-md">
             <v-responsive class="border rounded">
                 <v-app :theme="theme" style="display: flex;align-items: center;justify-content: center;overflow-y: hidden;overflow-x: auto;">
-                    <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="pa-0 shadow mb-5 position-relative" style="border: 1px solid pink;min-width: 1320px;">
-                        <v-row class="mb-2" style="height: 100px;display: flex;align-items: center;">
+                    <v-container elevation="10" :fluid="colorStore.selectedContent !== 'Compact'" class="pa-0 mb-5 mt-5 position-relative" style="min-width: 1320px;border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;">
+                        <v-row class="pa-2 mb-1" style="height: 100px;display: flex;align-items: center;">
                             <v-col cols="2" class="" style="height: 100%;">
                                 <v-card
-                                    class="mx-auto pa-1"
                                     href="https://github.com/vuetifyjs/vuetify/"
                                     target="_blank"
                                     style="height: 100%;"
@@ -768,6 +767,8 @@ function getStorageImageUrl(name) {
 
 .carousel .v-responsive__content {
     display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 </style>
