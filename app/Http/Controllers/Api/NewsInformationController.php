@@ -109,7 +109,6 @@ class NewsInformationController extends Controller
 
     public function delete(Request $request){
         try {
-            dd($request);
             DB::table('tb_news_information')
                 ->where('id', $request->id)
                 ->delete();

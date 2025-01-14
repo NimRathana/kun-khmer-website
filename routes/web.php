@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\MenuController;
 use App\Http\Controllers\Api\NewsInformationController;
 use App\Http\Controllers\Api\NewsTypeController;
 use App\Http\Controllers\Api\ParameterController;
+use App\Http\Controllers\Api\SponsorController;
 
 Route::prefix('/')->group(function () {
     Route::get('/', function () {
@@ -17,6 +18,7 @@ Route::prefix('/')->group(function () {
     Route::get('/getNewsTypeGrid', [NewsTypeController::class, 'getNewTypeGrid']);
     Route::get('/getNewsInformation', [NewsInformationController::class, 'getNewsInformationGrid']);
     Route::get('/getAboutNewsType', [AboutNewsTypeController::class, 'getAboutNewsType']);
+    Route::get('/getSponsor', [SponsorController::class, 'getSponsorGrid']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -85,5 +87,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/create', [AboutNewsTypeController::class, 'create']);
         Route::post('/update', [AboutNewsTypeController::class, 'update']);
         Route::post('/delete', [AboutNewsTypeController::class, 'delete']);
+    });
+
+    Route::prefix('sponsor')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Components/Sponsor');
+        });
+        Route::get('/getSponsorGrid', [SponsorController::class, 'getSponsorGrid']);
+        Route::post('/create', [SponsorController::class, 'create']);
+        Route::post('/update', [SponsorController::class, 'update']);
+        Route::post('/delete', [SponsorController::class, 'delete']);
     });
 });

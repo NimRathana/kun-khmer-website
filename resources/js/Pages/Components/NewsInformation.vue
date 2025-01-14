@@ -593,7 +593,7 @@ export default {
         },
 
         triggerFileInput() {
-            this.$refs.fileInput.$el.querySelector('input').click();;
+            this.$refs.fileInput.$el.querySelector('input').click();
         },
 
         FileChange(event) {

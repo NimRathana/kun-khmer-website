@@ -218,7 +218,11 @@
                                 </v-col>
                                 <v-col class="pa-0" style="min-width: 20%;max-width: 20%;">
                                     <v-card class="pa-0 bg-transparent" :style="{ border: `2px solid ${colorStore.color}`, borderRadius: '5px', height: '100%' }">
-                                        3
+                                        <v-img
+                                            v-for="(sponsor, index) in sponsor_data" :key="index"
+                                            :src="getStorageImageUrl('SponsorImages/' + sponsor.image)"
+                                            style="border-radius: 5px;margin: 5px;margin-bottom: 10px;"
+                                        ></v-img>
                                     </v-card>
                                 </v-col>
                             </v-row>
@@ -474,6 +478,7 @@ const news_detail = ref([]);
 const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
 const lat = ref(10.9134214);
 const lng = ref(104.5888426);
+const sponsor_data = ref([]);
 
 watch(
   () => colorStore.theme,
@@ -546,6 +551,7 @@ onMounted(async ()=>{
     getCompanyProfile();
     getNewsType();
     getNewsInformation();
+    getSponsor();
 });
 
 watch(chunkedItems, (newVal) => {
@@ -558,6 +564,23 @@ const autoClickFirstItem = () => {
     if (chunkedItems.value.length > 0 && chunkedItems.value[0].length > 0) {
         const firstItem = chunkedItems.value[0][0]; // Get the first item
         NewsInformationDetail(firstItem); // Trigger the click logic
+    }
+};
+
+async function getSponsor() {
+    try {
+        const response = await axios.get('getSponsor');
+        if (response.data && Array.isArray(response.data)) {
+            const filtered = response.data.filter(acitve => acitve.isUsed === 1);
+
+            if (filtered.length > 0) {
+                sponsor_data.value = filtered;
+            } else {
+                sponsor_data.value = null;
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching data', error);
     }
 };
 
@@ -615,7 +638,6 @@ async function getNewsInformation() {
             } else {
                 news_information_data.value = null;
             }
-            isDataReady.value = true;
         }
     } catch (error) {
         console.error('Error fetching data', error);
