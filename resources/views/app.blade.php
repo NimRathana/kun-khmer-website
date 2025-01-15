@@ -17,6 +17,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
+        <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+        <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead

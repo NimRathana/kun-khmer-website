@@ -202,7 +202,8 @@
                                             </v-row>
                                         </v-card-item>
                                         <v-card-item class="description">
-                                            <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" />
+                                            <!-- <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" /> -->
+                                            <div id="editor-container" ref="descriptionEditor" style="height: 100%"></div>
                                         </v-card-item>
 
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
@@ -473,11 +474,47 @@ const carousel = ref(0);
 const tab = ref(null);
 const tab_about_news = ref(null);
 const news_detail = ref([]);
-const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
+// const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
+const apiKey = ref("AIzaSyBP3eRYvTPrrRRAEFCOOkcn0gpcjKzqBHM");
 const lat = ref(10.9134214);
 const lng = ref(104.5888426);
 const sponsor_data = ref([]);
 const descriptionEditor = ref(null);
+const quill = ref(null);
+const options = ref({
+                    readOnly: false,
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            ['link', 'image', 'video', 'formula'],
+
+                            [{ 'header': 1 }, { 'header': 2 }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+                            [{ 'script': 'sub'}, { 'script': 'super' }],
+                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                            [{ 'direction': 'rtl' }],
+
+                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'font': [] }],
+                            [{ 'align': [] }],
+
+                            ['clean']
+                        ],
+                        imageResize: {
+                            displayStyles: {
+                                backgroundColor: 'black',
+                                border: 'none',
+                                color: 'white'
+                            },
+                            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+                        },
+                    },
+                });
 
 watch(
   () => colorStore.theme,
@@ -532,7 +569,9 @@ watch(
 );
 
 const filteredNews = computed(() => {
-    return news_information_data.value.filter(item => item.news_type_id === tab.value);
+    return Array.isArray(news_information_data.value)
+        ? news_information_data.value.filter(item => item.news_type_id === tab.value)
+        : [];
 });
 
 const chunkedItems = computed(() => {
@@ -546,6 +585,7 @@ const chunkedItems = computed(() => {
 });
 
 onMounted(async ()=>{
+    quill.value = new Quill(descriptionEditor.value, options.value);
     getAboutNewsType();
     getCompanyProfile();
     getNewsType();
@@ -671,16 +711,18 @@ function NewsInformationDetail(item) {
     }
 
     if (descriptionEditor.value) {
-        descriptionEditor.value.pasteHTML(item.description);
+        quill.value.root.innerHTML = item.description;
     }
 };
 
 function tabChange(tabID) {
-    const selectedNewsType = about_news_type_data.value.filter(
-        (item) => item.news_type_id === tabID
-    );
-
-    about_news_type_select_data.value = selectedNewsType;
+    const selectedNewsType = null;
+    if(about_news_type_data.value){
+        selectedNewsType = about_news_type_data.value.filter(
+            (item) => item.news_type_id === tabID
+        );
+        about_news_type_select_data.value = selectedNewsType;
+    }
     tab_about_news.value = null;
 };
 

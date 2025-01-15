@@ -95,7 +95,8 @@
                                         </v-col>
 
                                         <v-col cols="12" class="d-flex align-center">
-                                            <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field>
+                                            <input id="txtlocation" type="text" placeholder="Enter a location" style="width: 100%; padding: 10px;" @input="changeLocation" />
+                                            <!-- <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field> -->
                                             <v-card-text style="flex: unset;">or</v-card-text>
                                             <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">Use my current location</v-btn>
                                         </v-col>
@@ -148,7 +149,8 @@
 
                                 <v-col cols="12" class="mt-2" style="min-height: 400px;">
                                     <!-- <v-textarea variant="outlined" density="compact" label="Description" v-model="form.description"></v-textarea> -->
-                                    <QuillEditor ref="description" toolbar="full" :options="options" />
+                                    <!-- <QuillEditor ref="description" toolbar="full" :options="options" /> -->
+                                    <div id="editor-container" ref="description" style="height: 100%"></div>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -232,6 +234,7 @@ import { useForm } from '@inertiajs/vue3';
 import { GoogleMap, Marker } from 'vue3-google-map';
 import { Store } from '@/store/index';
 import { Loader } from '@googlemaps/js-api-loader';
+import Quill from 'quill';
 
 export default {
     components: { MainApp, GoogleMap, Marker },
@@ -273,13 +276,45 @@ export default {
             }),
             imageUrl: [],
             news_type_data: [],
-            apiKey: 'AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw',
+            // apiKey: 'AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw',
+            apiKey: 'AIzaSyDj5ak7LYutPoHkpGNrPks3fMDc9sToYhI',
             lat: 10.9134214,
             lng: 104.5888426,
+            quill: null,
             options: {
                 readOnly: false,
-                theme: 'snow'
-            }
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        ['link', 'image', 'video', 'formula'],
+
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'font': [] }],
+                        [{ 'align': [] }],
+
+                        ['clean']
+                    ],
+                    imageResize: {
+                        displayStyles: {
+                            backgroundColor: 'black',
+                            border: 'none',
+                            color: 'white'
+                        },
+                        modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+                    },
+                },
+            },
         }
     },
 
@@ -305,12 +340,12 @@ export default {
                     console.error("Error loading Google Maps API:", error);
                 });
                 setTimeout(() => {
+                    this.quill = new Quill(this.$refs.description, this.options);
                     if(this.editMode == true){
-                        if (this.$refs.description) {
-                            this.$refs.description.pasteHTML(this.form.description);
+                        if (this.form.description) {
+                            this.quill.root.innerHTML = this.form.description;
                         }
                     }
-
                 }, 100);
             }
         },
@@ -357,20 +392,18 @@ export default {
             this.imageUrl = null;
             this.lat = 10.9134214;
             this.lng = 104.5888426;
-            if (this.$refs.description) {
-                this.$refs.description.setText('');
-            }
         },
         changeLocation() {
             const inputElement = document.getElementById('txtlocation');
-            // const map = new google.maps.Map(document.getElementById("map"), {
-            //     center: { lat: this.lat, lng: this.lng },
-            //     zoom: 15,
+            const autocomplete = new google.maps.places.Autocomplete(inputElement, {
+                //types: ['geocode'], // Suggest addresses only
+                //fields: ['place_id', 'geometry', 'name'], // Fields to return
+                types: ['(cities)']
+            });
+            // google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            //     var place = autocomplete.getPlace();
+            //     document.getElementById('txtlocation').value = place.name;
             // });
-            // const autocomplete = new google.maps.places.Autocomplete(inputElement);
-            // autocomplete.bindTo('bounds', map);
-            // autocomplete.setFields(['address_components', 'geometry', 'name'])
-            // map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('txtlocation'))
         },
 
         initMap() {
@@ -508,7 +541,7 @@ export default {
                 return;
             }
 
-            this.form.description = this.$refs.description.getHTML()??NULL;
+            this.form.description = this.quill.root.innerHTML;
             this.form.post('news_information/create', {
                 onSuccess: () => {
                     this.getNewsInformationGrid();
@@ -551,7 +584,7 @@ export default {
                 return;
             }
 
-            this.form.description = this.$refs.description.getHTML()??NULL;
+            this.form.description = this.quill.root.innerHTML;
             this.form.post('news_information/update', {
                 onSuccess: () => {
                     this.getNewsInformationGrid();
@@ -657,5 +690,9 @@ export default {
 }
 .ql-container {
     font-family: 'Battambang';
+}
+div.ql-tooltip.ql-editing {
+    left: 0px !important;
+    top: 0px !important;
 }
 </style>
