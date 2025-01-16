@@ -7,8 +7,7 @@
                         <v-row class="pa-2 mb-1" style="height: 100px;display: flex;align-items: center;">
                             <v-col cols="2" class="" style="height: 100%;">
                                 <v-card
-                                    href="https://github.com/vuetifyjs/vuetify/"
-                                    target="_blank"
+                                    href="/"
                                     style="height: 100%;"
                                     variant="text"
                                 >
@@ -96,10 +95,9 @@
 
                         <v-card
                             class="mx-auto d-flex justify-center"
-                            href="https://github.com/vuetifyjs/vuetify/"
+                            href="/"
                             max-width="100%"
                             height="150"
-                            target="_blank"
                             :color="colorStore.color"
                         >
                             <v-card-item v-if="company_profile !== null">
@@ -448,7 +446,7 @@ import axios from 'axios';
 import { Store } from '@/store/index';
 import $ from 'jquery';
 import { useGoTo } from 'vuetify';
-import { GoogleMap, Marker, CustomMarker } from 'vue3-google-map';
+import { GoogleMap, Marker } from 'vue3-google-map';
 
 const goTo = useGoTo()
 const colorStore = Store();

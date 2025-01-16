@@ -398,21 +398,26 @@
                             </VBadge>
                         </template>
                         <template v-slot:extension>
-                            <v-container class="d-flex justify-center" fluid>
-                                <!-- <v-row align="center">
-                                    <v-col class="d-flex justify-center" cols="auto">
-                                        <v-btn text :to="{ name: 'home' }">Home</v-btn>
-                                    </v-col>
-                                    <v-col class="d-flex justify-center" cols="auto">
-                                        <v-btn text :to="{ name: 'about' }">About</v-btn>
-                                    </v-col>
-                                    <v-col class="d-flex justify-center" cols="auto">
-                                        <v-btn text :to="{ name: 'services' }">Services</v-btn>
-                                    </v-col>
-                                    <v-col class="d-flex justify-center" cols="auto">
-                                        <v-btn text :to="{ name: 'contact' }">Contact</v-btn>
-                                    </v-col>
-                                </v-row> -->
+                            <v-container class="d-flex justify-center" fluid color="transparent">
+                                <v-slide-group show-arrows center-active>
+                                    <v-slide-group-item
+                                        v-for="item in items"
+                                        :key="item.id"
+                                    >
+                                        <v-list>
+                                            <v-list-item
+                                                link
+                                                :class="{ 'bg-active': $page.url === '/'+item.url }"
+                                                :href="item.url"
+                                                :title="item.name"
+                                                :prepend-icon="item.icon"
+                                                rounded
+                                                class="d-flex align-center mr-3"
+                                            >
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-slide-group-item>
+                                </v-slide-group>
                             </v-container>
                         </template>
                     </v-app-bar>
@@ -760,7 +765,11 @@ function getImageUrl(name) {
     return new URL(`/storage/app/public/${name}`, import.meta.url).href
 };
 </script>
-<style scoped>
+<style>
+.v-toolbar__extension {
+    height: 60px !important;
+    overflow: hidden;
+}
 .bg-active {
   background-color: rgb(var(--v-theme-warning)) !important;
   color : white !important;
