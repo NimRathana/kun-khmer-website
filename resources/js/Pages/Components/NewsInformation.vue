@@ -204,6 +204,7 @@
                                                             <v-btn color="red" @click="reset(index)">Reset</v-btn>
                                                             <v-btn color="warning" @click="crop(index)">Crop</v-btn>
                                                             <v-btn color="primary" @click="browse(index)">Browe</v-btn>
+                                                            <v-btn color="red" @click="Delete(index)">Delete</v-btn>
                                                         </v-col>
                                                     </v-row>
                                                 </v-container>
@@ -215,6 +216,9 @@
                                                     @change="handleFileChangeByIndex($event, index)"
                                                 >
                                             </v-sheet>
+                                        </v-slide-group-item>
+                                        <v-slide-group-item>
+                                            <v-btn prepend-icon="mdi-plus" :color="colorStore.color" @click="triggerFileInput()">Add</v-btn>
                                         </v-slide-group-item>
                                     </v-slide-group>
                                 </v-col>
@@ -479,6 +483,11 @@ export default {
     },
 
     methods: {
+        Delete(index) {
+            this.imagePreviews.splice(index, 1);
+            this.croppedImages.splice(index, 1);
+        },
+
         getImageSource(image, index) {
             if (image instanceof File) {
                 // If image is a File object, convert it to base64
@@ -588,7 +597,7 @@ export default {
 
         handleFileChange(event) {
             const files = Array.from(event.target.files);
-            this.imagePreviews = [];
+            // this.imagePreviews = [];
 
             files.forEach((file) => {
                 const reader = new FileReader();
@@ -604,7 +613,6 @@ export default {
 
                 reader.readAsDataURL(file);
             });
-
             this.form.image = this.imagePreviews;
         },
 
@@ -961,6 +969,10 @@ export default {
 }
 </script>
 <style>
+.v-slide-group__content {
+    display: flex;
+    align-items: center;
+}
 .ql-snow{
     border-radius: 5px;
 }
