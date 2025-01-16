@@ -36,7 +36,7 @@
                             :key="index"
                             :src="getImageUrl(image)"
                             height="100"
-                            width="100"
+                            width="200"
                             cover
                             style="border-radius: 5px;object-fit: contain; border: 1px solid #ccc;"
                             ></v-img>
@@ -354,7 +354,7 @@ export default {
                 news_type_id: null,
                 title_en: '',
                 title_km: '',
-                image: '',
+                image: [],
                 url_video: '',
                 location: '',
                 description: '',
