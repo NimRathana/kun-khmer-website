@@ -172,13 +172,13 @@
                                                         <v-col cols="10">
                                                             <cropper
                                                                 ref="cropper"
-                                                                :src="image"
+                                                                :src="getImageSource(image, index)"
                                                                 :stencil-props="{
                                                                 movable: true,
                                                                 resizable: false,
                                                                 }"
-                                                                @ready="ready"
                                                                 @error="error"
+                                                                @change="updateCroppedImage($event, index)"
                                                                 :stencil-size="{
                                                                     width: 200,
                                                                     height: 100
@@ -187,7 +187,7 @@
                                                                 image-restriction="stencil"
                                                                 :auto-zoom="true"
                                                                 :default-size="defaultSize"
-                                                                style="height: 300px;width: 400px;overflow: hidden;border-radius: 10px;"
+                                                                style="height: 250px;width: 400px;overflow: hidden;border-radius: 10px;"
                                                             ></cropper>
                                                         </v-col>
                                                         <v-col cols="1" class="pa-0 pr-1 ma-0" style="display: flex;flex-direction: column;justify-content: space-evenly;align-items: center;">
@@ -479,6 +479,20 @@ export default {
     },
 
     methods: {
+        getImageSource(image, index) {
+            if (image instanceof File) {
+                // If image is a File object, convert it to base64
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // Update imagePreviews with base64 string when the conversion is complete
+                    this.imagePreviews[index] = reader.result; // Or handle accordingly
+                };
+                reader.readAsDataURL(image);
+                return reader.result; // This is the base64 string
+            }
+            return image; // Return the string if it's already a base64 or URL
+        },
+
         zoom(index, val) {
 			this.$refs.cropper[index].zoom(val);
 		},
@@ -598,9 +612,53 @@ export default {
 			console.log('There is error during image loading');
 		},
 
-		ready() {
-			console.log('Image is successfully loaded');
-		},
+		updateCroppedImage(event, index) {
+            const canvas = event.canvas;
+            if (canvas) {
+                this.croppedImages[index] = canvas.toDataURL('image/jpeg');
+            }
+        },
+
+        convertImageToFile(index) {
+            try {
+                // Ensure cropped image exists at the provided index
+                if (!this.croppedImages || !this.croppedImages[index]) {
+                    console.error(`No cropped image found at index ${index}`);
+                    return;
+                }
+
+                // Extract base64 string and MIME type from the cropped image
+                const base64String = this.croppedImages[index];
+                const byteString = atob(base64String.split(',')[1]);
+                const mimeString = base64String.split(',')[0].split(':')[1].split(';')[0];
+
+                // Create ArrayBuffer from the byteString
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+
+                // Create Blob from ArrayBuffer
+                const blob = new Blob([ab], { type: mimeString });
+
+                // Create a File object from the Blob
+                const file = new File([blob], `croppedImage_${index}.png`, { type: mimeString });
+
+                // Update form data with the newly created file
+                this.form.image[index] = file;
+
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    this.croppedImages[index] = reader.result;  // Update the src with base64 string
+                    this.imagePreviews[index] = reader.result;
+                };
+                reader.readAsDataURL(file);
+
+            } catch (error) {
+                console.error('Error converting image to file:', error);
+            }
+        },
 
         handleClose() {
             this.dialog = false;
@@ -763,6 +821,10 @@ export default {
                 return;
             }
 
+            for(var i = 0; i < this.croppedImages.length; i++){
+                this.convertImageToFile(i);
+            }
+
             this.form.description = this.quill.root.innerHTML;
             this.form.post('news_information/create', {
                 onSuccess: () => {
@@ -804,6 +866,10 @@ export default {
 
             if (Object.keys(this.errorMessage).length > 0) {
                 return;
+            }
+
+            for(var i = 0; i < this.croppedImages.length; i++){
+                this.convertImageToFile(i);
             }
 
             this.form.description = this.quill.root.innerHTML;
@@ -867,6 +933,7 @@ export default {
                 try {
                     const images = this.parseImages(data.image); // Parse the image field
                     this.imageUrl = images.map((img) => this.getImageUrl(img)); // Generate URLs for each image
+                    this.imagePreviews = this.imageUrl;
                     this.form.image_delete = images;
                 } catch (error) {
                     console.error("Error parsing images:", error);
