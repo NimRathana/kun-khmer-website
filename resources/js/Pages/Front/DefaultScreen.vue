@@ -124,7 +124,6 @@
                                             <v-img
                                             :src="getStorageImageUrl('NewsImages/' + JSON.parse(item.image)[0])"
                                             width="400"
-                                            height="200"
                                             style="border-radius: 5px;"
                                             ></v-img>
                                             <v-card-text class="text-center pa-2">
@@ -716,7 +715,7 @@ function NewsInformationDetail(item) {
 };
 
 function tabChange(tabID) {
-    const selectedNewsType = null;
+    let selectedNewsType = null;
     if(about_news_type_data.value){
         selectedNewsType = about_news_type_data.value.filter(
             (item) => item.news_type_id === tabID

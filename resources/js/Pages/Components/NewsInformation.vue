@@ -174,8 +174,8 @@
                                                                 ref="cropper"
                                                                 :src="getImageSource(image, index)"
                                                                 :stencil-props="{
-                                                                movable: true,
-                                                                resizable: false,
+                                                                    movable: true,
+                                                                    resizable: true,
                                                                 }"
                                                                 @error="error"
                                                                 @change="updateCroppedImage($event, index)"
