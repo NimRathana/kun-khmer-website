@@ -60,14 +60,14 @@
             </v-col>
         </v-row>
 
-        <v-dialog v-model="dialog" max-width="1000" persistent scrollable>
+        <v-dialog v-model="dialog" max-width="1200" persistent scrollable>
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
                 :title="editMode?'Update':'Create'"
             >
                 <v-divider></v-divider>
 
-                <v-card-text class="pa-0" style="max-height: 500px;">
+                <v-card-text class="pa-0" style="max-height: 700px;">
                     <form @submit.prevent="editMode ? update() : create()" enctype="multipart/form-data">
                         <v-card-text>
                             <v-row dense>
@@ -93,51 +93,136 @@
                                         <v-col cols="12" sm="6">
                                             <v-text-field variant="outlined" density="compact" label="Longitude" v-model="lng"></v-text-field>
                                         </v-col>
-
-                                        <v-col cols="12" class="d-flex align-center">
-                                            <input id="txtlocation" type="text" placeholder="Enter a location" style="width: 100%; padding: 10px;" @input="changeLocation" />
-                                            <!-- <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field> -->
-                                            <v-card-text style="flex: unset;">or</v-card-text>
-                                            <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">Use my current location</v-btn>
-                                        </v-col>
                                     </v-row>
                                 </v-col>
-                                <v-col cols="12" md="4" style="display: flex;justify-content: center;align-items: center;text-align: center;flex-direction: column;">
-                                    <v-row style="display: flex;justify-content: center;width:100%;">
-                                        <v-col cols="12" style="display: flex;flex-direction: column;align-items: center;">
+                                <v-col cols="12" md="4" style="display: flex; justify-content: center; align-items: center; text-align: center; flex-direction: column;">
+                                    <!-- Image Upload Section -->
+                                    <v-row style="display: flex; justify-content: center; width: 100%;">
+                                        <v-col cols="12" style="display: flex; flex-direction: column; align-items: center;">
                                             <v-sheet
-                                            class="pa-2"
-                                            height="285"
-                                            max-height="285"
-                                            width="90%"
-                                            :elevation="5"
-                                            rounded
-                                            style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; overflow: auto;"
-                                            >
-                                            <template v-if="imageUrl && imageUrl.length > 0">
-                                                <div
-                                                v-for="(preview, index) in imageUrl"
-                                                :key="index"
-                                                style="margin: 5px; display: flex; justify-content: center; align-items: center;"
+                                                class="pa-2"
+                                                height="250"
+                                                max-height="250"
+                                                width="90%"
+                                                :elevation="5"
+                                                rounded
+                                                style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; overflow: auto;"
                                                 >
-                                                <img
-                                                    :src="preview"
-                                                    alt="Uploaded Image"
-                                                    style="width: 100px; height: 100px; object-fit: contain; border: 1px solid #ccc; border-radius: 5px;"
-                                                />
-                                                </div>
-                                            </template>
+                                                <!-- Display Previews of Cropped Images -->
+                                                <template v-if="croppedImages.length > 0">
+                                                    <div
+                                                    v-for="(cropped, index) in croppedImages"
+                                                    :key="index"
+                                                    style="margin: 5px; display: flex; justify-content: center; align-items: center;"
+                                                    >
+                                                    <img
+                                                        v-if="cropped !== undefined"
+                                                        :src="cropped"
+                                                        alt="Cropped Image"
+                                                        style="width: 100%; min-height: 100px; object-fit: contain; border: 1px solid #ccc; border-radius: 5px;"
+                                                    />
+                                                    </div>
+                                                </template>
 
-                                                <!-- Fallback if no images -->
-                                                <span v-else>No Images</span>
+                                                <!-- Fallback if no cropped images -->
+                                                <span v-else>No Cropped Images</span>
                                             </v-sheet>
 
-                                            <!-- File input for uploading an image -->
-                                            <v-file-input multiple style="display: none;" ref="fileInput" accept="image/*" @change="FileChange"></v-file-input>
+                                            <!-- File input for uploading images -->
+                                            <v-file-input
+                                                multiple
+                                                style="display: none;"
+                                                ref="fileInput"
+                                                accept="image/*"
+                                                @change="handleFileChange"
+                                            ></v-file-input>
 
                                             <v-btn class="mt-5" @click="triggerFileInput" :color="colorStore.color">Upload</v-btn>
                                         </v-col>
                                     </v-row>
+                                </v-col>
+                                <v-col cols="12" class="my-3">
+                                    <!-- Cropping Section -->
+                                    <v-slide-group
+                                        v-if="imagePreviews.length > 0"
+                                        show-arrows
+                                        style="width: 100%;"
+                                    >
+                                        <v-slide-group-item
+                                            v-for="(image, index) in imagePreviews"
+                                            :key="index"
+                                            :value="index"
+                                        >
+                                            <v-sheet
+                                                class="mr-3 bg-success"
+                                                elevation="5"
+                                                rounded="lg"
+                                                style="display: flex; justify-content: center; align-items: center;width: 400px;overflow: hidden;"
+                                            >
+                                                <v-container :style="{ 'background-color': colorStore.color }">
+                                                    <v-row>
+                                                        <v-col cols="1" class="pa-0 pl-1 ma-0" style="display: flex;flex-direction: column;justify-content: space-evenly;align-items: center;">
+                                                            <v-icon @click="zoom(index, 2)">mdi-magnify-plus</v-icon>
+                                                            <v-icon @click="zoom(index, 0.5)">mdi-magnify-minus</v-icon>
+                                                            <v-icon @click="move(index, 0, -10)">mdi-arrow-up-thin</v-icon>
+                                                            <v-icon @click="move(index, -10, 0)">mdi-arrow-left-thin</v-icon>
+                                                            <v-icon @click="move(index, 10, 0)">mdi-arrow-right-thin</v-icon>
+                                                            <v-icon @click="move(index, 0, 10)">mdi-arrow-down-thin</v-icon>
+                                                        </v-col>
+                                                        <v-col cols="10">
+                                                            <cropper
+                                                                ref="cropper"
+                                                                :src="image"
+                                                                :stencil-props="{
+                                                                movable: true,
+                                                                resizable: false,
+                                                                }"
+                                                                @ready="ready"
+                                                                @error="error"
+                                                                :stencil-size="{
+                                                                    width: 200,
+                                                                    height: 100
+                                                                }"
+                                                                :transitions="true"
+                                                                image-restriction="stencil"
+                                                                :auto-zoom="true"
+                                                                :default-size="defaultSize"
+                                                                style="height: 300px;width: 400px;overflow: hidden;border-radius: 10px;"
+                                                            ></cropper>
+                                                        </v-col>
+                                                        <v-col cols="1" class="pa-0 pr-1 ma-0" style="display: flex;flex-direction: column;justify-content: space-evenly;align-items: center;">
+                                                            <v-icon @click="flip(index, 1, 0)">mdi-flip-horizontal</v-icon>
+                                                            <v-icon @click="flip(index, 0, 1)">mdi-flip-vertical</v-icon>
+                                                            <v-icon @click="rotate(index, 90)">mdi-rotate-right</v-icon>
+                                                            <v-icon @click="rotate(index, -90)">mdi-rotate-left</v-icon>
+                                                            <v-icon @click="center(index)">mdi-image-filter-center-focus</v-icon>
+                                                            <v-icon @click="download(index)">mdi-progress-download</v-icon>
+                                                        </v-col>
+                                                    </v-row>
+                                                    <v-row>
+                                                        <v-col cols="12" style="display: flex;justify-content: space-evenly;">
+                                                            <v-btn color="red" @click="reset(index)">Reset</v-btn>
+                                                            <v-btn color="warning" @click="crop(index)">Crop</v-btn>
+                                                            <v-btn color="primary" @click="browse(index)">Browe</v-btn>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-container>
+                                                <input
+                                                    type="file"
+                                                    :ref="'fileInput' + index"
+                                                    accept="image/*"
+                                                    style="display: none;"
+                                                    @change="handleFileChangeByIndex($event, index)"
+                                                >
+                                            </v-sheet>
+                                        </v-slide-group-item>
+                                    </v-slide-group>
+                                </v-col>
+                                <v-col cols="8" class="d-flex align-center">
+                                    <input id="txtlocation" type="text" placeholder="Enter a location" style="width: 100%; padding: 10px;" @input="changeLocation" />
+                                    <!-- <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field> -->
+                                    <v-card-text style="flex: unset;">or</v-card-text>
+                                    <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">Use my current location</v-btn>
                                 </v-col>
                                 <v-col cols="12" class="mt-2">
                                     <!-- <GoogleMap :api-key="apiKey" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15" animation="bounce">
@@ -146,7 +231,6 @@
                                     </GoogleMap> -->
                                     <div id="map" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;"></div>
                                 </v-col>
-
                                 <v-col cols="12" class="mt-2" style="min-height: 400px;">
                                     <!-- <v-textarea variant="outlined" density="compact" label="Description" v-model="form.description"></v-textarea> -->
                                     <!-- <QuillEditor ref="description" toolbar="full" :options="options" /> -->
@@ -235,9 +319,12 @@ import { GoogleMap, Marker } from 'vue3-google-map';
 import { Store } from '@/store/index';
 import { Loader } from '@googlemaps/js-api-loader';
 import Quill from 'quill';
+import { Cropper } from 'vue-advanced-cropper'
+import 'vue-advanced-cropper/dist/style.css';
+import 'vue-advanced-cropper/dist/theme.compact.css';
 
 export default {
-    components: { MainApp, GoogleMap, Marker },
+    components: { MainApp, GoogleMap, Marker, Cropper },
     data() {
         return {
             colorStore: Store(),
@@ -315,13 +402,21 @@ export default {
                     },
                 },
             },
+            imagePreviews: [],
+            croppedImages: [],
+            originalImages: [],
+            defaultSize({ imageSize, visibleArea }) {
+                return {
+                    width: (visibleArea || imageSize).width,
+                    height: (visibleArea || imageSize).height,
+                };
+            }
         }
     },
 
     mounted() {
         this.getNewsInformationGrid();
         this.getNewsType();
-        // this.getAddressForm();
         this.form.location = `${this.lat}, ${this.lng}`;
     },
 
@@ -384,6 +479,129 @@ export default {
     },
 
     methods: {
+        zoom(index, val) {
+			this.$refs.cropper[index].zoom(val);
+		},
+
+        move(index, val1, val2) {
+            this.$refs.cropper[index].move(val1, val2);
+        },
+
+        flip(index, x, y) {
+			const { image } = this.$refs.cropper[index].getResult();
+			if (image.transforms.rotate % 180 !== 0) {
+				this.$refs.cropper[index].flip(!x, !y);
+			} else {
+				this.$refs.cropper[index].flip(x, y);
+			}
+		},
+
+        rotate(index, angle) {
+			this.$refs.cropper[index].rotate(angle);
+		},
+
+        center(index) {
+			this.$refs.cropper[index].setCoordinates(({ coordinates, imageSize }) => ({
+				left: imageSize.width / 2 - coordinates.width / 2,
+				top: imageSize.height / 2 - coordinates.height / 2,
+			}));
+		},
+
+        download(index) {
+            const cropper = this.$refs.cropper[index];
+            const croppedImage = cropper.getResult().canvas;
+
+            // Convert to blob and download
+            croppedImage.toBlob((blob) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `cropped-image-${index}.png`;
+                link.click();
+            });
+        },
+
+        crop(index) {
+            try{
+                const { coordinates, canvas, } = this.$refs.cropper[index].getResult();
+
+                if (canvas) {
+
+                    const croppedImage = canvas.toDataURL();
+
+                    this.croppedImages[index] = croppedImage;
+
+                    // Update the preview for the cropped image
+                    this.imagePreviews.splice(index, 1, croppedImage);
+
+                    // Update the form's image data
+                    this.form.image[index] = croppedImage;
+                }
+            }catch(e){
+                console.log(e);
+            }
+		},
+
+        reset(index) {
+            // Option 1: Revert to the original image if stored
+            if (this.originalImages && this.originalImages[index]) {
+                this.imagePreviews.splice(index, 1, this.originalImages[index]);
+            } else {
+                // Option 2: Clear the image preview
+                this.imagePreviews.splice(index, 1, null);
+            }
+
+            // Clear the cropper reference (optional)
+            this.$refs.cropper[index].reset();
+        },
+
+        browse(index) {
+            const fileInput = this.$refs[`fileInput${index}`];
+            if (fileInput) fileInput[0].click();
+        },
+
+        handleFileChangeByIndex(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imagePreviews[index] = e.target.result;
+                    this.originalImages[index] = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            event.target.value = null; // Reset the file input
+        },
+
+        handleFileChange(event) {
+            const files = Array.from(event.target.files);
+            this.imagePreviews = [];
+
+            files.forEach((file) => {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    this.imagePreviews.push(e.target.result);
+                    this.originalImages.push(e.target.result);
+                };
+
+                reader.onerror = (error) => {
+                    console.error("Error reading file:", error);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            this.form.image = this.imagePreviews;
+        },
+
+        error() {
+			console.log('There is error during image loading');
+		},
+
+		ready() {
+			console.log('Image is successfully loaded');
+		},
+
         handleClose() {
             this.dialog = false;
             this.errorMessage = '';
@@ -392,7 +610,11 @@ export default {
             this.imageUrl = null;
             this.lat = 10.9134214;
             this.lng = 104.5888426;
+            this.imagePreviews = [];
+            this.croppedImages = [];
+            this.originalImages = [];
         },
+
         changeLocation() {
             const inputElement = document.getElementById('txtlocation');
             const autocomplete = new google.maps.places.Autocomplete(inputElement, {
@@ -654,19 +876,6 @@ export default {
 
         triggerFileInput() {
             this.$refs.fileInput.$el.querySelector('input').click();
-        },
-
-        FileChange(event) {
-            const files = event.target.files;
-            if (files.length > 0) {
-                this.form.image = [...files]; // Store all selected files in form data
-                this.imageUrl = Array.from(files).map((file) =>
-                URL.createObjectURL(file)
-                ); // Generate previews for all selected files
-            } else {
-                this.imageUrl = [];
-                console.error("No files selected or invalid files.");
-            }
         },
 
         getImageUrl(name) {

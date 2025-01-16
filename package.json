@@ -30,6 +30,7 @@
         "quill": "^2.0.3",
         "quill-image-drop-module": "^1.0.3",
         "quill-image-resize-module": "^3.0.0",
+        "vue-advanced-cropper": "^2.8.9",
         "vue3-geolocation": "^1.0.0",
         "vue3-google-map": "^0.21.1",
         "vuetify": "^3.7.5"
