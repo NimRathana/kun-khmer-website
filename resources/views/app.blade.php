@@ -81,7 +81,6 @@
             if (detailsElement) {
                 detailsElement.classList.remove("v-input__details");
             }
-
         }, 200);
     });
 </script>
@@ -101,7 +100,7 @@
         --tw-ring-shadow: none !important;
     }
     .v-table{
-        height: 100%;
+        min-height: 400px;
     }
     .v-table__wrapper{
         height: 1px;

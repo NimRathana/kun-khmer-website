@@ -1,7 +1,7 @@
 <template>
     <MainApp>
-        <v-row style="height: 100%;">
-            <v-col class="head" cols="12" style="height: fit-content;">
+        <v-row>
+            <v-col cols="12" class="txtsearch" style="height: fit-content;">
                 <v-row style="display: flex;align-items: end;">
                     <v-col cols="12" md="6">
                         <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" label="search" v-model="search"></v-text-field>
@@ -14,7 +14,7 @@
                 </v-row>
             </v-col>
 
-            <v-col cols="12" class="body" style="height: 100%;">
+            <v-col cols="12">
                 <v-data-table
                     :headers="headers"
                     :items="item"

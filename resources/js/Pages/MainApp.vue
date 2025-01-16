@@ -421,10 +421,10 @@
                             </v-container>
                         </template>
                     </v-app-bar>
-                    <v-main class="main" style="display: flex; flex-direction: column;min-width: 900px;min-height: 500px;">
+                    <v-main class="main" style="display: flex; flex-direction: column;min-width: 900px;">
                         <v-row class="pt-0 mt-0">
                             <v-col cols="12" class="content">
-                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" class="container_body" style="height: 100%;padding-bottom: 5px;">
+                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" style="padding-bottom: 5px;">
                                     <slot />
                                 </v-container>
                             </v-col>
@@ -469,7 +469,7 @@ const showButton = ref(false);
 const colorPicker = ref(colorStore.color);
 const selectedColor = ref(localStorage.getItem('selectedColor') || 'grey-darken-3');
 const WindowSize = ref(false);
-const footerHeight = ref(null);
+// const footerHeight = ref(null);
 const items = ref([]);
 const colors = ref(['#0D47A1', '#B71C1C', '#1B5E20', '#4A148C']);
 const hideDrawer = ref(page.url);
@@ -567,17 +567,17 @@ const checkWindowSize = () => {
         WindowSize.value = false;
     }
 
-    // let left = $(".v-navigation-drawer--left").position().left;
-    // if (left < -0) {
-    //     $(".app_scroll").attr("style", "overflow-x: scroll;");
-    //     $(".app_scroll").attr("style", "overflow-y: hidden;");
-    // } else {
-    //     setTimeout(() => {
-    //         $(".app_scroll").removeAttr("style");
-    //     }, 200);
-    // }
-    footerHeight.value = $(".footer").height() + 20;
-    $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
+    let left = $(".v-navigation-drawer--left").position().left;
+    if (left < -0) {
+        $(".app_scroll").attr("style", "overflow-x: scroll;");
+        $(".app_scroll").attr("style", "overflow-y: hidden;");
+    } else {
+        setTimeout(() => {
+            $(".app_scroll").removeAttr("style");
+        }, 200);
+    }
+    // footerHeight.value = $(".footer").height() + 20;
+    // $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
     showButton.value = window.innerWidth > window.outerWidth * 0.5 && window.outerWidth > 700;
 };
 
@@ -585,15 +585,15 @@ onMounted(() => {
     const instance = getCurrentInstance();
     const helper = instance?.proxy.$helper;
     helper.GetGridHeight();
-    // let left = $(".v-navigation-drawer--left").position().left;
-    // setTimeout(() => {
-    //     if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
-    //         $(".app_scroll").attr("style", "overflow-x: scroll;");
-    //         $(".app_scroll").attr("style", "overflow-y: hidden;");
-    //     } else {
-    //         $(".app_scroll").removeAttr("style");
-    //     }
-    // }, 100);
+    let left = $(".v-navigation-drawer--left").position().left;
+    setTimeout(() => {
+        if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
+            $(".app_scroll").attr("style", "overflow-x: scroll;");
+            $(".app_scroll").attr("style", "overflow-y: hidden;");
+        } else {
+            $(".app_scroll").removeAttr("style");
+        }
+    }, 100);
     const txtsearch = document.getElementsByClassName("search")[0];
     let detailsElement = '';
     if(txtsearch != undefined){
@@ -609,8 +609,8 @@ onMounted(() => {
     setTimeout(function(){
         $(".v-navigation-drawer").find(".treeview-mini").css({"display": "none"});
     }, 100);
-    footerHeight.value = $(".footer").height() + 20;
-    $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
+    // footerHeight.value = $(".footer").height() + 20;
+    // $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
     if(colorStore.selectedLayout !== 'Horizontal'){
         $(".v-toolbar__extension").css({"display":"none"});
         $(".main").css({"padding-top":"50px"});
