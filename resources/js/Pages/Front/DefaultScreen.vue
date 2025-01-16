@@ -658,7 +658,7 @@ async function getNewsType() {
                 tab.value = news_type_data.value[0].id;
                 tabChange(news_type_data.value[0].id);
             } else {
-                news_type_data.value = null;
+                news_type_data.value = [];
             }
         }
     } catch (error) {
