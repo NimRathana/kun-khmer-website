@@ -117,7 +117,7 @@
                         <v-carousel v-model="carousel" cycle class="carousel" height="400" show-arrows="hover" hide-delimiter-background :color="colorStore.color">
                             <v-carousel-item v-for="(chunk, index) in chunkedItems" :key="index">
                                 <v-row align="center">
-                                    <v-col cols="3" v-for="(item, subIndex) in chunk" :key="subIndex">
+                                    <v-col cols="3" class="d-flex justify-center" v-for="(item, subIndex) in chunk" :key="subIndex">
                                         <v-card max-width="400" height="300" variant="text" @click="NewsInformationDetail(item)">
                                             <v-img
                                             :src="getStorageImageUrl('NewsImages/' + JSON.parse(item.image)[0])"
@@ -150,7 +150,7 @@
                                             :style="{ '--selected-tab-color': colorStore.color }"
                                             >
                                             <template v-slot:tab="{ item }">
-                                                <v-tab href="" class="text-center">
+                                                <v-tab :value="item" class="text-center">
                                                     {{ item.about_news_name_en }}
                                                 </v-tab>
                                             </template>
@@ -158,7 +158,7 @@
                                     </v-card>
                                 </v-col>
                                 <v-col class="pt-0 pb-0" style="min-width: 60%;max-width: 60%;">
-                                    <v-card class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
+                                    <v-card v-if="tab_about_news == null" class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
                                         <!-- <v-tabs-window v-model="tab_about_news">
                                             <v-tabs-window-item value="one">
                                             One
@@ -210,6 +210,16 @@
                                             <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
                                                 position: { lat: Number(lat), lng: Number(lng) }, }" />
                                         </GoogleMap>
+                                    </v-card>
+
+                                    <v-card v-else class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
+                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ tab_about_news.about_news_name_en }}</v-card-title>
+                                        <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
+
+                                        <v-card-item class="description">
+                                            <!-- <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" /> -->
+                                            <div id="editor-container" ref="descriptionEditor" style="height: 100%"></div>
+                                        </v-card-item>
                                     </v-card>
                                 </v-col>
                                 <v-col class="pa-0" style="min-width: 20%;max-width: 20%;">
@@ -699,6 +709,7 @@ async function getAboutNewsType() {
 
 function NewsInformationDetail(item) {
     news_detail.value = item;
+    tab_about_news.value = null;
     if (item.location) {
         const [latitude, longitude] = item.location.split(',').map(coord => parseFloat(coord.trim()));
         lat.value = latitude;
