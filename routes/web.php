@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AboutNewsDescriptionController;
 use App\Http\Controllers\Api\AboutNewsTypeController;
 use App\Http\Controllers\Api\CompanyProfileController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ Route::prefix('/')->group(function () {
     Route::get('/getNewsInformation', [NewsInformationController::class, 'getNewsInformationGrid']);
     Route::get('/getAboutNewsType', [AboutNewsTypeController::class, 'getAboutNewsType']);
     Route::get('/getSponsor', [SponsorController::class, 'getSponsorGrid']);
+    Route::get('/getAboutNewsDescription', [AboutNewsDescriptionController::class, 'getAboutNewsDescriptionGrid']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -97,5 +99,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/create', [SponsorController::class, 'create']);
         Route::post('/update', [SponsorController::class, 'update']);
         Route::post('/delete', [SponsorController::class, 'delete']);
+    });
+
+    Route::prefix('about_news_description')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Components/AboutNewsDescription');
+        });
+        Route::get('/getAboutNewsDescriptionGrid', [AboutNewsDescriptionController::class, 'getAboutNewsDescriptionGrid']);
+        Route::post('/create', [AboutNewsDescriptionController::class, 'create']);
+        Route::post('/update', [AboutNewsDescriptionController::class, 'update']);
+        Route::post('/delete', [AboutNewsDescriptionController::class, 'delete']);
     });
 });

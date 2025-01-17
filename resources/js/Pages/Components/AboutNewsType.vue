@@ -61,7 +61,7 @@
                                 <v-text-field variant="outlined" density="compact" label="Name Khmer*" v-model="form.about_news_name_km" :error-messages="errorMessage.about_news_name_km"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-select v-model="form.news_type_id" @update:modelValue="selectChange(form.news_type_id)" variant="outlined" density="compact" label="Select*" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
+                                <v-select v-model="form.news_type_id" @update:modelValue="selectChange(form.news_type_id)" variant="outlined" density="compact" label="News Type*" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
                                 <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
                             </v-col>
                             <v-col cols="12" sm="6">

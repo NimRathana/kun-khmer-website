@@ -439,13 +439,14 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, getCurrentInstance } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { VTreeview } from 'vuetify/labs/VTreeview';
 import { Inertia } from '@inertiajs/inertia';
 import $ from 'jquery';
 import { Store } from '@/store/index';
 import axios from 'axios';
+import { helper } from '@/helper';
 
 const props = defineProps({
     title: String,
@@ -502,6 +503,7 @@ watch(
         $(".v-toolbar__extension").css({"display":"flex"});
         $(".main").css({"padding-top":""});
     }
+    helper.GetGridHeight()
   }
 );
 
@@ -576,14 +578,10 @@ const checkWindowSize = () => {
             $(".app_scroll").removeAttr("style");
         }, 200);
     }
-    // footerHeight.value = $(".footer").height() + 20;
-    // $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
     showButton.value = window.innerWidth > window.outerWidth * 0.5 && window.outerWidth > 700;
 };
 
 onMounted(() => {
-    const instance = getCurrentInstance();
-    const helper = instance?.proxy.$helper;
     helper.GetGridHeight();
     let left = $(".v-navigation-drawer--left").position().left;
     setTimeout(() => {
@@ -609,8 +607,6 @@ onMounted(() => {
     setTimeout(function(){
         $(".v-navigation-drawer").find(".treeview-mini").css({"display": "none"});
     }, 100);
-    // footerHeight.value = $(".footer").height() + 20;
-    // $(".main").find(".content").css({"height": `calc(100% - ${footerHeight.value}px)`});
     if(colorStore.selectedLayout !== 'Horizontal'){
         $(".v-toolbar__extension").css({"display":"none"});
         $(".main").css({"padding-top":"50px"});

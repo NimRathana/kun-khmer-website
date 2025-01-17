@@ -150,7 +150,7 @@
                                             :style="{ '--selected-tab-color': colorStore.color }"
                                             >
                                             <template v-slot:tab="{ item }">
-                                                <v-tab :value="item" class="text-center">
+                                                <v-tab :value="item" :loading="loading" class="text-center">
                                                     {{ item.about_news_name_en }}
                                                 </v-tab>
                                             </template>
@@ -213,10 +213,10 @@
                                     </v-card>
 
                                     <v-card v-else class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
-                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ tab_about_news.about_news_name_en }}</v-card-title>
+                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ news_detail.title_en }}</v-card-title>
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
 
-                                        <v-card-item class="description">
+                                        <v-card-item class="description pa-0 ma-0">
                                             <!-- <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" /> -->
                                             <div id="editor-container" ref="descriptionEditor" style="height: 100%"></div>
                                         </v-card-item>
@@ -477,6 +477,7 @@ const news_type_data = ref([]);
 const news_information_data = ref([]);
 const about_news_type_data = ref([]);
 const about_news_type_select_data = ref([]);
+const about_news_description_data = ref([]);
 const carousel = ref(0);
 const tab = ref(null);
 const tab_about_news = ref(null);
@@ -488,6 +489,7 @@ const lng = ref(104.5888426);
 const sponsor_data = ref([]);
 const descriptionEditor = ref(null);
 const quill = ref(null);
+const loading = ref(false);
 const options = ref({
                     readOnly: false,
                     theme: 'snow',
@@ -575,6 +577,15 @@ watch(
   }
 );
 
+watch(
+  () => tab_about_news.value,
+  (newVal) => {
+    if(newVal != null){
+        getAboutNewsDescription(newVal.id, news_detail.value.id);
+    }
+  }
+);
+
 const filteredNews = computed(() => {
     return Array.isArray(news_information_data.value)
         ? news_information_data.value.filter(item => item.news_type_id === tab.value)
@@ -610,6 +621,30 @@ const autoClickFirstItem = () => {
     if (chunkedItems.value.length > 0 && chunkedItems.value[0].length > 0) {
         const firstItem = chunkedItems.value[0][0];
         NewsInformationDetail(firstItem);
+    }
+};
+
+async function getAboutNewsDescription(tab_about_news_id, news_detail_id) {
+    try {
+        loading.value = true;
+        const response = await axios.get('getAboutNewsDescription', {
+            params: {
+                tab_about_news_id: tab_about_news_id,
+                news_detail_id: news_detail_id,
+            },
+        });
+
+        about_news_description_data.value = response.data;
+        quill.value.root.innerHTML = null;
+        if (descriptionEditor.value) {
+            if(about_news_description_data.value[0] != undefined) {
+                quill.value = new Quill(descriptionEditor.value, options.value);
+                quill.value.root.innerHTML = about_news_description_data.value[0]?.description;
+            }
+        }
+        loading.value = false;
+    } catch (error) {
+        console.error('Error fetching data', error);
     }
 };
 

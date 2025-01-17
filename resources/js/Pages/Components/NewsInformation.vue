@@ -973,14 +973,4 @@ export default {
     display: flex;
     align-items: center;
 }
-.ql-snow{
-    border-radius: 5px;
-}
-.ql-container {
-    font-family: 'Battambang';
-}
-div.ql-tooltip.ql-editing {
-    left: 0px !important;
-    top: 0px !important;
-}
 </style>
