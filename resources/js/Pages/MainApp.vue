@@ -38,8 +38,8 @@
                                 <Link :href="item.url" :active="route().current(item.url)">
                                     <v-list-item :color="'warning'" rounded :value="item.url" class="mt-3" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
-                                            <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
-                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                            <v-icon class="mr-2 ml-2" :icon="item.icon"></v-icon>
+                                            <v-list-item-title style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;display: inline-block;max-width: 170px; ">{{ item.name }}</v-list-item-title>
                                         </template>
                                     </v-list-item>
                                 </Link>
