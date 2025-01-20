@@ -85,6 +85,9 @@
         scroll-behavior: smooth;
         line-height: 1.5;
     }
+    .text-caption {
+        font-family: 'Battambang';
+    }
     input {
         background-color: transparent !important;
     }

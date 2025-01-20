@@ -137,6 +137,26 @@ const en = {
         sponsor_name: 'Sponsor Name',
         contact: 'Contact'
     },
+
+    drawer: {
+        theme_customize: 'Theme Customize',
+        customize_preview_real_time: 'Customize & Preview in Real Time',
+        theme: 'Theme',
+        system: 'System',
+        skin: 'Skins',
+        default: 'Default',
+        bordered: 'Bordered',
+        layout: 'Layout',
+        vertical: 'Vertical',
+        collapsed: 'Collapsed',
+        horizontal: 'Horizontal',
+        content: 'Content',
+        compact: 'Compact',
+        wide: 'Wide',
+        direction: 'Direction',
+        left_to_right: 'Left To Right',
+        right_to_left: 'Right To Left',
+    }
 };
 
 export default { en };

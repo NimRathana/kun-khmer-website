@@ -89,7 +89,7 @@
                     <v-navigation-drawer v-model="toggleRightDrawer" location="right" temporary :width="400" style="z-index:999;height:100vh;position:fixed;bottom:0;">
                         <v-toolbar style="position: sticky;top:0;z-index: 99;">
                             <v-list>
-                                <v-list-item title="Theme Customize" subtitle="Customize & Preview in Real Time"></v-list-item>
+                                <v-list-item :title="$t('drawer.theme_customize')" :subtitle="$t('drawer.customize_preview_real_time')"></v-list-item>
                             </v-list>
                             <v-spacer></v-spacer>
                             <v-btn icon variant="text" @click.stop="toggleRightDrawer = !toggleRightDrawer">
@@ -97,13 +97,7 @@
                             </v-btn>
                         </v-toolbar>
                         <v-container>
-                            <v-chip
-                            :color="colorStore.color" size="small"
-                            label
-                            >
-                                Theming
-                            </v-chip>
-                            <v-list-item-title class="mt-5">Primary Color</v-list-item-title>
+                            <v-list-item-title class="mt-2">{{ $t('drawer.primary_color') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3 d-flex" style="gap: 10px;">
                                 <v-btn
                                 v-for="(color, index) in colors"
@@ -141,7 +135,7 @@
                                     </v-menu>
                                 </v-btn>
                             </div>
-                            <v-list-item-title class="mt-5">Theme</v-list-item-title>
+                            <v-list-item-title class="mt-5">{{ $t('drawer.theme') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -150,7 +144,7 @@
                                                 <v-icon size="30">mdi-weather-sunny</v-icon>
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Light</p>
+                                        <p class="text-caption">{{ $t('global.light_theme') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -159,7 +153,7 @@
                                                 <v-icon size="30">mdi-weather-night</v-icon>
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Dark</p>
+                                        <p class="text-caption">{{ $t('global.dark_theme') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -168,11 +162,11 @@
                                                 <v-icon size="30">mdi-monitor</v-icon>
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">System</p>
+                                        <p class="text-caption">{{ $t('drawer.system') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
-                            <v-list-item-title class="mt-5">Skins</v-list-item-title>
+                            <v-list-item-title class="mt-5">{{ $t('drawer.skin') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -185,7 +179,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Default</p>
+                                        <p class="text-caption">{{ $t('drawer.default') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -198,7 +192,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Bordered</p>
+                                        <p class="text-caption">{{ $t('drawer.bordered') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
@@ -214,13 +208,7 @@
                         </v-container>
                         <v-divider :thickness="1" :class="['my-2', { 'border-opacity-50': theme === 'dark', 'border-opacity-100': theme !== 'dark' }]"></v-divider>
                         <v-container>
-                            <v-chip
-                            :color="colorStore.color" size="small"
-                            label
-                            >
-                            Layout
-                            </v-chip>
-                            <v-list-item-title class="mt-5">Layout</v-list-item-title>
+                            <v-list-item-title class="mt-2">{{ $t('drawer.layout') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -233,7 +221,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Vertical</p>
+                                        <p class="text-caption">{{ $t('drawer.vertical') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -246,7 +234,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Collapsed</p>
+                                        <p class="text-caption">{{ $t('drawer.collapsed') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -259,11 +247,11 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Horizontal</p>
+                                        <p class="text-caption">{{ $t('drawer.horizontal') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
-                            <v-list-item-title class="mt-5">Content</v-list-item-title>
+                            <v-list-item-title class="mt-5">{{ $t('drawer.content') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -276,7 +264,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Compact</p>
+                                        <p class="text-caption">{{ $t('drawer.compact') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -289,11 +277,11 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Wide</p>
+                                        <p class="text-caption">{{ $t('drawer.wide') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
-                            <v-list-item-title class="mt-5">Direction</v-list-item-title>
+                            <v-list-item-title class="mt-5">{{ $t('drawer.direction') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -306,7 +294,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Left to right</p>
+                                        <p class="text-caption">{{ $t('drawer.left_to_right') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -319,7 +307,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Right to left</p>
+                                        <p class="text-caption">{{ $t('drawer.right_to_left') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>

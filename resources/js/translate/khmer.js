@@ -138,6 +138,28 @@ const kh = {
         sponsor_name: 'ឈ្មោះអ្នកឧបត្ថម្ភ',
         contact: 'ទំនាក់ទំនង'
     },
+
+    drawer: {
+        theme_customize: 'ផ្ទាល់ខ្លួនស្បែកផ្ទេម',
+        customize_preview_real_time: 'ប្ដូររូបរាង & មើលជាមុនក្នុងពេលវេលាពិតប្រាកដ',
+        primary_color: 'ពណ៌បឋម',
+        theme: 'ផ្ទៃ',
+        system: 'ប្រព័ន្ធ',
+        skin: 'ស្បែក',
+        default: 'លំនាំដើម',
+        bordered: 'មានស៊ុម',
+        layout: 'ប្លង់',
+        vertical: 'បញ្ឈរ',
+        collapsed: 'បង្រួម',
+        horizontal: 'ផ្តេក',
+        content: 'មាតិកា',
+        compact: 'ចង្អៀត',
+        wide: 'ទូលាយ',
+        direction: 'ទិសដៅ',
+        left_to_right: 'ពីឆ្វេងទៅស្តាំ',
+        right_to_left: 'ពីស្តាំទៅឆ្វេង',
+    }
+
 };
 
 export default { kh };
