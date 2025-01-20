@@ -327,10 +327,10 @@
                                         </v-btn>
                                     </template>
                                     <v-list>
-                                        <v-list-item @click="ChangeLanguage('en')">
+                                        <v-list-item :prepend-avatar="getFlagImage('logos/english_flag.jpg')" @click="ChangeLanguage('en')">
                                             <v-list-item-title>{{ $t('global.english') }}</v-list-item-title>
                                         </v-list-item>
-                                        <v-list-item @click="ChangeLanguage('kh')">
+                                        <v-list-item class="mt-3" :prepend-avatar="getFlagImage('logos/cambodia_flag.png')" @click="ChangeLanguage('kh')">
                                             <v-list-item-title>{{ $t('global.khmer') }}</v-list-item-title>
                                         </v-list-item>
                                     </v-list>
@@ -768,6 +768,10 @@ function goHomePage(){
 function getImageUrl(name) {
     return new URL(`/storage/app/public/${name}`, import.meta.url).href
 };
+
+function getFlagImage(name){
+    return new URL(`/resources/js/images/${name}`, import.meta.url).href
+}
 </script>
 <style>
 .v-toolbar__extension {

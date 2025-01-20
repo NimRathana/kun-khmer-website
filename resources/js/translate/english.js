@@ -29,7 +29,8 @@ const en = {
         no_image: 'No Image',
         are_you_sure_you_want_to_delete: 'Are you sure you want to delete',
         no_cancel: 'No, Cancel',
-        yes_i_am_sure: "Yes, I'm Sure"
+        yes_i_am_sure: "Yes, I'm Sure",
+        important_video: 'Important Video'
     },
 
     profile: {
@@ -141,6 +142,7 @@ const en = {
     drawer: {
         theme_customize: 'Theme Customize',
         customize_preview_real_time: 'Customize & Preview in Real Time',
+        primary_color: 'Primary Color',
         theme: 'Theme',
         system: 'System',
         skin: 'Skins',

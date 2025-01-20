@@ -28,8 +28,8 @@
                                     :style="{ '--selected-tab-color': colorStore.color }"
                                     >
                                     <template v-slot:tab="{ item }">
-                                        <v-tab :value="item.id" href="" class="text-center">
-                                            {{ item.name_en }}
+                                        <v-tab :value="item.id" class="text-center">
+                                            {{ $i18n.locale == "en" ? item.name_en : item.name_km }}
                                         </v-tab>
                                     </template>
                                 </v-tabs>
@@ -38,7 +38,24 @@
                                 <div class="d-flex justify-end">
                                     <v-menu offset-y>
                                         <template #activator="{ props }">
-                                            <v-btn v-bind="props" icon variant="text">
+                                            <v-btn v-bind="props" icon variant="text" size="large">
+                                                <v-icon>
+                                                    mdi-translate
+                                                </v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <v-list>
+                                            <v-list-item :prepend-avatar="getImageUrl('logos/english_flag.jpg')" @click="ChangeLanguage('en')">
+                                                <v-list-item-title>{{ $t('global.english') }}</v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item class="mt-3" :prepend-avatar="getImageUrl('logos/cambodia_flag.png')" @click="ChangeLanguage('kh')">
+                                                <v-list-item-title>{{ $t('global.khmer') }}</v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                    <v-menu offset-y>
+                                        <template #activator="{ props }">
+                                            <v-btn v-bind="props" icon variant="text" size="large" class="mx-2">
                                                 <v-icon>
                                                 {{ theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night' }}
                                                 </v-icon>
@@ -46,18 +63,15 @@
                                         </template>
                                         <v-list>
                                             <v-list-item @click="ChangeTheme('light')">
-                                                <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> Light Theme</v-list-item-title>
+                                                <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> {{ $t('global.light_theme') }}</v-list-item-title>
                                             </v-list-item>
                                             <v-list-item @click="ChangeTheme('dark')">
-                                                <v-list-item-title><v-icon>mdi-weather-night</v-icon> Dark Theme</v-list-item-title>
-                                            </v-list-item>
-                                            <v-list-item @click="ChangeTheme('system')">
-                                                <v-list-item-title><v-icon>mdi-monitor</v-icon> System Theme</v-list-item-title>
+                                                <v-list-item-title><v-icon>mdi-weather-night</v-icon> {{ $t('global.dark_theme') }}</v-list-item-title>
                                             </v-list-item>
                                         </v-list>
                                     </v-menu>
                                 </div>
-                                <v-btn variant="text" icon="mdi-cog-outline" size="x-large">
+                                <v-btn variant="text" icon="mdi-cog-outline" size="large">
                                     <v-icon>mdi-cog-outline</v-icon>
                                     <VMenu activator="parent" width="300" location="bottom end" offset="14px">
                                         <VList>
@@ -125,7 +139,7 @@
                                             style="border-radius: 5px;"
                                             ></v-img>
                                             <v-card-text class="text-center pa-2">
-                                                <div class="font-weight-bold text-clamp">{{ item.title_en }}</div>
+                                                <div class="font-weight-bold text-clamp">{{ $i18n.locale == "en" ? item.title_en : item.title_km }}</div>
                                             </v-card-text>
                                         </v-card>
                                     </v-col>
@@ -151,7 +165,7 @@
                                             >
                                             <template v-slot:tab="{ item }">
                                                 <v-tab :value="item" :loading="loading" class="text-center">
-                                                    {{ item.about_news_name_en }}
+                                                    {{ $i18n.locale == "en" ? item.about_news_name_en : item.about_news_name_km }}
                                                 </v-tab>
                                             </template>
                                         </v-tabs>
@@ -159,21 +173,7 @@
                                 </v-col>
                                 <v-col class="pt-0 pb-0" style="min-width: 60%;max-width: 60%;">
                                     <v-card v-if="tab_about_news == null" class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
-                                        <!-- <v-tabs-window v-model="tab_about_news">
-                                            <v-tabs-window-item value="one">
-                                            One
-                                            </v-tabs-window-item>
-
-                                            <v-tabs-window-item value="two">
-                                            Two
-                                            </v-tabs-window-item>
-
-                                            <v-tabs-window-item value="three">
-                                            Three
-                                            </v-tabs-window-item>
-                                        </v-tabs-window> -->
-
-                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ news_detail.title_en }}</v-card-title>
+                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $i18n.locale == "en" ? news_detail.title_en : news_detail.title_km }}</v-card-title>
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
 
                                         <v-card-item>
@@ -204,7 +204,7 @@
                                         </v-card-item>
 
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
-                                        <v-card-title class="text-center mb-5" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">ទីតាំង</v-card-title>
+                                        <v-card-title class="text-center mb-5" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $t('company_profile.location') }}</v-card-title>
 
                                         <GoogleMap :api-key="apiKey" style="width: 100%; height: 500px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15">
                                             <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
@@ -235,7 +235,7 @@
 
                             <v-row class="my-5">
                                 <v-col cols="12" class="pa-0">
-                                    <h6 class="Muol-Light p-3 text-white" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">វីឌីអូសំខាន់ៗ</h6>
+                                    <h6 class="Muol-Light p-3 text-white" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $t('global.important_video') }}</h6>
                                 </v-col>
                                 <v-col cols="12" class="grid-container m-3">
                                     <a href="https://www.youtube.com/embed/aLkTDdx8aS8?si=02EusmijT5ROthGA" class="grid-item">
@@ -288,13 +288,7 @@
                             </v-btn>
                         </v-toolbar>
                         <v-container>
-                            <v-chip
-                            :color="colorStore.color" size="small"
-                            label
-                            >
-                                Theming
-                            </v-chip>
-                            <v-list-item-title class="mt-5">Primary Color</v-list-item-title>
+                            <v-list-item-title class="mt-2">{{ $t('drawer.primary_color') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3 d-flex" style="gap: 10px;">
                                 <v-btn
                                 v-for="(color, index) in colors"
@@ -332,7 +326,7 @@
                                     </v-menu>
                                 </v-btn>
                             </div>
-                            <v-list-item-title class="mt-5">Theme</v-list-item-title>
+                            <v-list-item-title class="mt-5">{{ $t('drawer.theme') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -341,7 +335,7 @@
                                                 <v-icon size="30">mdi-weather-sunny</v-icon>
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Light</p>
+                                        <p class="text-caption">{{ $t('global.light_theme') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -350,7 +344,7 @@
                                                 <v-icon size="30">mdi-weather-night</v-icon>
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Dark</p>
+                                        <p class="text-caption">{{ $t('global.dark_theme') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -359,11 +353,11 @@
                                                 <v-icon size="30">mdi-monitor</v-icon>
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">System</p>
+                                        <p class="text-caption">{{ $t('drawer.system') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
-                            <v-list-item-title class="mt-5">Skins</v-list-item-title>
+                            <v-list-item-title class="mt-5">{{ $t('drawer.skin') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -376,7 +370,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Default</p>
+                                        <p class="text-caption">{{ $t('drawer.default') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -389,7 +383,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Bordered</p>
+                                        <p class="text-caption">{{ $t('drawer.bordered') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
@@ -405,7 +399,7 @@
                         </v-container>
                         <v-divider :thickness="1" :class="['my-2', { 'border-opacity-50': theme === 'dark', 'border-opacity-100': theme !== 'dark' }]"></v-divider>
                         <v-container>
-                            <v-list-item-title class="mt-5">Content</v-list-item-title>
+                            <v-list-item-title>{{ $t('drawer.content') }}</v-list-item-title>
                             <div class="pa-0 ma-0 mt-3">
                                 <v-row>
                                     <v-col cols="4">
@@ -418,7 +412,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Compact</p>
+                                        <p class="text-caption">{{ $t('drawer.compact') }}</p>
                                     </v-col>
 
                                     <v-col cols="4">
@@ -431,7 +425,7 @@
                                                 />
                                             </v-card>
                                         </v-btn>
-                                        <p class="text-caption">Wide</p>
+                                        <p class="text-caption">{{ $t('drawer.wide') }}</p>
                                     </v-col>
                                 </v-row>
                             </div>
@@ -457,8 +451,11 @@ import { Store } from '@/store/index';
 import $ from 'jquery';
 import { useGoTo } from 'vuetify';
 import { GoogleMap, Marker } from 'vue3-google-map';
+import { useI18n } from 'vue-i18n';
+import english from '@/translate/english';
 
-const goTo = useGoTo()
+const { locale } = useI18n();
+const goTo = useGoTo();
 const colorStore = Store();
 const theme = ref(colorStore.theme);
 const selectedSkin = ref(colorStore.selectedSkin);
@@ -616,6 +613,11 @@ watch(chunkedItems, (newVal) => {
         autoClickFirstItem();
     }
 });
+
+function ChangeLanguage(lang) {
+    locale.value = lang;
+    localStorage.setItem('locale', lang);
+};
 
 const autoClickFirstItem = () => {
     if (chunkedItems.value.length > 0 && chunkedItems.value[0].length > 0) {

@@ -29,7 +29,8 @@ const kh = {
         no_image: 'គ្មានរូបភាព',
         are_you_sure_you_want_to_delete: 'តើអ្នកប្រាកដថាចង់លុប',
         no_cancel: 'ទេ, បោះបង់ចោល',
-        yes_i_am_sure: "បាទ, ខ្ញុំប្រាកដថា"
+        yes_i_am_sure: "បាទ, ខ្ញុំប្រាកដថា",
+        important_video: 'វីដេអូសំខាន់ៗ'
     },
 
     profile: {
@@ -124,7 +125,7 @@ const kh = {
 
     news_information: {
         title_en: 'ចំណងជើង ភាសាអង់គ្លេស',
-        title_km: 'ចំណងជើង: ភាសាខ្មែរ',
+        title_km: 'ចំណងជើង ភាសាខ្មែរ',
         url_video: 'Url Video',
         latitude: 'រយៈទទឹង',
         longitude: 'រយៈបណ្តោយ',
