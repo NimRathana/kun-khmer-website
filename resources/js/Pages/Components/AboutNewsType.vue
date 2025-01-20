@@ -137,14 +137,6 @@ export default {
             search: null,
             dialog: false,
             itemsPerPage: 5,
-            headers: [
-                { title: this.$t('global.name_en'), align: 'start', key: 'about_news_name_en' },
-                { title: this.$t('global.name_km'), key: 'about_news_name_km', align: 'start' },
-                { title: this.$t('menu.news_type'), key: 'name_en', align: 'start' },
-                { title: this.$t('global.order'), key: 'order', align: 'start' },
-                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
-                { title: this.$t('global.action'), key: 'action', align: 'center' },
-            ],
             loading: true,
             totalItems: 0,
             form: useForm({
@@ -156,6 +148,19 @@ export default {
                 isUsed: false,
             }),
             news_type_data: [],
+        }
+    },
+
+    computed: {
+        headers(){
+            return[
+                { title: this.$t('global.name_en'), align: 'start', key: 'about_news_name_en' },
+                { title: this.$t('global.name_km'), key: 'about_news_name_km', align: 'start' },
+                { title: this.$t('menu.news_type'), key: 'name_en', align: 'start' },
+                { title: this.$t('global.order'), key: 'order', align: 'start' },
+                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
+            ]
         }
     },
 

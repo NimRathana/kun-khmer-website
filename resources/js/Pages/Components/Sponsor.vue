@@ -159,13 +159,6 @@ export default {
             search: null,
             dialog: false,
             itemsPerPage: 5,
-            headers: [
-                { title: this.$t('sponsor.sponsor_name'), align: 'start', key: 'sponsor_name' },
-                { title: this.$t('sponsor.contact'), key: 'contact', align: 'start' },
-                { title: this.$t('profile.photo'), key: 'image', align: 'start' },
-                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
-                { title: this.$t('global.action'), key: 'action', align: 'center' },
-            ],
             loading: true,
             totalItems: 0,
             form: useForm({
@@ -177,6 +170,18 @@ export default {
                 image_delete: null,
             }),
             imageUrl: null
+        }
+    },
+
+    computed: {
+        headers(){
+            return[
+                { title: this.$t('sponsor.sponsor_name'), align: 'start', key: 'sponsor_name' },
+                { title: this.$t('sponsor.contact'), key: 'contact', align: 'start' },
+                { title: this.$t('profile.photo'), key: 'image', align: 'start' },
+                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
+            ]
         }
     },
 

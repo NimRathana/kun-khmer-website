@@ -167,7 +167,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import MainApp from '../MainApp.vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
@@ -183,18 +183,20 @@ const errorMessage = ref('');
 const search = ref(null);
 const dialog = ref(false);
 const itemsPerPage = ref(5);
-const headers = ref([
-  { title: t('global.name_km'), align: 'start', key: 'name_km' },
-  { title: t('global.name_en'), key: 'name_en', align: 'start' },
-  { title: t('company_profile.logo'), key: 'logo', align: 'start' },
-  { title: t('company_profile.created_date'), key: 'created_date', align: 'start' },
-  { title: t('company_profile.location'), key: 'location', align: 'start' },
-  { title: t('company_profile.phone'), key: 'phone', align: 'start' },
-  { title: t('global.email'), key: 'email', align: 'start' },
-  { title: t('global.used'), key: 'isUsed', align: 'start' },
-  { title: t('global.remark'), key: 'remark', align: 'start' },
-  { title: t('global.action'), key: 'action', align: 'center' },
-]);
+const headers = computed(()=>
+    [
+        { title: t('global.name_km'), align: 'start', key: 'name_km' },
+        { title: t('global.name_en'), key: 'name_en', align: 'start' },
+        { title: t('company_profile.logo'), key: 'logo', align: 'start' },
+        { title: t('company_profile.created_date'), key: 'created_date', align: 'start' },
+        { title: t('company_profile.location'), key: 'location', align: 'start' },
+        { title: t('company_profile.phone'), key: 'phone', align: 'start' },
+        { title: t('global.email'), key: 'email', align: 'start' },
+        { title: t('global.used'), key: 'isUsed', align: 'start' },
+        { title: t('global.remark'), key: 'remark', align: 'start' },
+        { title: t('global.action'), key: 'action', align: 'center' },
+    ]
+);
 const loading = ref(true);
 const totalItems = ref(0);
 const form = useForm({

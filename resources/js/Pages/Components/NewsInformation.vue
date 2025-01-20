@@ -340,16 +340,6 @@ export default {
             search: null,
             dialog: false,
             itemsPerPage: 5,
-            headers: [
-                { title: this.$t('menu.news_type'), key: 'news_type_id', align: 'start' },
-                { title: this.$t('news_information.title_en'), key: 'title_en', align: 'start' },
-                { title: this.$t('news_information.title_km'), key: 'title_km', align: 'start' },
-                { title: this.$t('profile.photo'), key: 'image', align: 'start' },
-                { title: this.$t('news_information.url_video'), key: 'url_video', align: 'start' },
-                { title: this.$t('company_profile.location'), key: 'location', align: 'start' },
-                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
-                { title: this.$t('global.action'), key: 'action', align: 'center' },
-            ],
             loading: false,
             totalItems: 0,
             form: useForm({
@@ -414,6 +404,21 @@ export default {
                     height: (visibleArea || imageSize).height,
                 };
             }
+        }
+    },
+
+    computed: {
+        headers(){
+            return[
+                { title: this.$t('menu.news_type'), key: 'news_type_id', align: 'start' },
+                { title: this.$t('news_information.title_en'), key: 'title_en', align: 'start' },
+                { title: this.$t('news_information.title_km'), key: 'title_km', align: 'start' },
+                { title: this.$t('profile.photo'), key: 'image', align: 'start' },
+                { title: this.$t('news_information.url_video'), key: 'url_video', align: 'start' },
+                { title: this.$t('company_profile.location'), key: 'location', align: 'start' },
+                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
+            ]
         }
     },
 

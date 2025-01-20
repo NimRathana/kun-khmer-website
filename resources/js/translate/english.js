@@ -20,6 +20,7 @@ const en = {
         password: 'Password',
         or: 'Or',
         action: 'Actions',
+        used: 'Used',
         remark: 'Remark',
         choose_image: 'Choose Image',
         name_en: 'Name English',

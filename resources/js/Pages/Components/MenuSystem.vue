@@ -120,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import MainApp from '../MainApp.vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
@@ -136,13 +136,6 @@ const errorMessage = ref('');
 const search = ref(null);
 const dialog = ref(false);
 const itemsPerPage = ref(5);
-const headers = ref([
-  { title: t('register.name'), align: 'start', key: 'name' },
-  { title: t('menu_system.url'), key: 'url', align: 'start' },
-  { title: t('global.order'), key: 'order', align: 'start' },
-  { title: t('menu_system.icon'), key: 'icon', align: 'start' },
-  { title: t('global.action'), key: 'action', align: 'center' },
-]);
 const loading = ref(true);
 const totalItems = ref(0);
 const form = useForm({
@@ -152,6 +145,13 @@ const form = useForm({
     order: '',
     icon: ''
 });
+const headers = computed(() => [
+  { title: t('register.name'), align: 'start', key: 'name' },
+  { title: t('menu_system.url'), key: 'url', align: 'start' },
+  { title: t('global.order'), key: 'order', align: 'start' },
+  { title: t('menu_system.icon'), key: 'icon', align: 'start' },
+  { title: t('global.action'), key: 'action', align: 'center' },
+]);
 
 onMounted(()=>{
     getMenuGrid();

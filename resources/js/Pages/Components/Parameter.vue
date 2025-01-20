@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import MainApp from '../MainApp.vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
@@ -128,13 +128,15 @@ const errorMessage = ref('');
 const search = ref(null);
 const dialog = ref(false);
 const itemsPerPage = ref(5);
-const headers = ref([
-  { title: t('parameter.parameter_code'), align: 'start', key: 'parameter_code' },
-  { title: t('parameter.value'), key: 'value', align: 'start' },
-  { title: t('parameter.text_km'), key: 'text_km', align: 'start' },
-  { title: t('parameter.text_en'), key: 'text_en', align: 'start' },
-  { title: t('global.action'), key: 'action', align: 'center' },
-]);
+const headers = computed(()=>
+    [
+        { title: t('parameter.parameter_code'), align: 'start', key: 'parameter_code' },
+        { title: t('parameter.value'), key: 'value', align: 'start' },
+        { title: t('parameter.text_km'), key: 'text_km', align: 'start' },
+        { title: t('parameter.text_en'), key: 'text_en', align: 'start' },
+        { title: t('global.action'), key: 'action', align: 'center' },
+    ]
+);
 const loading = ref(true);
 const totalItems = ref(0);
 const form = useForm({

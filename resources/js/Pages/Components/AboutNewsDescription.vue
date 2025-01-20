@@ -129,11 +129,6 @@ export default {
             search: null,
             dialog: false,
             itemsPerPage: 5,
-            headers: [
-                { title: this.$t('menu.about_news_type'), align: 'start', key: 'about_news_name_en' },
-                { title: this.$t('menu.news_information'), align: 'start', key: 'title_en' },
-                { title: this.$t('global.action'), key: 'action', align: 'center' },
-            ],
             loading: true,
             totalItems: 0,
             form: useForm({
@@ -179,6 +174,16 @@ export default {
                     },
                 },
             },
+        }
+    },
+
+    computed: {
+        headers(){
+            return[
+                { title: this.$t('menu.about_news_type'), align: 'start', key: 'about_news_name_en' },
+                { title: this.$t('menu.news_information'), align: 'start', key: 'title_en' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
+            ]
         }
     },
 

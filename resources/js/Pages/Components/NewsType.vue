@@ -130,13 +130,6 @@ export default {
             search: null,
             dialog: false,
             itemsPerPage: 5,
-            headers: [
-                { title: this.$t('global.name_en'), align: 'start', key: 'name_en' },
-                { title: this.$t('global.name_km'), key: 'name_km', align: 'start' },
-                { title: this.$t('global.order'), key: 'order', align: 'start' },
-                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
-                { title: this.$t('global.action'), key: 'action', align: 'center' },
-            ],
             loading: true,
             totalItems: 0,
             form: useForm({
@@ -146,6 +139,18 @@ export default {
                 order: '',
                 isUsed: false,
             })
+        }
+    },
+
+    computed: {
+        headers(){
+            return[
+                { title: this.$t('global.name_en'), align: 'start', key: 'name_en' },
+                { title: this.$t('global.name_km'), key: 'name_km', align: 'start' },
+                { title: this.$t('global.order'), key: 'order', align: 'start' },
+                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
+            ]
         }
     },
 
