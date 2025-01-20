@@ -4,11 +4,11 @@
             <v-col class="txtsearch" cols="12" style="height: fit-content;">
                 <v-row style="display: flex;align-items: end;">
                     <v-col cols="12" md="6">
-                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" label="search" v-model="search"></v-text-field>
+                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" :label="$t('global.search')" v-model="search"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-btn color="primary" style="float: right;text-align: center;" @click="dialog = true" size="small">
-                            <v-icon>mdi-plus</v-icon>Add
+                            <v-icon>mdi-plus</v-icon>{{ $t('global.add') }}
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -56,7 +56,7 @@
         <v-dialog v-model="dialog" max-width="1000" persistent>
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
-                :title="editMode?'Update':'Create'"
+                :title="editMode ? $t('global.update') : $t('global.create')"
             >
                 <v-divider></v-divider>
 
@@ -66,28 +66,28 @@
                             <v-col cols="12" md="8">
                                 <v-row>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" density="compact" label="Name English*" v-model="form.name_en" :error-messages="errorMessage.name_en"></v-text-field>
+                                        <v-text-field variant="outlined" density="compact" :label="$t('global.name_en')+'*'" v-model="form.name_en" :error-messages="errorMessage.name_en"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" density="compact" label="Name Khmer*" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
+                                        <v-text-field variant="outlined" density="compact" :label="$t('global.name_km')+'*'" v-model="form.name_km" :error-messages="errorMessage.name_km"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" type="date" density="compact" label="Create Date" v-model="form.created_date"></v-text-field>
+                                        <v-text-field variant="outlined" type="date" density="compact" :label="$t('company_profile.created_date')" v-model="form.created_date"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" type="email" density="compact" label="Email" v-model="form.email"></v-text-field>
+                                        <v-text-field variant="outlined" type="email" density="compact" :label="$t('global.email')" v-model="form.email"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field variant="outlined" density="compact" label="Phone" v-model="form.phone"></v-text-field>
+                                        <v-text-field variant="outlined" density="compact" :label="$t('company_profile.phone')" v-model="form.phone"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary"></v-checkbox>
+                                        <v-checkbox hide-details :label="$t('global.used')" v-model="form.isUsed" color="primary"></v-checkbox>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-textarea variant="outlined" density="compact" label="Remark" v-model="form.remark"></v-textarea>
+                                        <v-textarea variant="outlined" density="compact" :label="$t('global.remark')" v-model="form.remark"></v-textarea>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-textarea variant="outlined" density="compact" label="Location" v-model="form.location"></v-textarea>
+                                        <v-textarea variant="outlined" density="compact" :label="$t('company_profile.location')" v-model="form.location"></v-textarea>
                                     </v-col>
                                 </v-row>
                             </v-col>
@@ -99,16 +99,16 @@
                                             <img
                                                 v-if="imageUrl"
                                                 :src="imageUrl"
-                                                alt="No Image"
+                                                :alt="$t('global.no_image')"
                                                 style="max-width: 100%; max-height: 100%; object-fit: contain;"
                                             />
-                                            <span v-else>No Image</span>
+                                            <span v-else>{{ $t('global.no_image') }}</span>
                                         </v-sheet>
 
                                         <!-- File input for uploading an image -->
                                         <v-file-input style="display: none;" ref="fileInput" accept="image/*" @change="FileChange"></v-file-input>
 
-                                        <v-btn class="mt-5" @click="triggerFileInput" color="warning">Upload</v-btn>
+                                        <v-btn class="mt-5" @click="triggerFileInput" color="warning">{{ $t('global.choose_image') }}</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-col>
@@ -120,14 +120,14 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                            text="Close"
+                            :text="$t('global.close')"
                             color="red"
                             @click="dialog = false, errorMessage = '', form.reset(), editMode = false, imageUrl = null"
                         ></v-btn>
 
                         <v-btn
                             color="primary"
-                            text="Save"
+                            :text="$t('global.save')"
                             type="submit"
                         ></v-btn>
                     </v-card-actions>
@@ -140,10 +140,10 @@
                 <v-card-text style="display: flex; align-items: center; justify-content: center;">
                     <div style="display: flex;flex-direction: column;align-items: center; justify-content: center;">
                         <v-icon size="x-large" color="red">mdi-delete</v-icon>
-                        <span class="my-3">Are you sure you want to delete?</span>
+                        <span class="my-3">{{ $t('global.are_you_sure_you_want_to_delete') }}?</span>
                         <v-card-actions>
                             <v-btn size="small"
-                            text="No, cancel"
+                            :text="$t('global.no_cancel')"
                             variant="flat"
                             flat
                             color="blue-grey-lighten-5"
@@ -153,7 +153,7 @@
                             <v-btn
                             size="small"
                             color="red"
-                            text="Yes, I'm sure"
+                            :text="$t('global.yes_i_am_sure')"
                             variant="flat"
                             flat
                             @click="confirmDelete(true)"
@@ -171,7 +171,9 @@ import { ref, onMounted } from 'vue';
 import MainApp from '../MainApp.vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const item = ref([]);
 const imageUrl = ref(null);
 const fileInput = ref(null);
@@ -182,16 +184,16 @@ const search = ref(null);
 const dialog = ref(false);
 const itemsPerPage = ref(5);
 const headers = ref([
-  { title: 'Name KM', align: 'start', key: 'name_km' },
-  { title: 'Name EN', key: 'name_en', align: 'start' },
-  { title: 'Logo', key: 'logo', align: 'start' },
-  { title: 'Created Date', key: 'created_date', align: 'start' },
-  { title: 'Location', key: 'location', align: 'start' },
-  { title: 'Phone', key: 'phone', align: 'start' },
-  { title: 'Email', key: 'email', align: 'start' },
-  { title: 'Used', key: 'isUsed', align: 'start' },
-  { title: 'Remark', key: 'remark', align: 'start' },
-  { title: 'Actions', key: 'action', align: 'center' },
+  { title: t('global.name_km'), align: 'start', key: 'name_km' },
+  { title: t('global.name_en'), key: 'name_en', align: 'start' },
+  { title: t('company_profile.logo'), key: 'logo', align: 'start' },
+  { title: t('company_profile.created_date'), key: 'created_date', align: 'start' },
+  { title: t('company_profile.location'), key: 'location', align: 'start' },
+  { title: t('company_profile.phone'), key: 'phone', align: 'start' },
+  { title: t('global.email'), key: 'email', align: 'start' },
+  { title: t('global.used'), key: 'isUsed', align: 'start' },
+  { title: t('global.remark'), key: 'remark', align: 'start' },
+  { title: t('global.action'), key: 'action', align: 'center' },
 ]);
 const loading = ref(true);
 const totalItems = ref(0);

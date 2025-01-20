@@ -4,11 +4,11 @@
             <v-col class="txtsearch" cols="12" style="height: fit-content;">
                 <v-row style="display: flex;align-items: end;">
                     <v-col cols="12" md="6">
-                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" label="search" v-model="search"></v-text-field>
+                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" :label="$t('global.search')" v-model="search"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-btn color="primary" style="float: right;text-align: center;" @click="dialog = true" size="small">
-                            <v-icon>mdi-plus</v-icon>Add
+                            <v-icon>mdi-plus</v-icon>{{ $t('global.add') }}
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -26,6 +26,9 @@
                     :server-items-length="totalItems"
                     :sticky="true"
                 >
+                <template v-slot:column.name="{ column  }">
+                    {{ console.log(column ) }}
+                </template>
                     <template v-slot:loading>
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                     </template>
@@ -46,23 +49,23 @@
         <v-dialog v-model="dialog" max-width="600">
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
-                :title="editMode?'Update':'Create'"
+                :title="editMode ? $t('global.update') : $t('global.create')"
             >
                 <v-divider></v-divider>
                 <form @submit.prevent="editMode ? updateMenu() : createMenu()" enctype="multipart/form-data">
                     <v-card-text>
                         <v-row dense>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Name*" v-model="form.name" :error-messages="errorMessage.name"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" :label="$t('menu_system.name')+'*'" v-model="form.name" :error-messages="errorMessage.name"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Url*" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" :label="$t('menu_system.url')+'*'" v-model="form.url" :error-messages="errorMessage.url"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Order*" v-model="form.order" type="number" :disabled="editMode == true ? false : true" :error-messages="errorMessage.order"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" :label="$t('global.order')+'*'" v-model="form.order" type="number" :disabled="editMode == true ? false : true" :error-messages="errorMessage.order"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field variant="outlined" density="compact" label="Icon*" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
+                                <v-text-field variant="outlined" density="compact" :label="$t('menu_system.icon')+'*'" v-model="form.icon" :error-messages="errorMessage.icon"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -70,14 +73,14 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                            text="Close"
+                            :text="$t('global.close')"
                             color="red"
                             @click="dialog = false, errorMessage = '', form.reset(), editMode = false"
                         ></v-btn>
 
                         <v-btn
                             color="primary"
-                            text="Save"
+                            :text="$t('global.save')"
                             type="submit"
                         ></v-btn>
                     </v-card-actions>
@@ -90,10 +93,10 @@
                 <v-card-text style="display: flex; align-items: center; justify-content: center;">
                     <div style="display: flex;flex-direction: column;align-items: center; justify-content: center;">
                         <v-icon size="x-large" color="red">mdi-delete</v-icon>
-                        <span class="my-3">Are you sure you want to delete?</span>
+                        <span class="my-3">{{ $t('global.are_you_sure_you_want_to_delete') }}?</span>
                         <v-card-actions>
                             <v-btn size="small"
-                            text="No, cancel"
+                            :text="$t('global.no_cancel')"
                             variant="flat"
                             flat
                             color="blue-grey-lighten-5"
@@ -103,7 +106,7 @@
                             <v-btn
                             size="small"
                             color="red"
-                            text="Yes, I'm sure"
+                            :text="$t('global.yes_i_am_sure')"
                             variant="flat"
                             flat
                             @click="confirmDelete(true)"
@@ -122,7 +125,9 @@ import MainApp from '../MainApp.vue';
 import axios from 'axios';
 import { useForm } from '@inertiajs/vue3';
 import { Store } from '@/store/index';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const colorStore = Store();
 const MenuItem = ref([]);
 const deleteDialog = ref(false);
@@ -132,11 +137,11 @@ const search = ref(null);
 const dialog = ref(false);
 const itemsPerPage = ref(5);
 const headers = ref([
-  { title: 'Name', align: 'start', key: 'name' },
-  { title: 'Url', key: 'url', align: 'start' },
-  { title: 'Order', key: 'order', align: 'start' },
-  { title: 'Icon', key: 'icon', align: 'start' },
-  { title: 'Actions', key: 'action', align: 'center' },
+  { title: t('register.name'), align: 'start', key: 'name' },
+  { title: t('menu_system.url'), key: 'url', align: 'start' },
+  { title: t('global.order'), key: 'order', align: 'start' },
+  { title: t('menu_system.icon'), key: 'icon', align: 'start' },
+  { title: t('global.action'), key: 'action', align: 'center' },
 ]);
 const loading = ref(true);
 const totalItems = ref(0);

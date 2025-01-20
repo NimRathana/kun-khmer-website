@@ -126,7 +126,7 @@ const submit = () => {
 
                         <form @submit.prevent="submit">
                             <div>
-                                <InputLabel for="email" value="Email" />
+                                <InputLabel for="email" :value="$t('global.email')" />
                                 <TextInput
                                     id="email"
                                     v-model="form.email"
@@ -140,7 +140,7 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="password" value="Password" />
+                                <InputLabel for="password" :value="$t('global.password')" />
                                 <TextInput
                                     id="password"
                                     v-model="form.password"
@@ -155,32 +155,32 @@ const submit = () => {
                             <div class="mt-4 d-flex justify-between align-center">
                                 <div class="d-flex align-center">
                                     <Checkbox v-model:checked="form.remember" name="remember" />
-                                    <span class="ms-2 text-sm">Remember me</span>
+                                    <span class="ms-2 text-sm">{{ $t('login.remember') }}</span>
                                 </div>
                                 <div>
                                     <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-blue-600 hover:text-blue-400 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        <span class="ms-2 text-sm">Forgot Password?</span>
+                                        <span class="ms-2 text-sm">{{ $t('login.forgot_password') }}?</span>
                                     </Link>
                                 </div>
                             </div>
 
                             <div class="flex items-center justify-center mt-4">
                                 <PrimaryButton class="bg-[#2563eb] w-100 d-flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                    Log in
+                                    {{ $t('global.login') }}
                                 </PrimaryButton>
                             </div>
                         </form>
                         <div class="mt-4 d-flex justify-center text-sm border-hidden">
-                            <span>Don't have an account?</span>
+                            <span>{{ $t('login.do_not_have_an_account') }}?</span>
                             <Link :href="route('register')" class="text-sm text-blue-600 hover:text-blue-400 border-hidden">
-                                <span class="ms-2 text-sm">Create an account</span>
+                                <span class="ms-2 text-sm">{{ $t('login.create_an_account') }}</span>
                             </Link>
                         </div>
                         <v-row class="mt-4 d-flex justify-center align-center">
                             <v-col cols="5" class="pa-0 ma-0">
                                 <v-divider :thickness="1" :class="['my-2', { 'border-opacity-50': colorStore.theme === 'dark', 'border-opacity-100': colorStore.theme !== 'dark' }]"></v-divider>
                             </v-col>
-                            <v-col cols="1" class="pa-0 ma-0 d-flex justify-center align-center">or</v-col>
+                            <v-col cols="1" class="pa-0 ma-0 d-flex justify-center align-center">{{ $t('global.or') }}</v-col>
                             <v-col cols="5" class="pa-0 ma-0">
                                 <v-divider :thickness="1" :class="['my-2', { 'border-opacity-50': colorStore.theme === 'dark', 'border-opacity-100': colorStore.theme !== 'dark' }]"></v-divider>
                             </v-col>

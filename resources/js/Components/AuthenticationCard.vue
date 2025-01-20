@@ -28,13 +28,10 @@
                                 </template>
                                 <v-list>
                                     <v-list-item @click="ChangeTheme('light')">
-                                        <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> Light Theme</v-list-item-title>
+                                        <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> {{ $t('global.light_theme') }}</v-list-item-title>
                                     </v-list-item>
                                     <v-list-item @click="ChangeTheme('dark')">
-                                        <v-list-item-title><v-icon>mdi-weather-night</v-icon> Dark Theme</v-list-item-title>
-                                    </v-list-item>
-                                    <v-list-item @click="ChangeTheme('system')">
-                                        <v-list-item-title><v-icon>mdi-monitor</v-icon> System Theme</v-list-item-title>
+                                        <v-list-item-title><v-icon>mdi-weather-night</v-icon> {{ $t('global.dark_theme') }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>

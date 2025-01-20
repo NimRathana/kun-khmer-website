@@ -4,11 +4,11 @@
             <v-col cols="12" class="txtsearch" style="height: fit-content;">
                 <v-row style="display: flex;align-items: end;">
                     <v-col cols="12" md="6">
-                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" label="search" v-model="search"></v-text-field>
+                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" :label="$t('global.search')" v-model="search"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-btn color="primary" style="float: right;text-align: center;" @click="dialog = true" size="small">
-                            <v-icon>mdi-plus</v-icon>Add
+                            <v-icon>mdi-plus</v-icon>{{ $t('global.add') }}
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -63,7 +63,7 @@
         <v-dialog v-model="dialog" max-width="1200" persistent scrollable>
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
-                :title="editMode?'Update':'Create'"
+                :title="editMode ? $t('global.update') : $t('global.create')"
             >
                 <v-divider></v-divider>
 
@@ -74,24 +74,24 @@
                                 <v-col cols="12" md="8">
                                     <v-row dense>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field variant="outlined" density="compact" label="Title English*" v-model="form.title_en" :error-messages="errorMessage.title_en"></v-text-field>
+                                            <v-text-field variant="outlined" density="compact" :label="$t('news_information.title_en')+'*'" v-model="form.title_en" :error-messages="errorMessage.title_en"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field variant="outlined" density="compact" label="Title Khmer*" v-model="form.title_km" :error-messages="errorMessage.title_km"></v-text-field>
+                                            <v-text-field variant="outlined" density="compact" :label="$t('news_information.title_km')+'*'" v-model="form.title_km" :error-messages="errorMessage.title_km"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-select v-model="form.news_type_id" variant="outlined" density="compact" label="Select*" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
-                                            <v-checkbox hide-details label="Used" v-model="form.isUsed" color="primary" class="mb-3"></v-checkbox>
+                                            <v-select v-model="form.news_type_id" variant="outlined" density="compact" :label="$t('menu.news_type')+'*'" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
+                                            <v-checkbox hide-details :label="$t('global.used')" v-model="form.isUsed" color="primary" class="mb-3"></v-checkbox>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field variant="outlined" density="compact" label="Url Video" v-model="form.url_video"></v-text-field>
+                                            <v-text-field variant="outlined" density="compact" :label="$t('news_information.url_video')" v-model="form.url_video"></v-text-field>
                                         </v-col>
 
                                         <v-col cols="12" sm="6">
-                                            <v-text-field variant="outlined" density="compact" label="Latitude" v-model="lat"></v-text-field>
+                                            <v-text-field variant="outlined" density="compact" :label="$t('news_information.latitude')" v-model="lat"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field variant="outlined" density="compact" label="Longitude" v-model="lng"></v-text-field>
+                                            <v-text-field variant="outlined" density="compact" :label="$t('news_information.longitude')" v-model="lng"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -118,14 +118,14 @@
                                                     <img
                                                         v-if="cropped !== undefined"
                                                         :src="cropped"
-                                                        alt="Cropped Image"
+                                                        :alt="$t('global.no_image')"
                                                         style="width: 100%; min-height: 100px; object-fit: contain; border: 1px solid #ccc; border-radius: 5px;"
                                                     />
                                                     </div>
                                                 </template>
 
                                                 <!-- Fallback if no cropped images -->
-                                                <span v-else>No Cropped Images</span>
+                                                <span v-else>{{ $t('global.no_image') }}</span>
                                             </v-sheet>
 
                                             <!-- File input for uploading images -->
@@ -137,7 +137,7 @@
                                                 @change="handleFileChange"
                                             ></v-file-input>
 
-                                            <v-btn class="mt-5" @click="triggerFileInput" :color="colorStore.color">Upload</v-btn>
+                                            <v-btn class="mt-5" @click="triggerFileInput" :color="colorStore.color">{{ $t('global.choose_image') }}</v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -201,10 +201,10 @@
                                                     </v-row>
                                                     <v-row>
                                                         <v-col cols="12" style="display: flex;justify-content: space-evenly;">
-                                                            <v-btn color="red" @click="reset(index)">Reset</v-btn>
-                                                            <v-btn color="warning" @click="crop(index)">Crop</v-btn>
-                                                            <v-btn color="primary" @click="browse(index)">Browe</v-btn>
-                                                            <v-btn color="red" @click="Delete(index)">Delete</v-btn>
+                                                            <v-btn color="red" @click="reset(index)">{{ $t('news_information.reset') }}</v-btn>
+                                                            <v-btn color="warning" @click="crop(index)">{{ $t('news_information.crop') }}</v-btn>
+                                                            <v-btn color="primary" @click="browse(index)">{{ $t('news_information.browse') }}</v-btn>
+                                                            <v-btn color="red" @click="Delete(index)">{{ $t('global.delete') }}</v-btn>
                                                         </v-col>
                                                     </v-row>
                                                 </v-container>
@@ -218,15 +218,15 @@
                                             </v-sheet>
                                         </v-slide-group-item>
                                         <v-slide-group-item>
-                                            <v-btn prepend-icon="mdi-plus" :color="colorStore.color" @click="triggerFileInput()">Add</v-btn>
+                                            <v-btn prepend-icon="mdi-plus" :color="colorStore.color" @click="triggerFileInput()">{{ $t('global.add') }}</v-btn>
                                         </v-slide-group-item>
                                     </v-slide-group>
                                 </v-col>
                                 <v-col cols="8" class="d-flex align-center">
                                     <input id="txtlocation" type="text" placeholder="Enter a location" style="width: 100%; padding: 10px;" @input="changeLocation" />
                                     <!-- <v-text-field id="txtlocation" hide-details variant="outlined" density="compact" label="Location" v-model="form.location" @input="changeLocation"></v-text-field> -->
-                                    <v-card-text style="flex: unset;">or</v-card-text>
-                                    <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">Use my current location</v-btn>
+                                    <v-card-text style="flex: unset;">{{ $t('global.or') }}</v-card-text>
+                                    <v-btn border prepend-icon="mdi-crosshairs-gps" :loading="loading" @click="getCurrentPosition()">{{ $t('news_information.use_my_current_location') }}</v-btn>
                                 </v-col>
                                 <v-col cols="12" class="mt-2">
                                     <!-- <GoogleMap :api-key="apiKey" style="width: 100%; height: 400px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15" animation="bounce">
@@ -249,14 +249,14 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                        text="Close"
+                        :text="$t('global.close')"
                         color="red"
                         @click="handleClose"
                     ></v-btn>
 
                     <v-btn
                         color="primary"
-                        text="Save"
+                        :text="$t('global.save')"
                         @click="editMode ? update() : create()"
                     ></v-btn>
                 </v-card-actions>
@@ -268,10 +268,10 @@
                 <v-card-text style="display: flex; align-items: center; justify-content: center;">
                     <div style="display: flex;flex-direction: column;align-items: center; justify-content: center;">
                         <v-icon size="x-large" color="red">mdi-delete</v-icon>
-                        <span class="my-3">Are you sure you want to delete?</span>
+                        <span class="my-3">{{ $t('global.are_you_sure_you_want_to_delete') }}?</span>
                         <v-card-actions>
                             <v-btn size="small"
-                            text="No, cancel"
+                            :text="$t('global.no_cancel')"
                             variant="flat"
                             flat
                             color="blue-grey-lighten-5"
@@ -281,7 +281,7 @@
                             <v-btn
                             size="small"
                             color="red"
-                            text="Yes, I'm sure"
+                            :text="$t('global.yes_i_am_sure')"
                             variant="flat"
                             flat
                             @click="confirmDelete(true)"
@@ -307,7 +307,7 @@
                 variant="text"
                 @click="snackbar = false"
                 >
-                Close
+                {{ $t('global.close') }}
                 </v-btn>
             </template>
         </v-snackbar>
@@ -341,15 +341,14 @@ export default {
             dialog: false,
             itemsPerPage: 5,
             headers: [
-                { title: 'News Type', key: 'news_type_id', align: 'start' },
-                { title: 'Title EN', key: 'title_en', align: 'start' },
-                { title: 'Title KM', key: 'title_km', align: 'start' },
-                { title: 'Image', key: 'image', align: 'start' },
-                { title: 'Url Video', key: 'url_video', align: 'start' },
-                { title: 'Location', key: 'location', align: 'start' },
-                // { title: 'Description', key: 'description', align: 'start' },
-                { title: 'Used', key: 'isUsed', align: 'start' },
-                { title: 'Actions', key: 'action', align: 'center' },
+                { title: this.$t('menu.news_type'), key: 'news_type_id', align: 'start' },
+                { title: this.$t('news_information.title_en'), key: 'title_en', align: 'start' },
+                { title: this.$t('news_information.title_km'), key: 'title_km', align: 'start' },
+                { title: this.$t('profile.photo'), key: 'image', align: 'start' },
+                { title: this.$t('news_information.url_video'), key: 'url_video', align: 'start' },
+                { title: this.$t('company_profile.location'), key: 'location', align: 'start' },
+                { title: this.$t('global.used'), key: 'isUsed', align: 'start' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
             ],
             loading: false,
             totalItems: 0,

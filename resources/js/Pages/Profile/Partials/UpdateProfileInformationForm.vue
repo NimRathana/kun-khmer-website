@@ -85,11 +85,11 @@ function getImageUrl(name) {
 <template>
     <FormSection @submitted="updateProfileInformation">
         <template #title>
-            Profile Information
+            {{ $t('profile.profile_information') }}
         </template>
 
         <template #description>
-            Update your account's profile information and email address.
+            {{ $t('profile.update_your_account_profile_information_and_email_address') }}
         </template>
 
         <template #form>
@@ -105,11 +105,11 @@ function getImageUrl(name) {
                     @change="updatePhotoPreview"
                 >
                 <!-- {{ JSON.stringify($page.props.jetstream.managesProfilePhotos) }} -->
-                <InputLabel for="photo" value="Photo" />
+                <InputLabel for="photo" :value="$t('profile.photo')" />
 
                 <!-- Current Profile Photo -->
                 <div v-show="! photoPreview" class="mt-2">
-                    <img :src="getImageUrl(user.profile_photo_path)" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                    <img :src="getImageUrl(user.profile_photo_path)" :alt="$t('global.no_image')" class="rounded-full h-20 w-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->
@@ -121,7 +121,7 @@ function getImageUrl(name) {
                 </div>
 
                 <SecondaryButton class="mt-2 me-2" type="button" @click.prevent="selectNewPhoto">
-                    Select A New Photo
+                    {{ $t('profile.select_new_photo') }}
                 </SecondaryButton>
 
                 <SecondaryButton
@@ -130,7 +130,7 @@ function getImageUrl(name) {
                     class="mt-2"
                     @click.prevent="deletePhoto"
                 >
-                    Remove Photo
+                    {{ $t('profile.remove_photo') }}
                 </SecondaryButton>
 
                 <InputError :message="form.errors.photo" class="mt-2" />
@@ -138,7 +138,7 @@ function getImageUrl(name) {
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" :value="$t('register.name')" />
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -152,7 +152,7 @@ function getImageUrl(name) {
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" :value="$t('global.email')" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -165,7 +165,7 @@ function getImageUrl(name) {
 
                 <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
                     <p class="text-sm mt-2">
-                        Your email address is unverified.
+                        {{ $t('profile.your_email_address_is_unverified') }}
 
                         <Link
                             :href="route('verification.send')"
@@ -174,12 +174,12 @@ function getImageUrl(name) {
                             class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             @click.prevent="sendEmailVerification"
                         >
-                            Click here to re-send the verification email.
+                        {{ $t('profile.click_here_to_resend_the_verification_email') }}
                         </Link>
                     </p>
 
                     <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
-                        A new verification link has been sent to your email address.
+                        {{ $t('profile.a_new_verification_link_has_been_sent_to_your_email_address') }}
                     </div>
                 </div>
             </div>
@@ -187,11 +187,11 @@ function getImageUrl(name) {
 
         <template #actions>
             <ActionMessage :on="form.recentlySuccessful" class="me-3">
-                Saved.
+                {{ $t('global.save') }}.
             </ActionMessage>
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" :style="{'background': colorStore.color}">
-                Save
+                {{ $t('global.save') }}
             </PrimaryButton>
         </template>
     </FormSection>

@@ -32,14 +32,14 @@
                                 <v-icon>{{ item.icon }}</v-icon>
                             </template>
                             <template v-slot:title="{ item }">
-                                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                <v-list-item-title>{{ $t('menu.' + item.url) }}</v-list-item-title>
                             </template>
                             <template v-slot:item="{ item }">
                                 <Link :href="item.url" :active="route().current(item.url)">
                                     <v-list-item :color="'warning'" rounded :value="item.url" class="mt-3" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-2" :icon="item.icon"></v-icon>
-                                            <v-list-item-title style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;display: inline-block;max-width: 170px; ">{{ item.name }}</v-list-item-title>
+                                            <v-list-item-title style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;display: inline-block;max-width: 170px; ">{{ $t('menu.' + item.url) }}</v-list-item-title>
                                         </template>
                                     </v-list-item>
                                 </Link>
@@ -57,14 +57,14 @@
                                 <v-icon>{{ item.icon }}</v-icon>
                             </template>
                             <template v-slot:title="{ item }">
-                                <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                <v-list-item-title>{{ $t('menu.' + item.url) }}</v-list-item-title>
                             </template>
                             <template v-slot:item="{ item }">
                                 <Link :href="item.url">
                                     <v-list-item color="warning" rounded :value="item.url" class="mt-3" :class="{ 'bg-active': $page.url === '/'+item.url }">
                                         <template v-slot:prepend>
                                             <v-icon class="mr-2 ml-5" :icon="item.icon"></v-icon>
-                                            <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                            <v-list-item-title>{{ $t('menu.' + item.url) }}</v-list-item-title>
                                         </template>
                                     </v-list-item>
                                 </Link>
@@ -75,12 +75,12 @@
                         <template v-slot:append>
                             <div class="pa-2">
                                 <v-btn block :color="colorStore.color" v-if="!miniDrawer" @click="logout">
-                                    <v-icon>mdi-logout</v-icon>Logout
+                                    <v-icon>mdi-logout</v-icon>{{ $t('global.logout') }}
                                 </v-btn>
                                 <v-btn v-else style="min-width: 100%; max-width: 100%;" :color="colorStore.color" @click="logout">
                                     <div class="d-flex align-center">
                                         <v-icon>mdi-logout</v-icon>
-                                        <v-list-item-title :class="['text-uppercase', 'custom-font', { 'hidden-text': drawerWidth <= 50 }]">Logout</v-list-item-title>
+                                        <v-list-item-title :class="['text-uppercase', 'custom-font', { 'hidden-text': drawerWidth <= 50 }]">{{ $t('global.logout') }}</v-list-item-title>
                                     </div>
                                 </v-btn>
                             </div>
@@ -329,7 +329,24 @@
                         <v-app-bar-nav-icon v-show="hideDrawer !== '/user/profile' ? true : false" v-if="colorStore.selectedLayout !== 'Horizontal' || selectedLayout !== 'Horizontal'" @click="toggleDrawerLeft"></v-app-bar-nav-icon>
                         <v-app-bar-title>{{ $page.url.split('/').pop().toLocaleUpperCase() }}</v-app-bar-title>
                         <template v-slot:append>
-                            <div class="d-flex justify-end">
+                            <div class="d-flex justify-end align-center">
+                                <v-menu offset-y>
+                                    <template #activator="{ props }">
+                                        <v-btn v-bind="props" icon>
+                                            <v-icon>
+                                                mdi-translate
+                                            </v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-list>
+                                        <v-list-item @click="ChangeLanguage('en')">
+                                            <v-list-item-title>{{ $t('global.english') }}</v-list-item-title>
+                                        </v-list-item>
+                                        <v-list-item @click="ChangeLanguage('kh')">
+                                            <v-list-item-title>{{ $t('global.khmer') }}</v-list-item-title>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
                                 <v-menu offset-y>
                                     <template #activator="{ props }">
                                         <v-btn v-bind="props" icon>
@@ -340,13 +357,10 @@
                                     </template>
                                     <v-list>
                                         <v-list-item @click="ChangeTheme('light')">
-                                            <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> Light Theme</v-list-item-title>
+                                            <v-list-item-title><v-icon>mdi-weather-sunny</v-icon> {{ $t('global.light_theme') }}</v-list-item-title>
                                         </v-list-item>
                                         <v-list-item @click="ChangeTheme('dark')">
-                                            <v-list-item-title><v-icon>mdi-weather-night</v-icon> Dark Theme</v-list-item-title>
-                                        </v-list-item>
-                                        <v-list-item @click="ChangeTheme('system')">
-                                            <v-list-item-title><v-icon>mdi-monitor</v-icon> System Theme</v-list-item-title>
+                                            <v-list-item-title><v-icon>mdi-weather-night</v-icon> {{ $t('global.dark_theme') }}</v-list-item-title>
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
@@ -377,20 +391,20 @@
                                                 <template #prepend>
                                                     <VIcon class="me-2" icon="mdi-account-tie" size="22" />
                                                 </template>
-                                                <VListItemTitle>Profile</VListItemTitle>
+                                                <VListItemTitle>{{ $t('global.profile') }}</VListItemTitle>
                                             </VListItem>
                                             <VListItem link @click="goHomePage">
                                                 <template #prepend>
                                                     <VIcon class="me-2" icon="mdi-home-account" size="22" />
                                                 </template>
-                                                <VListItemTitle>Home</VListItemTitle>
+                                                <VListItemTitle>{{ $t('global.home') }}</VListItemTitle>
                                             </VListItem>
                                             <VDivider class="my-2" />
                                             <VListItem @click="logout">
                                                 <template #prepend>
                                                     <VIcon class="me-2" icon="mdi-logout" size="22" />
                                                 </template>
-                                                <VListItemTitle>Logout</VListItemTitle>
+                                                <VListItemTitle>{{ $t('global.logout') }}</VListItemTitle>
                                             </VListItem>
                                         </VList>
                                     </VMenu>
@@ -447,11 +461,13 @@ import $ from 'jquery';
 import { Store } from '@/store/index';
 import axios from 'axios';
 import { helper } from '@/helper';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
     title: String,
     sessions: Array,
 });
+const { locale } = useI18n();
 const page = usePage();
 const colorStore = Store();
 const theme = ref(colorStore.theme);
@@ -470,7 +486,6 @@ const showButton = ref(false);
 const colorPicker = ref(colorStore.color);
 const selectedColor = ref(localStorage.getItem('selectedColor') || 'grey-darken-3');
 const WindowSize = ref(false);
-// const footerHeight = ref(null);
 const items = ref([]);
 const colors = ref(['#0D47A1', '#B71C1C', '#1B5E20', '#4A148C']);
 const hideDrawer = ref(page.url);
@@ -639,6 +654,11 @@ onMounted(() => {
 
 const logout = () => {
     Inertia.post(route('logout'));
+};
+
+function ChangeLanguage(lang) {
+    locale.value = lang;
+    localStorage.setItem('locale', lang);
 };
 
 function ChangeTheme(newTheme) {

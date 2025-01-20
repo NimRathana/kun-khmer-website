@@ -1,0 +1,143 @@
+const kh = {
+    global: {
+        english: 'អង់គ្លេស',
+        khmer: 'ខ្មែរ',
+        light_theme: 'ផ្ទៃពណ៌ស',
+        dark_theme: 'ផ្ទៃពណ៌ខ្មៅ',
+        profile: 'ប្រវត្តិរូប',
+        home: 'ទំព័រដើម',
+        login: 'ចូលប្រើ',
+        register: 'ចុះឈ្មោះ',
+        logout: 'ចាកចេញ',
+        search: 'ស្វែងរក',
+        add: 'បន្ថែម',
+        create: 'បង្កើត',
+        update: 'កែ',
+        delete: 'លុប',
+        save: 'រក្សាទុក',
+        close: 'បិទ',
+        email: 'អ៊ីម៉ែល',
+        password: 'ពាក្យសម្ងាត់',
+        or: 'រឺ',
+        action: 'សកម្មភាព',
+        used: 'ប្រើ',
+        remark: 'កំណត់សម្គាល់',
+        choose_image: 'ជ្រើសរើសរូបភាព',
+        name_en: 'ឈ្មោះអង់គ្លេស',
+        name_km: 'ឈ្មោះខ្មែរ',
+        order: 'លំដាប់',
+        no_image: 'គ្មានរូបភាព',
+        are_you_sure_you_want_to_delete: 'តើអ្នកប្រាកដថាចង់លុប',
+        no_cancel: 'ទេ, បោះបង់ចោល',
+        yes_i_am_sure: "បាទ, ខ្ញុំប្រាកដថា"
+    },
+
+    profile: {
+        photo: 'រូបភាព',
+        select_new_photo: 'ជ្រើសរើសរូបថតថ្មី',
+        remove_photo: 'លុបរូបភាព',
+        profile_information: 'ព័ត៌មានប្រវត្តិរូប',
+        update_your_account_profile_information_and_email_address: "ធ្វើបច្ចុប្បន្នភាពព័ត៌មានប្រវត្តិរូប និងអាសយដ្ឋានអ៊ីមែលរបស់គណនីរបស់អ្នក។",
+        current_password: 'ពាក្យសម្ងាត់បច្ចុប្បន្ន',
+        new_password: 'ពាក្យសម្ងាត់ថ្មី',
+        update_password: 'កែពាក្យសម្ងាត់',
+        ensure_your_account_is_using_a_long: 'ត្រូវប្រាកដថាគណនីរបស់អ្នកកំពុងប្រើពាក្យសម្ងាត់វែង ចៃដន្យ ដើម្បីរក្សាសុវត្ថិភាព។',
+        two_factor_authentication: 'ការផ្ទៀងផ្ទាត់ពីរកត្តា',
+        add_additional_security_to_your_account_using_two_factor_authentication: 'បន្ថែមសុវត្ថិភាពបន្ថែមទៅគណនីរបស់អ្នកដោយប្រើការផ្ទៀងផ្ទាត់ពីរកត្តា។',
+        you_have_not_enabled_two_factor_authentication: 'អ្នកមិនបានបើកការផ្ទៀងផ្ទាត់ពីរកត្តាទេ។',
+        when_two_factor_authentication_is_enabled: "នៅពេលដែលការផ្ទៀងផ្ទាត់ពីរកត្តាត្រូវបានអនុញ្ញាត អ្នកនឹងត្រូវបានជម្រុញឱ្យមានសុវត្ថិភាព សញ្ញាសម្ងាត់ចៃដន្យក្នុងអំឡុងពេលផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវ។ អ្នកអាចទាញយកនិមិត្តសញ្ញានេះពីកម្មវិធី Google Authenticator របស់ទូរស័ព្ទរបស់អ្នក។",
+        enable: 'អនុញ្ញាត',
+        browser_sessions: 'វគ្គកម្មវិធីរុករក',
+        manage_and_log_out_your_active_sessions_on_other_browsers_and_devices: 'គ្រប់គ្រង និងចេញពីវគ្គសកម្មរបស់អ្នកនៅលើកម្មវិធីរុករក និងឧបករណ៍ផ្សេងទៀត។',
+        if_necessary: 'ប្រសិនបើចាំបាច់ អ្នកអាចចេញពីវគ្គកម្មវិធីរុករកផ្សេងទៀតទាំងអស់របស់អ្នកនៅលើឧបករណ៍ទាំងអស់របស់អ្នក។ វគ្គថ្មីៗមួយចំនួនរបស់អ្នកត្រូវបានរាយខាងក្រោម; ទោះជាយ៉ាងណាក៏ដោយ បញ្ជីនេះប្រហែលជាមិនហត់នឿយទេ។ ប្រសិនបើអ្នកមានអារម្មណ៍ថាគណនីរបស់អ្នកត្រូវបានសម្របសម្រួល អ្នកក៏គួរតែធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់របស់អ្នក។',
+        this_device: 'ឧបករណ៍នេះ',
+        log_out_other_browser_sessions: 'ចាកចេញវគ្គកម្មវិធីរុករកផ្សេងទៀត',
+        delete_account: 'លុបគណនី',
+        permanently_delete_your_account: 'លុបគណនីរបស់អ្នកជាអចិន្ត្រៃយ៍។',
+        once_your_account_is_deleted: 'នៅពេលដែលគណនីរបស់អ្នកត្រូវបានលុបចោល ធនធាន និងទិន្នន័យទាំងអស់របស់វានឹងត្រូវបានលុបចោលជាអចិន្ត្រៃយ៍។ មុនពេលលុបគណនីរបស់អ្នក សូមទាញយកទិន្នន័យ ឬព័ត៌មានណាមួយដែលអ្នកចង់រក្សាទុក។',
+        your_email_address_is_unverified: 'អាសយដ្ឋានអ៊ីមែលរបស់អ្នកមិនត្រូវបានផ្ទៀងផ្ទាត់ទេ។',
+        click_here_to_resend_the_verification_email: 'ចុចទីនេះដើម្បីផ្ញើអ៊ីមែលផ្ទៀងផ្ទាត់ឡើងវិញ។',
+        a_new_verification_link_has_been_sent_to_your_email_address: 'តំណផ្ទៀងផ្ទាត់ថ្មីត្រូវបានផ្ញើទៅកាន់អាសយដ្ឋានអ៊ីមែលរបស់អ្នក។',
+        you_have_enabled_two_factor_authentication: 'អ្នកបានបើកការផ្ទៀងផ្ទាត់ពីរកត្តា។',
+        finish_enabling_two_factor_authentication: 'បញ្ចប់ការបើកដំណើរការការផ្ទៀងផ្ទាត់ពីរកត្តា។',
+        to_finish_enabling_two_factor_authentication: "ដើម្បីបញ្ចប់ការបើកការផ្ទៀងផ្ទាត់ពីរកត្តា សូមស្កេនកូដ QR ខាងក្រោមដោយប្រើកម្មវិធីផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវរបស់ទូរសព្ទរបស់អ្នក ឬបញ្ចូលសោដំឡើង ហើយផ្តល់លេខកូដ OTP ដែលបានបង្កើត។",
+        two_factor_authentication_is_now_enabled: "ការផ្ទៀងផ្ទាត់ពីរកត្តាឥឡូវនេះត្រូវបានបើក។ ស្កេនកូដ QR ខាងក្រោមដោយប្រើកម្មវិធីផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវរបស់ទូរសព្ទរបស់អ្នក ឬបញ្ចូលសោដំឡើង។",
+        setup_key: 'សោតំឡើង',
+        store_these_recovery_codes_in_a_secure_password_manager: 'រក្សាទុកលេខកូដសង្គ្រោះទាំងនេះនៅក្នុងកម្មវិធីគ្រប់គ្រងពាក្យសម្ងាត់ដែលមានសុវត្ថិភាព។ ពួកវាអាចត្រូវបានប្រើដើម្បីស្តារការចូលប្រើគណនីរបស់អ្នក ប្រសិនបើឧបករណ៍ផ្ទៀងផ្ទាត់ពីរកត្តារបស់អ្នកបាត់បង់។',
+        confirm: 'បញ្ជាក់',
+        regenerate_recovery_codes: 'បង្កើតលេខកូដសង្គ្រោះឡើងវិញ',
+        show_recovery_codes: 'បង្ហាញលេខកូដសង្គ្រោះ',
+        disable: 'បិទ',
+        last_active: 'សកម្មចុងក្រោយ',
+        done: 'ធ្វើហើយ',
+        please_enter_your_password_to_confirm: 'សូមបញ្ចូលពាក្យសម្ងាត់របស់អ្នកដើម្បីបញ្ជាក់ថាអ្នកចង់ចេញពីវគ្គកម្មវិធីរុករកផ្សេងទៀតរបស់អ្នកនៅលើឧបករណ៍ទាំងអស់របស់អ្នក។',
+        are_you_sure_you_want_to_delete_your_account: "តើអ្នកប្រាកដថាចង់លុបគណនីរបស់អ្នកទេ? នៅពេលដែលគណនីរបស់អ្នកត្រូវបានលុបចោល ធនធាន និងទិន្នន័យទាំងអស់របស់វានឹងត្រូវបានលុបចោលជាអចិន្ត្រៃយ៍។ សូមបញ្ចូលពាក្យសម្ងាត់របស់អ្នកដើម្បីបញ្ជាក់ថាអ្នកចង់លុបគណនីរបស់អ្នកជាអចិន្ត្រៃយ៍។",
+        for_your_security: 'សម្រាប់សុវត្ថិភាពរបស់អ្នក សូមបញ្ជាក់ពាក្យសម្ងាត់របស់អ្នកដើម្បីបន្ត។',
+    },
+
+    login: {
+        remember: 'ចងចាំ',
+        forgot_password: 'ភ្លេចពាក្យសម្ងាត់',
+        do_not_have_an_account: 'មិនមានគណនី',
+        create_an_account: 'បង្កើតគណនី',
+    },
+
+    register: {
+        name: 'ឈ្មោះ',
+        confirm_password: 'បញ្ជាក់ពាក្យសម្ងាត់',
+        sign_up: 'ចុះ​ឈ្មោះ',
+        already_have_an_account: 'មានគណនីរួចហើយ',
+    },
+
+    menu:{
+        dashboard: 'ផ្ទាំងគ្រប់គ្រង',
+        menu_system: 'ប្រព័ន្ធម៉ឺនុយ',
+        parameter: 'ប៉ារ៉ាម៉ែត្រ',
+        company_profile: 'ព័ត៍មានក្រុមហ៊ុន',
+        news_type: 'ប្រភេទព័ត៌មាន',
+        news_information: 'ព័ត៌មាន',
+        about_news_type: 'អំពីប្រភេទព័ត៌មាន',
+        sponsor: 'អ្នកឧបត្ថម្ភ',
+        about_news_description: 'អំពីការពិពណ៌នាព័ត៌មាន',
+    },
+
+    menu_system: {
+        name: 'ឈ្មោះ',
+        url: 'Url',
+        icon: 'រូបតំណាង',
+
+    },
+
+    parameter: {
+        parameter_code: 'ប៉ារ៉ាម៉ែត្រ',
+        value: 'តម្លៃ',
+        text_km: 'អត្ថបទ ភាសាខ្មែរ',
+        text_en: 'អត្ថបទ ភាសាអង់គ្លេស',
+    },
+
+    company_profile: {
+        created_date: 'កាលបរិច្ឆេទបង្កើត',
+        phone: 'លេខទូរស័ព្ទ',
+        location: 'ទីតាំង',
+        logo: 'និមិត្តសញ្ញា'
+    },
+
+    news_information: {
+        title_en: 'ចំណងជើង ភាសាអង់គ្លេស',
+        title_km: 'ចំណងជើង: ភាសាខ្មែរ',
+        url_video: 'Url Video',
+        latitude: 'រយៈទទឹង',
+        longitude: 'រយៈបណ្តោយ',
+        use_my_current_location: 'ប្រើទីតាំងបច្ចុប្បន្នរបស់ខ្ញុំ',
+        reset: 'កំណត់ឡើងវិញ',
+        crop: 'កាត់់',
+        browse: 'រកមើល',
+    },
+
+    sponsor: {
+        sponsor_name: 'ឈ្មោះអ្នកឧបត្ថម្ភ',
+        contact: 'ទំនាក់ទំនង'
+    },
+};
+
+export default { kh };

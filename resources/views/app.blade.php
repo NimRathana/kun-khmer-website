@@ -93,6 +93,7 @@
     }
     .v-table{
         min-height: 400px;
+        border-radius: 10px;
     }
     .v-table__wrapper{
         height: 1px;

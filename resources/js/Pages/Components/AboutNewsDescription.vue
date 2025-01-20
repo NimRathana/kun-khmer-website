@@ -4,11 +4,11 @@
             <v-col class="txtsearch" cols="12" style="height: fit-content;">
                 <v-row style="display: flex;align-items: end;">
                     <v-col cols="12" md="6">
-                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" label="search" v-model="search"></v-text-field>
+                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" :label="$t('global.search')" v-model="search"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-btn color="primary" style="float: right;text-align: center;" @click="dialog = true" size="small">
-                            <v-icon>mdi-plus</v-icon>Add
+                            <v-icon>mdi-plus</v-icon>{{ $t('global.add') }}
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -40,7 +40,7 @@
         <v-dialog v-model="dialog" max-width="1200" persistent scrollable>
             <v-card
                 :prepend-icon="editMode?'mdi-pen':'mdi-plus'"
-                :title="editMode?'Update':'Create'"
+                :title="editMode ? $t('global.update') : $t('global.create')"
             >
                 <v-divider></v-divider>
 
@@ -49,10 +49,10 @@
                         <v-card-text>
                             <v-row dense>
                                 <v-col cols="12" md="6">
-                                    <v-select v-model="form.about_news_type_id" variant="outlined" density="compact" label="About News Type*" :items="about_news_type_data" item-title="about_news_name_en" item-value="id" :error-messages="errorMessage.about_news_type_id"></v-select>
+                                    <v-select v-model="form.about_news_type_id" variant="outlined" density="compact" :label="$t('menu.about_news_type')+'*'" :items="about_news_type_data" item-title="about_news_name_en" item-value="id" :error-messages="errorMessage.about_news_type_id"></v-select>
                                 </v-col>
                                 <v-col cols="12" md="6">
-                                    <v-select v-model="form.news_information_id" variant="outlined" density="compact" label="News Information*" :items="news_information_data" item-title="title_en" item-value="id" :error-messages="errorMessage.news_information_id"></v-select>
+                                    <v-select v-model="form.news_information_id" variant="outlined" density="compact" :label="$t('menu.news_information')+'*'" :items="news_information_data" item-title="title_en" item-value="id" :error-messages="errorMessage.news_information_id"></v-select>
                                 </v-col>
                                 <v-col cols="12" style="min-height: 500px;">
                                     <div id="editor-container" ref="description" style="height: 100%"></div>
@@ -67,14 +67,14 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                        text="Close"
+                        :text="$t('global.close')"
                         color="red"
                         @click="dialog = false, errorMessage = '', form.reset(), editMode = false"
                     ></v-btn>
 
                     <v-btn
                         color="primary"
-                        text="Save"
+                        :text="$t('global.save')"
                         @click="editMode ? update() : create()"
                     ></v-btn>
                 </v-card-actions>
@@ -86,10 +86,10 @@
                 <v-card-text style="display: flex; align-items: center; justify-content: center;">
                     <div style="display: flex;flex-direction: column;align-items: center; justify-content: center;">
                         <v-icon size="x-large" color="red">mdi-delete</v-icon>
-                        <span class="my-3">Are you sure you want to delete?</span>
+                        <span class="my-3">{{ $t('global.are_you_sure_you_want_to_delete') }}?</span>
                         <v-card-actions>
                             <v-btn size="small"
-                            text="No, cancel"
+                            :text="$t('global.no_cancel')"
                             variant="flat"
                             flat
                             color="blue-grey-lighten-5"
@@ -99,7 +99,7 @@
                             <v-btn
                             size="small"
                             color="red"
-                            text="Yes, I'm sure"
+                            :text="$t('global.yes_i_am_sure')"
                             variant="flat"
                             flat
                             @click="confirmDelete(true)"
@@ -130,11 +130,9 @@ export default {
             dialog: false,
             itemsPerPage: 5,
             headers: [
-                { title: 'About News Type', align: 'start', key: 'about_news_name_en' },
-                // { title: 'about_news_type_id', align: 'start', key: 'about_news_type_id' },
-                // { title: 'news_information_id', key: 'news_information_id', align: 'start' },
-                { title: 'News Information', align: 'start', key: 'title_en' },
-                { title: 'Actions', key: 'action', align: 'center' },
+                { title: this.$t('menu.about_news_type'), align: 'start', key: 'about_news_name_en' },
+                { title: this.$t('menu.news_information'), align: 'start', key: 'title_en' },
+                { title: this.$t('global.action'), key: 'action', align: 'center' },
             ],
             loading: true,
             totalItems: 0,

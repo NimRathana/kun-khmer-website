@@ -79,13 +79,13 @@
                                                 <template #prepend>
                                                     <VIcon class="me-2" icon="mdi-account-plus-outline" size="22" />
                                                 </template>
-                                                <VListItemTitle>Register</VListItemTitle>
+                                                <VListItemTitle>{{ $t('global.register') }}</VListItemTitle>
                                             </VListItem>
                                             <VListItem link :href="route('login')">
                                                 <template #prepend>
                                                     <VIcon class="me-2" icon="mdi-login" size="22" />
                                                 </template>
-                                                <VListItemTitle>Login</VListItemTitle>
+                                                <VListItemTitle>{{ $t('global.login') }}</VListItemTitle>
                                             </VListItem>
                                         </VList>
                                     </VMenu>

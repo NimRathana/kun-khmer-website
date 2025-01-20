@@ -82,7 +82,7 @@ const submit = () => {
 
                         <form @submit.prevent="submit">
                             <div>
-                                <InputLabel for="name" value="Name" />
+                                <InputLabel for="name" :value="$t('register.name')" />
                                 <TextInput
                                     id="name"
                                     v-model="form.name"
@@ -96,7 +96,7 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="email" value="Email" />
+                                <InputLabel for="email" :value="$t('global.email')" />
                                 <TextInput
                                     id="email"
                                     v-model="form.email"
@@ -109,7 +109,7 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="password" value="Password" />
+                                <InputLabel for="password" :value="$t('global.password')" />
                                 <TextInput
                                     id="password"
                                     v-model="form.password"
@@ -122,7 +122,7 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="password_confirmation" value="Confirm Password" />
+                                <InputLabel for="password_confirmation" :value="$t('register.confirm_password')" />
                                 <TextInput
                                     id="password_confirmation"
                                     v-model="form.password_confirmation"
@@ -149,21 +149,21 @@ const submit = () => {
 
                             <div class="flex items-center justify-center mt-4">
                                 <PrimaryButton class="bg-[#2563eb] w-100 d-flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                    Sign Up
+                                    {{ $t('register.sign_up') }}
                                 </PrimaryButton>
                             </div>
                         </form>
                         <div class="mt-4 d-flex justify-center text-sm border-hidden">
-                            <span>Already have an account?</span>
+                            <span>{{ $t('register.already_have_an_account') }}?</span>
                             <Link :href="route('login')" class="text-sm text-blue-600 hover:text-blue-400 border-hidden">
-                                <span class="ms-2 text-sm">Sign In</span>
+                                <span class="ms-2 text-sm">{{ $t('global.login') }}</span>
                             </Link>
                         </div>
                         <v-row class="mt-4 d-flex justify-center align-center">
                             <v-col cols="5" class="pa-0 ma-0">
                                 <v-divider :thickness="1" :class="['my-2', { 'border-opacity-50': colorStore.theme === 'dark', 'border-opacity-100': colorStore.theme !== 'dark' }]"></v-divider>
                             </v-col>
-                            <v-col cols="1" class="pa-0 ma-0 d-flex justify-center align-center">or</v-col>
+                            <v-col cols="1" class="pa-0 ma-0 d-flex justify-center align-center">{{ $t('global.or') }}</v-col>
                             <v-col cols="5" class="pa-0 ma-0">
                                 <v-divider :thickness="1" :class="['my-2', { 'border-opacity-50': colorStore.theme === 'dark', 'border-opacity-100': colorStore.theme !== 'dark' }]"></v-divider>
                             </v-col>
