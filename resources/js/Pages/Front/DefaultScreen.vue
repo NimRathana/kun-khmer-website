@@ -236,7 +236,7 @@
 
                             <v-row class="my-5">
                                 <v-col cols="12" class="pa-0">
-                                    <h6 class="Muol-Light p-3 text-white" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $t('global.important_video') }}</h6>
+                                    <v-card-title class="Muol-Light p-3" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $t('global.important_video') }}</v-card-title>
                                 </v-col>
                                 <v-col cols="12" class="grid-container m-3">
                                     <a href="https://www.youtube.com/embed/aLkTDdx8aS8?si=02EusmijT5ROthGA" class="grid-item">
