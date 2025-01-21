@@ -17,6 +17,16 @@ class AboutNewsTypeController extends Controller
         return response()->json($data);
     }
 
+    public function getAboutNewsTypeID(Request $request){
+        $validated = $request->validate([
+            'news_type_id' => 'required|integer', // Ensure the input is provided and is an integer
+        ]);
+        $data = DB::table('tb_about_news_type')
+        ->where('tb_about_news_type.news_type_id', $validated['news_type_id'])
+        ->get();
+        return response()->json($data);
+    }
+
     public function create(Request $request){
         try{
 

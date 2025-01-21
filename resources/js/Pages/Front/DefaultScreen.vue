@@ -24,11 +24,10 @@
                                     align-tabs="center"
                                     hide-slider
                                     :items="news_type_data"
-                                    @update:modelValue="tabChange(tab)"
                                     :style="{ '--selected-tab-color': colorStore.color }"
                                     >
                                     <template v-slot:tab="{ item }">
-                                        <v-tab :value="item.id" class="text-center">
+                                        <v-tab :value="item.id" :loading="loading" class="text-center" @click="tabChange(tab)">
                                             {{ $i18n.locale == "en" ? item.name_en : item.name_km }}
                                         </v-tab>
                                     </template>
@@ -164,7 +163,7 @@
                                             :style="{ '--selected-tab-color': colorStore.color }"
                                             >
                                             <template v-slot:tab="{ item }">
-                                                <v-tab :value="item" :loading="loading" class="text-center">
+                                                <v-tab :value="item" :loading="loading" class="text-center" @click="tabAboutNewsChange(tab_about_news)">
                                                     {{ $i18n.locale == "en" ? item.about_news_name_en : item.about_news_name_km }}
                                                 </v-tab>
                                             </template>
@@ -172,49 +171,50 @@
                                     </v-card>
                                 </v-col>
                                 <v-col class="pt-0 pb-0" style="min-width: 60%;max-width: 60%;">
-                                    {{ console.log(tab_about_news) }}
-                                    <v-card v-if="tab_about_news == null" class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
-                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $i18n.locale == "en" ? news_detail.title_en : news_detail.title_km }}</v-card-title>
-                                        <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
+                                    <v-card v-if="tab_about_news_check == false" class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
+                                        <div v-if="news_detail.length != 0">
+                                            <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $i18n.locale == "en" ? news_detail.title_en : news_detail.title_km }}</v-card-title>
+                                            <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
 
-                                        <v-card-item>
-                                            <v-row class="d-flex justify-center">
-                                                <v-col
-                                                    v-for="(img, index) in (() => {
-                                                        try {
-                                                            return JSON.parse(news_detail.image) || [];
-                                                        } catch (e) {
-                                                            return [];
-                                                        }
-                                                    })()"
-                                                    :key="index"
-                                                    cols="12"
-                                                    sm="6"
-                                                >
-                                                    <v-img
-                                                        :src="getStorageImageUrl('NewsImages/' + img)"
-                                                        width="100%"
-                                                        style="border-radius: 5px;"
-                                                    ></v-img>
-                                                </v-col>
-                                            </v-row>
-                                        </v-card-item>
-                                        <v-card-item class="description">
-                                            <!-- <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" /> -->
-                                            <div id="editor-container" ref="descriptionEditor" style="height: 100%"></div>
-                                        </v-card-item>
+                                            <v-card-item>
+                                                <v-row class="d-flex justify-center">
+                                                    <v-col
+                                                        v-for="(img, index) in (() => {
+                                                            try {
+                                                                return JSON.parse(news_detail.image) || [];
+                                                            } catch (e) {
+                                                                return [];
+                                                            }
+                                                        })()"
+                                                        :key="index"
+                                                        cols="12"
+                                                        sm="6"
+                                                    >
+                                                        <v-img
+                                                            :src="getStorageImageUrl('NewsImages/' + img)"
+                                                            width="100%"
+                                                            style="border-radius: 5px;"
+                                                        ></v-img>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-card-item>
+                                            <v-card-item class="description">
+                                                <!-- <QuillEditor ref="descriptionEditor" theme="snow" :readOnly="true" /> -->
+                                                <div id="editor-container" ref="descriptionEditor" style="height: 100%"></div>
+                                            </v-card-item>
 
-                                        <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
-                                        <v-card-title class="text-center mb-5" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $t('company_profile.location') }}</v-card-title>
+                                            <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
+                                            <v-card-title class="text-center mb-5" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $t('company_profile.location') }}</v-card-title>
 
-                                        <GoogleMap :api-key="apiKey" style="width: 100%; height: 500px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15">
-                                            <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
-                                                position: { lat: Number(lat), lng: Number(lng) }, }" />
-                                        </GoogleMap>
+                                            <GoogleMap :api-key="apiKey" style="width: 100%; height: 500px; border-radius: 5px; overflow: hidden;" :center="{ lat: Number(lat), lng: Number(lng) }" :zoom="15">
+                                                <Marker v-if="!isNaN(lat) && !isNaN(lng)" :options="{
+                                                    position: { lat: Number(lat), lng: Number(lng) }, }" />
+                                            </GoogleMap>
+                                        </div>
                                     </v-card>
 
                                     <v-card v-else class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
-                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ news_detail.title_en }}</v-card-title>
+                                        <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $i18n.locale == "en" ? news_detail.title_en : news_detail.title_km }}</v-card-title>
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
 
                                         <v-card-item class="description pa-0 ma-0">
@@ -453,7 +453,6 @@ import $ from 'jquery';
 import { useGoTo } from 'vuetify';
 import { GoogleMap, Marker } from 'vue3-google-map';
 import { useI18n } from 'vue-i18n';
-import english from '@/translate/english';
 
 const { locale } = useI18n();
 const goTo = useGoTo();
@@ -479,6 +478,7 @@ const about_news_description_data = ref([]);
 const carousel = ref(0);
 const tab = ref(null);
 const tab_about_news = ref(null);
+const tab_about_news_check = ref(false);
 const news_detail = ref([]);
 const apiKey = ref("AIzaSyBP3eRYvTPrrRRAEFCOOkcn0gpcjKzqBHM");
 const lat = ref(10.9134214);
@@ -574,15 +574,6 @@ watch(
   }
 );
 
-watch(
-  () => tab_about_news.value,
-  (newVal) => {
-    if(newVal != null){
-        getAboutNewsDescription(newVal.id, news_detail.value.id);
-    }
-  }
-);
-
 const filteredNews = computed(() => {
     return Array.isArray(news_information_data.value)
         ? news_information_data.value.filter(item => item.news_type_id === tab.value)
@@ -611,6 +602,8 @@ onMounted(async ()=>{
 watch(chunkedItems, (newVal) => {
     if (newVal.length > 0) {
         autoClickFirstItem();
+    }else{
+        news_detail.value = [];
     }
 });
 
@@ -626,6 +619,13 @@ const autoClickFirstItem = () => {
     }
 };
 
+function tabAboutNewsChange(val) {
+    tab_about_news_check.value = true;
+    if(news_detail.value) {
+        getAboutNewsDescription(val.id, news_detail.value.id);
+    }
+};
+
 async function getAboutNewsDescription(tab_about_news_id, news_detail_id) {
     try {
         loading.value = true;
@@ -637,6 +637,7 @@ async function getAboutNewsDescription(tab_about_news_id, news_detail_id) {
         });
 
         about_news_description_data.value = response.data;
+        quill.value = new Quill(descriptionEditor.value, options.value);
         quill.value.root.innerHTML = null;
         if (descriptionEditor.value) {
             if(about_news_description_data.value[0] != undefined) {
@@ -746,6 +747,7 @@ async function getAboutNewsType() {
 
 function NewsInformationDetail(item) {
     news_detail.value = item;
+    tab_about_news_check.value = false;
     tab_about_news.value = null;
     if (item.location) {
         const [latitude, longitude] = item.location.split(',').map(coord => parseFloat(coord.trim()));
@@ -760,15 +762,26 @@ function NewsInformationDetail(item) {
     }
 };
 
-function tabChange(tabID) {
-    let selectedNewsType = null;
-    if(about_news_type_data.value){
-        selectedNewsType = about_news_type_data.value.filter(
-            (item) => item.news_type_id === tabID
-        );
-        about_news_type_select_data.value = selectedNewsType;
+async function tabChange(tabID) {
+    try {
+        loading.value = true;
+        tab_about_news_check.value = false;
+        const response = await axios.get('getAboutNewsTypeID', {
+            params: {
+                news_type_id: tabID,
+            },
+        });
+
+        if (response.status === 200) {
+            about_news_type_select_data.value = response.data;
+            loading.value = false;
+        }
+        setTimeout(() => {
+            tab_about_news.value = null;
+        }, 100);
+    } catch (error) {
+        console.error('Error fetching data', error);
     }
-    tab_about_news.value = null;
 };
 
 function UpdateColor() {

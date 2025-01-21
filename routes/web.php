@@ -21,6 +21,7 @@ Route::prefix('/')->group(function () {
     Route::get('/getAboutNewsType', [AboutNewsTypeController::class, 'getAboutNewsType']);
     Route::get('/getSponsor', [SponsorController::class, 'getSponsorGrid']);
     Route::get('/getAboutNewsDescription', [AboutNewsDescriptionController::class, 'getAboutNewsDescriptionGrid']);
+    Route::get('/getAboutNewsTypeID', [AboutNewsTypeController::class, 'getAboutNewsTypeID']);
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
