@@ -43,7 +43,7 @@
                         </div>
                     </template>
                     <template v-slot:item.news_type_id="{ item }">
-                        {{ item.name_en }}
+                        {{ $i18n.locale == "en" ? item.name_en : item.name_km }}
                     </template>
                     <template v-slot:item.isUsed="{ item }">
                         <v-chip
@@ -80,7 +80,7 @@
                                             <v-text-field variant="outlined" density="compact" :label="$t('news_information.title_km')+'*'" v-model="form.title_km" :error-messages="errorMessage.title_km"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-select v-model="form.news_type_id" variant="outlined" density="compact" :label="$t('menu.news_type')+'*'" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
+                                            <v-select v-model="form.news_type_id" variant="outlined" density="compact" :label="$t('menu.news_type')+'*'" :items="news_type_data" :item-title="(item) => $i18n.locale === 'en' ? item.name_en : item.name_km" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
                                             <v-checkbox hide-details :label="$t('global.used')" v-model="form.isUsed" color="primary" class="mb-3"></v-checkbox>
                                         </v-col>
                                         <v-col cols="12" sm="6">

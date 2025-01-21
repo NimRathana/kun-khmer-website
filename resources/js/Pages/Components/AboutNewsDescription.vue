@@ -29,6 +29,9 @@
                     <template v-slot:loading>
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                     </template>
+                    <template v-slot:item.title_en="{ item }">
+                        {{ $i18n.locale == "en" ? item.title_en : item.title_km }}
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon @click="editItem($event, item)" color="primary">mdi-pencil</v-icon>
                         <v-icon @click="deleteMenu(item)" class="ml-2" color="red">mdi-delete</v-icon>
@@ -52,7 +55,7 @@
                                     <v-select v-model="form.about_news_type_id" variant="outlined" density="compact" :label="$t('menu.about_news_type')+'*'" :items="about_news_type_data" item-title="about_news_name_en" item-value="id" :error-messages="errorMessage.about_news_type_id">
                                         <template v-slot:item="{ item, index }">
                                             <v-list-item
-                                                :title="item.raw.about_news_name_en + ' -> ' + item.raw.name_en"
+                                                :title="$i18n.locale == 'en' ? item.raw.about_news_name_en + ' -> ' + item.raw.name_en : item.raw.about_news_name_km + ' -> ' + item.raw.name_km"
                                                 @click="getSelectChangeAboutNewsType(item.value), form.about_news_type_id = item.value"
                                             >
                                             </v-list-item>
@@ -60,7 +63,7 @@
                                     </v-select>
                                 </v-col>
                                 <v-col cols="12" md="6">
-                                    <v-select v-model="form.news_information_id" :loading="loading" variant="outlined" density="compact" :label="$t('menu.news_information')+'*'" :items="news_information_data" item-title="title_en" item-value="id" :error-messages="errorMessage.news_information_id"></v-select>
+                                    <v-select v-model="form.news_information_id" :loading="loading" variant="outlined" density="compact" :label="$t('menu.news_information')+'*'" :items="news_information_data" :item-title="(item) => $i18n.locale === 'en' ? item.title_en : item.title_km" item-value="id" :error-messages="errorMessage.news_information_id"></v-select>
                                 </v-col>
                                 <v-col cols="12" style="min-height: 500px;">
                                     <div id="editor-container" ref="description" style="height: 100%"></div>

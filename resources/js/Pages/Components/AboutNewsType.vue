@@ -29,6 +29,9 @@
                     <template v-slot:loading>
                         <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
                     </template>
+                    <template v-slot:item.name_en="{ item }">
+                        {{ $i18n.locale == "en" ? item.name_en : item.name_km }}
+                    </template>
                     <template v-slot:item.isUsed="{ item }">
                         <v-chip
                             :color="item.isUsed ? 'green' : 'red'"
@@ -61,7 +64,7 @@
                                 <v-text-field variant="outlined" density="compact" :label="$t('global.name_km')+'*'" v-model="form.about_news_name_km" :error-messages="errorMessage.about_news_name_km"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-select v-model="form.news_type_id" @update:modelValue="selectChange(form.news_type_id)" variant="outlined" density="compact" :label="$t('menu.news_type')+'*'" :items="news_type_data" item-title="name_en" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
+                                <v-select v-model="form.news_type_id" @update:modelValue="selectChange(form.news_type_id)" variant="outlined" density="compact" :label="$t('menu.news_type')+'*'" :items="news_type_data" :item-title="(item) => $i18n.locale === 'en' ? item.name_en : item.name_km" item-value="id" :error-messages="errorMessage.news_type_id"></v-select>
                                 <v-checkbox hide-details :label="$t('global.used')" v-model="form.isUsed" color="primary"></v-checkbox>
                             </v-col>
                             <v-col cols="12" sm="6">
