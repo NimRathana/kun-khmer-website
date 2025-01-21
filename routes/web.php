@@ -107,6 +107,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             return Inertia::render('Components/AboutNewsDescription');
         });
         Route::get('/getAboutNewsDescriptionGrid', [AboutNewsDescriptionController::class, 'getAboutNewsDescriptionGrid']);
+        Route::get('/getNewsInformationCombo', [AboutNewsDescriptionController::class, 'getNewsInformationCombo']);
         Route::post('/create', [AboutNewsDescriptionController::class, 'create']);
         Route::post('/update', [AboutNewsDescriptionController::class, 'update']);
         Route::post('/delete', [AboutNewsDescriptionController::class, 'delete']);

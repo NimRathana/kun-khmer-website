@@ -49,10 +49,18 @@
                         <v-card-text>
                             <v-row dense>
                                 <v-col cols="12" md="6">
-                                    <v-select v-model="form.about_news_type_id" variant="outlined" density="compact" :label="$t('menu.about_news_type')+'*'" :items="about_news_type_data" item-title="about_news_name_en" item-value="id" :error-messages="errorMessage.about_news_type_id"></v-select>
+                                    <v-select v-model="form.about_news_type_id" variant="outlined" density="compact" :label="$t('menu.about_news_type')+'*'" :items="about_news_type_data" item-title="about_news_name_en" item-value="id" :error-messages="errorMessage.about_news_type_id">
+                                        <template v-slot:item="{ item, index }">
+                                            <v-list-item
+                                                :title="item.raw.about_news_name_en + ' -> ' + item.raw.name_en"
+                                                @click="getSelectChangeAboutNewsType(item.value), form.about_news_type_id = item.value"
+                                            >
+                                            </v-list-item>
+                                        </template>
+                                    </v-select>
                                 </v-col>
                                 <v-col cols="12" md="6">
-                                    <v-select v-model="form.news_information_id" variant="outlined" density="compact" :label="$t('menu.news_information')+'*'" :items="news_information_data" item-title="title_en" item-value="id" :error-messages="errorMessage.news_information_id"></v-select>
+                                    <v-select v-model="form.news_information_id" :loading="loading" variant="outlined" density="compact" :label="$t('menu.news_information')+'*'" :items="news_information_data" item-title="title_en" item-value="id" :error-messages="errorMessage.news_information_id"></v-select>
                                 </v-col>
                                 <v-col cols="12" style="min-height: 500px;">
                                     <div id="editor-container" ref="description" style="height: 100%"></div>
@@ -205,10 +213,26 @@ export default {
     mounted() {
         this.getAboutNewsDescriptionGrid();
         this.getAboutNewsType();
-        this.getNewsInformation();
     },
 
     methods: {
+        async getSelectChangeAboutNewsType(id) {
+            try {
+                this.loading = true;
+                await axios.get('about_news_description/getNewsInformationCombo', {
+                        params: { news_type: id },
+                    }
+                ).then((response)=>{
+                    this.news_information_data = response.data;
+                    this.loading = false;
+                }).catch((e)=>{
+                    console.error(e);
+                });
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        },
+
         async getAboutNewsDescriptionGrid() {
             try {
                 const response = await axios.get('about_news_description/getAboutNewsDescriptionGrid', {
@@ -227,21 +251,6 @@ export default {
                 const response = await axios.get('about_news_type/getAboutNewsType');
                 this.about_news_type_data = response.data;
                 this.loading = false;
-            } catch (error) {
-                console.error('Error fetching data', error);
-            }
-        },
-
-        async getNewsInformation() {
-            try {
-                axios.get('news_information/getNewsInformationGrid')
-                .then((response)=>{
-                    this.news_information_data = response.data;
-                    this.loading = false;
-                }).catch((e)=>{
-                    console.error(e);
-                });
-
             } catch (error) {
                 console.error('Error fetching data', error);
             }

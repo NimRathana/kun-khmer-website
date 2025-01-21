@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 class AboutNewsDescriptionController extends Controller
 {
     public function getAboutNewsDescriptionGrid(Request $request){
-
         $query = DB::table('tb_about_news_description')
         ->leftJoin('tb_about_news_type', 'tb_about_news_type.id', '=', 'tb_about_news_description.about_news_type_id')
         ->leftJoin('tb_news_information', 'tb_news_information.id', '=', 'tb_about_news_description.news_information_id');
@@ -37,6 +36,16 @@ class AboutNewsDescriptionController extends Controller
             'tb_news_information.title_en',
             'tb_news_information.title_km',
         ])->get();
+
+        return response()->json($data);
+    }
+
+    public function getNewsInformationCombo(Request $request) {
+        $validated = $request->validate([
+            'news_type' => 'required|integer', // Ensure the input is provided and is an integer
+        ]);
+        $query = DB::table('tb_about_news_type')->where('tb_about_news_type.id', $validated['news_type'])->first();
+        $data = DB::table('tb_news_information')->where('tb_news_information.news_type_id', $query->news_type_id)->get();
 
         return response()->json($data);
     }
