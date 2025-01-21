@@ -172,6 +172,7 @@
                                     </v-card>
                                 </v-col>
                                 <v-col class="pt-0 pb-0" style="min-width: 60%;max-width: 60%;">
+                                    {{ console.log(tab_about_news) }}
                                     <v-card v-if="tab_about_news == null" class="pa-3" color="transparent" :style="{ border: `2px solid ${colorStore.color}`, height: '100%', borderRadius: '5px' }">
                                         <v-card-title class="text-center" :style="{ borderRadius: '5px', backgroundColor: colorStore.color }">{{ $i18n.locale == "en" ? news_detail.title_en : news_detail.title_km }}</v-card-title>
                                         <v-divider class="border-opacity-100 my-5" :thickness="2" :color="colorStore.color"></v-divider>
@@ -479,7 +480,6 @@ const carousel = ref(0);
 const tab = ref(null);
 const tab_about_news = ref(null);
 const news_detail = ref([]);
-// const apiKey = ref("AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw");
 const apiKey = ref("AIzaSyBP3eRYvTPrrRRAEFCOOkcn0gpcjKzqBHM");
 const lat = ref(10.9134214);
 const lng = ref(104.5888426);

@@ -356,7 +356,6 @@ export default {
             }),
             imageUrl: [],
             news_type_data: [],
-            // apiKey: 'AIzaSyAHv9WrtrdTEAJGZXJlIGmefJwZzzyBnmw',
             apiKey: 'AIzaSyDj5ak7LYutPoHkpGNrPks3fMDc9sToYhI',
             lat: 10.9134214,
             lng: 104.5888426,
