@@ -44,7 +44,7 @@ function getStorageImageUrl(name) {
     <Link :href="'/'">
         <v-avatar size="80" :color="colorStore.color">
             <v-img
-                v-if="company_profile.logo !== null"
+                v-if="company_profile && company_profile.logo !== null"
                 alt="mdi-account-tie"
                 :src="getStorageImageUrl('CompanyProfile/' + company_profile.logo)"
               ></v-img>
