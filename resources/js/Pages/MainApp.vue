@@ -762,7 +762,8 @@ const fetchDashboardData = async () => {
 };
 
 function goHomePage(){
-    Inertia.get(route('dashboard'));
+    window.history.back()
+    // Inertia.get(route('dashboard'));
 };
 
 function getImageUrl(name) {
