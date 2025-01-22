@@ -45,12 +45,12 @@ function getStorageImageUrl(name) {
         <v-avatar size="80" :color="colorStore.color">
             <v-img
                 v-if="company_profile.logo !== null"
-                alt="Avatar"
+                alt="mdi-account-tie"
                 :src="getStorageImageUrl('CompanyProfile/' + company_profile.logo)"
               ></v-img>
               <v-icon
                 v-else
-                size="x-large"
+                size="50"
                 icon="mdi-account-tie"
               ></v-icon>
         </v-avatar>
