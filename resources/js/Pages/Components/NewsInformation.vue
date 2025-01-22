@@ -2,9 +2,9 @@
     <MainApp>
         <v-row>
             <v-col cols="12" class="txtsearch" style="height: fit-content;">
-                <v-row style="display: flex;align-items: end;">
+                <v-row style="display: flex;align-items: center;">
                     <v-col cols="12" md="6">
-                        <v-text-field class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" :label="$t('global.search')" v-model="search"></v-text-field>
+                        <v-text-field hide-details class="search" prepend-inner-icon="mdi-magnify" icon variant="outlined" density="compact" :label="$t('global.search')" v-model="search"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-btn color="primary" style="float: right;text-align: center;" @click="dialog = true" size="small">

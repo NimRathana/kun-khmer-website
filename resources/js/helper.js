@@ -22,7 +22,7 @@ export const helper = {
         // Get the table element
         var tableElement = document.querySelector(".v-table");
         if (tableElement) {
-            tableElement.style.height = `calc(100vh - ${toolbarHeader + rowSearch + toolbarExtensionHeight}px)`;
+            tableElement.style.height = `calc(100vh - ${toolbarHeader+ 20 + rowSearch + toolbarExtensionHeight}px)`;
         } else {
             console.log("Table element not found");
         }

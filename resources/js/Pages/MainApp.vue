@@ -425,8 +425,12 @@
                     </v-app-bar>
                     <v-main class="main" style="display: flex; flex-direction: column;min-width: 900px;">
                         <v-row class="pt-0 mt-0">
-                            <v-col cols="12" class="content">
-                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" style="padding-bottom: 5px;">
+                            <v-col cols="12" class="content d-flex justify-center">
+                                <div v-if="loadingState.isLoading" class="d-flex justify-center align-center">
+                                    <Loading />
+                                </div>
+
+                                <v-container v-else :fluid="colorStore.selectedContent !== 'Compact'" style="padding-bottom: 5px;">
                                     <slot />
                                 </v-container>
                             </v-col>
@@ -441,7 +445,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted,  } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { VTreeview } from 'vuetify/labs/VTreeview';
 import { Inertia } from '@inertiajs/inertia';
@@ -450,6 +454,8 @@ import { Store } from '@/store/index';
 import axios from 'axios';
 import { helper } from '@/helper';
 import { useI18n } from 'vue-i18n';
+import Loading from '../Components/Loading/Loading.vue';
+import { loadingState } from '@/store/loadingState';
 
 const props = defineProps({
     title: String,
@@ -585,7 +591,6 @@ const checkWindowSize = () => {
 };
 
 onMounted(() => {
-    helper.GetGridHeight();
     let left = $(".v-navigation-drawer--left").position().left;
     setTimeout(() => {
         if (left < -0 && toggleLeftDrawer.value == false && miniDrawer.value == false) {
@@ -754,10 +759,16 @@ function selectDirection(direction) {
 
 const fetchDashboardData = async () => {
     try {
+        loadingState.isLoading = true;
         const response = await axios.get('menu_system/getMenu');
         items.value = response.data.sort((a, b) => a.order - b.order);
     } catch (error) {
         console.error('Error fetching data', error);
+    }finally {
+        loadingState.isLoading = false;
+        setTimeout(() => {
+            helper.GetGridHeight();
+        }, 100);
     }
 };
 
