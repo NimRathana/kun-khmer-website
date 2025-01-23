@@ -100,6 +100,7 @@ const kh = {
         about_news_type: 'អំពីប្រភេទព័ត៌មាន',
         sponsor: 'អ្នកឧបត្ថម្ភ',
         about_news_description: 'អំពីការពិពណ៌នាព័ត៌មាន',
+        youtube: 'Youtube',
     },
 
     menu_system: {

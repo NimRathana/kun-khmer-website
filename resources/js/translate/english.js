@@ -100,6 +100,7 @@ const en = {
         about_news_type: 'About News Type',
         sponsor: 'Sponsor',
         about_news_description: 'About News Description',
+        youtube: 'Youtube',
     },
 
     menu_system: {

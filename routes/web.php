@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\NewsInformationController;
 use App\Http\Controllers\Api\NewsTypeController;
 use App\Http\Controllers\Api\ParameterController;
 use App\Http\Controllers\Api\SponsorController;
+use App\Http\Controllers\Api\YoutubeController;
 
 Route::prefix('/')->group(function () {
     Route::get('/', function () {
@@ -111,5 +112,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/create', [AboutNewsDescriptionController::class, 'create']);
         Route::post('/update', [AboutNewsDescriptionController::class, 'update']);
         Route::post('/delete', [AboutNewsDescriptionController::class, 'delete']);
+    });
+
+    Route::prefix('youtube')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Components/Youtube');
+        })->name('youtube');
+        Route::post('/', [YoutubeController::class, 'upload'])->name('youtube.upload');
     });
 });

@@ -455,12 +455,13 @@ import axios from 'axios';
 import { helper } from '@/helper';
 import { useI18n } from 'vue-i18n';
 import Loading from '../Components/Loading/Loading.vue';
-import { loadingState } from '@/store/loadingState';
+import { useLoadingState } from '@/store/loadingState';
 
 const props = defineProps({
     title: String,
     sessions: Array,
 });
+const loadingState = useLoadingState();
 const { locale } = useI18n();
 const page = usePage();
 const colorStore = Store();
@@ -759,13 +760,13 @@ function selectDirection(direction) {
 
 const fetchDashboardData = async () => {
     try {
-        loadingState.isLoading = true;
+        loadingState.startLoading();
         const response = await axios.get('menu_system/getMenu');
         items.value = response.data.sort((a, b) => a.order - b.order);
     } catch (error) {
         console.error('Error fetching data', error);
     }finally {
-        loadingState.isLoading = false;
+        loadingState.stopLoading();
         setTimeout(() => {
             helper.GetGridHeight();
         }, 100);

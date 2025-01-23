@@ -1,5 +1,15 @@
-import { reactive } from 'vue';
+import { defineStore } from 'pinia';
 
-export const loadingState = reactive({
-  isLoading: false
+export const useLoadingState = defineStore('loadingState', {
+  state: () => ({
+    isLoading: false,
+  }),
+  actions: {
+    startLoading() {
+      this.isLoading = true;
+    },
+    stopLoading() {
+      this.isLoading = false;
+    },
+  },
 });
