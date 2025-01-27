@@ -7,6 +7,10 @@ defineProps({
         type: String,
         default: 'submit',
     },
+    loading: {
+        type: Boolean,
+        default: false,
+    },
 });
 </script>
 
@@ -15,6 +19,7 @@ defineProps({
         <slot />
     </button> -->
     <v-btn
+        :loading="loading"
         :type="type"
         class="text-center"
         :color="colorStore.color"

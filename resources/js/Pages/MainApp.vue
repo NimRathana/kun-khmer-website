@@ -426,11 +426,11 @@
                     <v-main class="main" style="display: flex; flex-direction: column;min-width: 900px;">
                         <v-row class="pt-0 mt-0">
                             <v-col cols="12" class="content d-flex justify-center">
-                                <div v-if="loadingState.isLoading" class="d-flex justify-center align-center">
-                                    <Loading />
+                                <div v-if="loadingState.isLoading" class="d-flex justify-center align-center;" style="position: absolute;top: 40%;">
+                                    <v-overlay v-model="overlay" persistent style="display: flex;justify-content: center;align-items: center;"><Loading /></v-overlay>
                                 </div>
 
-                                <v-container v-else :fluid="colorStore.selectedContent !== 'Compact'" style="padding-bottom: 5px;">
+                                <v-container :fluid="colorStore.selectedContent !== 'Compact'" style="padding-bottom: 5px;">
                                     <slot />
                                 </v-container>
                             </v-col>
@@ -464,6 +464,7 @@ const props = defineProps({
 const loadingState = useLoadingState();
 const { locale } = useI18n();
 const page = usePage();
+const overlay = ref(true);
 const colorStore = Store();
 const theme = ref(colorStore.theme);
 const selectedSkin = ref(colorStore.selectedSkin);

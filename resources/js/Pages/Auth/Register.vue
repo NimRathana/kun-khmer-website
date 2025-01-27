@@ -41,10 +41,18 @@ const form = useForm({
     password_confirmation: '',
     terms: false,
 });
+const loading = ref(false);
 
 const submit = () => {
+    loading.value = true;
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
+        onSuccess: () => {
+            loading.value = false;
+        },
+        onError: () => {
+            loading.value = false;
+        },
     });
 };
 </script>
@@ -148,7 +156,7 @@ const submit = () => {
                             </div>
 
                             <div class="flex items-center justify-center mt-4">
-                                <PrimaryButton class="bg-[#2563eb] w-100 d-flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                <PrimaryButton :loading="loading" class="bg-[#2563eb] w-100 d-flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                     {{ $t('register.sign_up') }}
                                 </PrimaryButton>
                             </div>

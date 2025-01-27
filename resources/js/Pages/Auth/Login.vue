@@ -44,14 +44,17 @@ const form = useForm({
     password: '',
     remember: false,
 });
+const loading = ref(false);
 
 const submit = () => {
+    loading.value = true;
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
     })).post(route('login'), {
         onFinish: () => form.reset('password'),
         onSuccess: () => {
+            loading.value = false;
             //move button setting
             const button = document.querySelector('.setting_btn');
             let isDragging = false;
@@ -84,7 +87,10 @@ const submit = () => {
                     document.body.style.userSelect = ''; // Restore the text selection behavior
                 });
             }
-        }
+        },
+        onError: () => {
+            loading.value = false;
+        },
     });
 };
 </script>
@@ -165,7 +171,7 @@ const submit = () => {
                             </div>
 
                             <div class="flex items-center justify-center mt-4">
-                                <PrimaryButton class="bg-[#2563eb] w-100 d-flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                <PrimaryButton :loading="loading" class="bg-[#2563eb] w-100 d-flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                     {{ $t('global.login') }}
                                 </PrimaryButton>
                             </div>

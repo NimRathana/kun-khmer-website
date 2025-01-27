@@ -119,5 +119,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             return Inertia::render('Components/Youtube');
         })->name('youtube');
         Route::post('/', [YoutubeController::class, 'upload'])->name('youtube.upload');
+        Route::get('/playlists', [YouTubeController::class, 'getPlaylists'])->name('youtube.playlists');
     });
 });
